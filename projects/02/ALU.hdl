@@ -43,4 +43,39 @@ CHIP ALU {
 
     PARTS:
    // Put you code here:
+   // zxがtrueの場合は、xは強制的にすべて0になる
+   // trueの場合はxが選ばれ、falseの場合はbのすべてが0のものがoutで出力される
+   Mux16(a=x, b[0..15]=false, sel=zx, out=zdx); // Zero the x
+
+   // nxの反転のための変数を予め取得しておく
+   Not16(in=zdx, out=notx);// Not the zdx
+
+   // nxの値により、反転化否かを取得する
+   Mux16(a=zdx, b=notx, sel=nx, out=ndx);
+
+   // 同じことをyでもする
+   Mux16(a=y, b[0..15]=false, sel=zy, out=zdy); // Zero the y
+   Not16(in=zdy, out=noty);
+   Mux16(a=zdy, b=noty, sel=ny, out=ndy);
+
+   Add16(a=ndx, b=ndy, out=xplusy); // x+y
+   And16(a=ndx, b=ndy, out=xandy); // x and y
+
+   // 選択
+   Mux16(a=xandy, b=xplusy, sel=f, out=fxy); // chose function
+
+   // 反転
+   Not16(in=fxy, out=nfxy);
+
+   Mux16(a=fxy, b=nfxy, sel=no, out=oo); // 反転するかどうか
+
+   // zr: すべて0のときだけ1にする
+   Or16Way(in=oo, out=notZr);
+   Not(in=notZr, out=zr);
+
+   // ng
+   And16(a[0..15]=true, b=oo, out[15]=ng, out[0..14]=drop); // ng 
+
+   Or16(a=oo,b[0..15]=false,out=out); //oo=output
+
 }
