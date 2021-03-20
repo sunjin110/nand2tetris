@@ -43,60 +43,62 @@
 
 (DRAW)
 
-@R0
-D=M
+// @R0
+// D=M
 
-@SCREEN
-M=D
+// @SCREEN
+// M=D
 
-@16385
-D=A
 
-@pos
-M=D
-
-@R0
-D=M
-
-@pos
-A=M
-M=D
-
-@16386
-D=A
-
-@pos
-M=D
-
-@R0
-D=M
-
-@pos
-A=M
-M=D
 
 // @8191
 // D=A
 // @R1
 // M=D
 
-
-// @R1
-// D=M
 // @pos
 // M=D
+
 // @SCREEN
 // D=A
-// @pos
-// M=M+D
 
-// @R0
+
+
+
+
+
+
+
 // D=M
-// @pos
-// A=M
 // M=D
+    // 実行する必要のあるblits数
+    @8191
+    D=A
+    @R1
+    M=D
 
+    (NEXT)
+        @R1
+        D=M
+        @pos
+        M=D
+        @SCREEN
+        D=A
+        @pos
+        M=M+D
 
+        @R0
+        D=M
+        @pos
+        A=M
+        M=D
+
+        @R1
+        D=M-1
+        M=D
+
+        @NEXT
+        D;JGE
 
 // 描画完了したらLoopに戻す
 @LOOP
