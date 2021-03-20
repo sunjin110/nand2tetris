@@ -13,48 +13,34 @@
 
 // Start R2 at 0.
 
-// 結果の値を先にセットする
 @R2
 M=0
 
-// Jump into the first STEP if R0 > 0.
-// R0の値が、0以上の場合のみ、loopに入る
 @R0
 D=M
 @STEP
 D;JGT
 
-// If it didn't jump, go to END.
-// 0か、0以下の場合は、処理が終了
 @END
-0;JGT
-
-// Adds R1 to R2 and removes 1 from R0
-// If R0 is more than 0 we step again
+0;JMP
 
 (STEP)
-    // Get R2.
     @R2
     D=M
 
-    // Add R1 to it.
     @R1
     D=D+M
 
-    // And write the result back to R2.
     @R2
     M=D
 
-    // Reduce R0 by 1.
     @R0
     D=M-1
     M=D
 
-    // If R0 is still > 0 then loop.
     @STEP
     D;JGT
 
-// END 終了時は無限ループ
 (END)
     @END
     0;JMP
