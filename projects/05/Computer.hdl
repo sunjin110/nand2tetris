@@ -19,5 +19,13 @@ CHIP Computer {
     IN reset;
 
     PARTS:
-    // Put your code here:
+    // 実行する命令を取得する
+    ROM32K(address=pc, out=instruction);
+
+    // 命令に沿ってCPUが仕事をする
+    CPU(inM=memOut, instruction=instruction, reset=reset, outM=outM,
+        writeM=writeM, addressM=addressM, pc=pc);
+    
+    // メモリ操作(registerに格納したり、screen, mouseの値を取得したりする)
+    Memory(in=outM, load=writeM, address=addressM, out=memOut);
 }
