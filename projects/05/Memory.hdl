@@ -23,9 +23,28 @@
  */
 
 CHIP Memory {
-    IN in[16], load, address[15];
+    IN in[16], load, address[15]; // in:なにをかきこむか, load: 書き込み有効ビット, adress: どこに書き込むか
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+
+    // どこに書き込むかを判別する
+    // load=0の場合は全てに0が渡されるので書き込みはしない、
+    DMux4Way(in=load, sel=address[13..14], a=loadram1, b=loadram2, c=loadscreen, d=loadkbd);
+
+    // RAMへの命令かどうかを判断する
+    Or(a=loadram1, b=loadram2, out=loadram);
+
+    // RAMへのアクセス(loadram=1)の場合は次のclockで今回追加したinを返すようになる
+    // そうでない場合は、前回のoutと同じ値を次のclockで返す
+    RAM16K(in=in, load=loadram, address=address[0..13], out=ramout);
+
+    // Screen
+    Screen(in=in, load=loadscreen, address=address[0..12], out=scrout);
+
+    // keyboar
+    Keyboard(out=kbout);
+
+    // 求めている値を、返す 
+    Mux4Way16(a=ramout, b=ramout, c=scrout, d=kbout, sel=address[13..14], out=out);
 }
