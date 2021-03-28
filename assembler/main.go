@@ -46,7 +46,8 @@ func main() {
 			symbol := parser.GetSymbol(line, commandType)
 			fmt.Println("debug: symbol is ", symbol)
 		case parser.CCommand:
-
+			dest, comp, jump := parser.GetCMemonic(line, commandType)
+			log.Println(dest, comp, jump)
 		default:
 			panic("想定していないcommandType")
 		}
