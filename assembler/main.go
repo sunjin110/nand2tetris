@@ -23,6 +23,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	// input file
 	asmFileName := args[0]
 	fp, err := os.Open(asmFileName)
 	if err != nil {
@@ -30,6 +31,15 @@ func main() {
 		panic(err)
 	}
 	defer fp.Close()
+
+	// output file
+	hackFileName := fmt.Sprintf("%s.hack", common.GetFileNameWithoutExt(fp.Name()))
+	hackFile, err := os.Create(hackFileName)
+	if err != nil {
+		fmt.Println("output fileが開けませんでした")
+		panic(err)
+	}
+	defer hackFile.Close()
 
 	scanner := bufio.NewScanner(fp)
 	for scanner.Scan() {
@@ -42,6 +52,7 @@ func main() {
 			continue
 		}
 
+		var outLine string
 		// A命令のとき || L命令のとき
 		switch commandType {
 		case parser.ACommand, parser.LCommand:
@@ -49,20 +60,25 @@ func main() {
 
 			// 数字の場合
 			i := common.StrToUint(symbol)
-			fmt.Printf("0%015b\n", i)
+			outLine = fmt.Sprintf("0%015b\n", i)
 
 		case parser.CCommand:
 			dest, comp, jump := parser.GetCMemonic(line, commandType)
-			// log.Println(dest, comp, jump)
 
 			destBinary := code.ConvDest(dest)
 			compBinary := code.ConvComp(comp)
 			jumpBinary := code.ConvJump(jump)
 
-			// TODO output file
-			fmt.Printf("111%07b%03b%03b\n", compBinary, destBinary, jumpBinary)
+			outLine = fmt.Sprintf("111%07b%03b%03b\n", compBinary, destBinary, jumpBinary)
 		default:
 			panic("想定していないcommandType")
+		}
+
+		// 書き込み
+		_, err := hackFile.WriteString(outLine)
+		if err != nil {
+			log.Println("書き込みに失敗しました")
+			panic(err)
 		}
 
 	}
