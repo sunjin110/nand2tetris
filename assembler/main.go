@@ -4,6 +4,7 @@ import (
 	"assembler/pkg/code"
 	"assembler/pkg/common"
 	"assembler/pkg/parser"
+	"assembler/pkg/symboltable"
 	"bufio"
 	"flag"
 	"fmt"
@@ -25,6 +26,16 @@ func main() {
 
 	// input file
 	asmFileName := args[0]
+
+	// シンボルテーブルを作成するために一度すべてを読む
+	ffp, err := os.Open(asmFileName)
+	if err != nil {
+		fmt.Println("ファイルが見つかりません")
+		panic(err)
+	}
+	// L命令のsymbolをmappingしているものを取得する
+	symbolTableMap, isUseAddressMap := symboltable.GetSymbolTableMap(bufio.NewScanner(ffp))
+
 	fp, err := os.Open(asmFileName)
 	if err != nil {
 		fmt.Println("ファイルが見つかりません")
@@ -43,6 +54,7 @@ func main() {
 
 	scanner := bufio.NewScanner(fp)
 	var lineCounter int
+	addressCounter := 0
 	for scanner.Scan() {
 
 		line := scanner.Text()
@@ -61,15 +73,30 @@ func main() {
 		fmt.Println("line is ", line)
 
 		var outLine string
-		// A命令のとき || L命令のとき
+		// A命令のとき
 		switch commandType {
-		case parser.ACommand, parser.LCommand:
+		case parser.ACommand:
 			symbol := parser.GetSymbol(line, commandType)
 
-			// 数字の場合
-			i := common.StrToUint(symbol)
-			outLine = fmt.Sprintf("0%015b\n", i)
-			fmt.Println("outline is ", outLine, " num is ", i)
+			i, err := common.StrToUint(symbol)
+			if err == nil {
+				// 数字の場合
+				outLine = fmt.Sprintf("0%015b\n", i)
+			} else {
+
+				address, exists := symbolTableMap[symbol]
+				if exists {
+					// もし存在する場合は、adressをそれに追加する
+					outLine = fmt.Sprintf("0%015b\n", address)
+				} else {
+					// ない場合は新しい変数、使用できるアドレスを取得してそこに格納する
+					var canUseAddress int
+					canUseAddress, addressCounter = symboltable.GetCanUseAddressAndCounter(isUseAddressMap, addressCounter)
+					isUseAddressMap[canUseAddress] = true
+					outLine = fmt.Sprintf("0%015b\n", canUseAddress)
+				}
+
+			}
 
 		case parser.CCommand:
 			dest, comp, jump := parser.GetCMemonic(line, commandType)
@@ -79,6 +106,9 @@ func main() {
 			jumpBinary := code.ConvJump(jump)
 
 			outLine = fmt.Sprintf("111%07b%03b%03b\n", compBinary, destBinary, jumpBinary)
+		case parser.LCommand:
+			// LCommandのときは何もしない
+			continue
 		default:
 			panic("想定していないcommandType")
 		}

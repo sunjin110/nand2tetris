@@ -14,9 +14,9 @@ func Uint2bytes(i uint64, size int) []byte {
 }
 
 // StrToUint 10進数の文字列を数字に治す
-func StrToUint(str string) uint {
-	i, _ := strconv.ParseUint(str, 10, 0)
-	return uint(i)
+func StrToUint(str string) (uint, error) {
+	i, err := strconv.ParseUint(str, 10, 0)
+	return uint(i), err
 }
 
 func GetFileNameWithoutExt(fileName string) string {
