@@ -1,6 +1,8 @@
 package main
 
 import (
+	"assembler/pkg/code"
+	"assembler/pkg/common"
 	"assembler/pkg/parser"
 	"bufio"
 	"flag"
@@ -44,10 +46,21 @@ func main() {
 		switch commandType {
 		case parser.ACommand, parser.LCommand:
 			symbol := parser.GetSymbol(line, commandType)
-			fmt.Println("debug: symbol is ", symbol)
+
+			// 数字の場合
+			i := common.StrToUint(symbol)
+			fmt.Printf("0%015b\n", i)
+
 		case parser.CCommand:
 			dest, comp, jump := parser.GetCMemonic(line, commandType)
-			log.Println(dest, comp, jump)
+			// log.Println(dest, comp, jump)
+
+			destBinary := code.ConvDest(dest)
+			compBinary := code.ConvComp(comp)
+			jumpBinary := code.ConvJump(jump)
+
+			// TODO output file
+			fmt.Printf("111%07b%03b%03b\n", compBinary, destBinary, jumpBinary)
 		default:
 			panic("想定していないcommandType")
 		}
