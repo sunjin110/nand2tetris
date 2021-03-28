@@ -1,16 +1,10 @@
+// parser アセンブリコマンドをフィールドとシンボルに分解する
+
 package parser
 
 import (
 	"strings"
 )
-
-// HasMoreCommonds 入力にまだコマンドが存在するか?
-// func HasMoreCommonds() bool
-
-// Advance 入力から次のコマンドを読み、それを現在のコマンドにする
-// このルーチンはHasMoreCommandsがtrueの場合のみ呼ぶようにする
-// goだと必要ないかも
-// func Advance()
 
 type CommandType int32
 
