@@ -41,10 +41,15 @@ func main() {
 		}
 
 		// A命令のとき || L命令のとき
-		// switch commandType {
-		// case parser.ACommand, parser.LCommand:
-		// 	symbol :=
-		// }
+		switch commandType {
+		case parser.ACommand, parser.LCommand:
+			symbol := parser.GetSymbol(line, commandType)
+			fmt.Println("debug: symbol is ", symbol)
+		case parser.CCommand:
+
+		default:
+			panic("想定していないcommandType")
+		}
 
 	}
 

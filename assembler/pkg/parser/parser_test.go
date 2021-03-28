@@ -25,6 +25,15 @@ func Test(t *testing.T) {
 
 		})
 
+		g.It("GetCMemonic", func() {
+
+			dest, comp, jump := parser.GetCMemonic("M=0;JMP", parser.CCommand)
+			g.Assert(dest).Eql("M")
+			g.Assert(comp).Eql("0")
+			g.Assert(jump).Eql("JMP")
+
+		})
+
 	})
 
 }

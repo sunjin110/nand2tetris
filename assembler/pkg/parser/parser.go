@@ -1,6 +1,8 @@
 package parser
 
-import "strings"
+import (
+	"strings"
+)
 
 // HasMoreCommonds 入力にまだコマンドが存在するか?
 // func HasMoreCommonds() bool
@@ -57,9 +59,49 @@ func GetSymbol(line string, commandType CommandType) string {
 	}
 
 	if commandType == ACommand {
+		// @symbol -> symbol
 		return line[1:]
 	}
 
 	// 前と後ろを削除する
+	// (symbol) -> symbol
 	return line[1 : len(line)-1]
+}
+
+// GetCMemonic C命令のニーモニックを
+// dest, comp, jumpで分割して返す
+// dest=comp;jump
+func GetCMemonic(line string, commandType CommandType) (string, string, string) {
+
+	if commandType != CCommand {
+		panic("C命令以外は想定していません")
+	}
+
+	eqlIndex := strings.Index(line, "=")
+	semicolonIndex := strings.Index(line, ";")
+
+	// dest
+	var dest string
+	if eqlIndex > 0 {
+		dest = line[:eqlIndex]
+	}
+
+	// jump
+	var jump string
+	if semicolonIndex != -1 {
+		jump = line[semicolonIndex+1:]
+	}
+
+	// comp
+	compPreIndex := 0
+	compSufIndex := len(line)
+	if eqlIndex > 0 {
+		compPreIndex = eqlIndex + 1
+	}
+	if semicolonIndex > 0 {
+		compSufIndex = semicolonIndex
+	}
+	comp := line[compPreIndex:compSufIndex]
+
+	return dest, comp, jump
 }
