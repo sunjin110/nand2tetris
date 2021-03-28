@@ -31,12 +31,15 @@ func GetCommandType(line string) CommandType {
 		return NoneCommand
 	}
 
+	// 無駄な空白を取る
+	command := strings.TrimSpace(line)
+
 	// @で始まる命令は、A命令
-	if strings.HasPrefix(line, "@") {
+	if strings.HasPrefix(command, "@") {
 		return ACommand
 	}
 
-	if strings.HasPrefix(line, "(") && strings.HasSuffix(line, ")") {
+	if strings.HasPrefix(command, "(") && strings.HasSuffix(command, ")") {
 		return LCommand
 	}
 
@@ -84,6 +87,7 @@ func GetCMemonic(line string, commandType CommandType) (string, string, string) 
 	var jump string
 	if semicolonIndex != -1 {
 		jump = line[semicolonIndex+1:]
+		jump = jump[:3]
 	}
 
 	// comp
@@ -97,5 +101,5 @@ func GetCMemonic(line string, commandType CommandType) (string, string, string) 
 	}
 	comp := line[compPreIndex:compSufIndex]
 
-	return dest, comp, jump
+	return strings.TrimSpace(dest), strings.TrimSpace(comp), strings.TrimSpace(jump)
 }

@@ -76,6 +76,7 @@ func main() {
 		// A命令のとき
 		switch commandType {
 		case parser.ACommand:
+
 			symbol := parser.GetSymbol(line, commandType)
 
 			i, err := common.StrToUint(symbol)
@@ -99,13 +100,7 @@ func main() {
 			}
 
 		case parser.CCommand:
-			dest, comp, jump := parser.GetCMemonic(line, commandType)
-
-			destBinary := code.ConvDest(dest)
-			compBinary := code.ConvComp(comp)
-			jumpBinary := code.ConvJump(jump)
-
-			outLine = fmt.Sprintf("111%07b%03b%03b\n", compBinary, destBinary, jumpBinary)
+			outLine = getCBinary(line, commandType)
 		case parser.LCommand:
 			// LCommandのときは何もしない
 			continue
@@ -122,4 +117,21 @@ func main() {
 
 	}
 
+}
+
+// getCBinary C命令のbinaryを取得する
+func getCBinary(line string, commandType parser.CommandType) string {
+
+	dest, comp, jump := parser.GetCMemonic(line, commandType)
+
+	// fmt.Println("jum is ", jump)
+	fmt.Printf("dest=[%s]\n", dest)
+	fmt.Printf("comp=[%s]\n", comp)
+	fmt.Printf("jump=[%s]\n", jump)
+
+	destBinary := code.ConvDest(dest)
+	compBinary := code.ConvComp(comp)
+	jumpBinary := code.ConvJump(jump)
+
+	return fmt.Sprintf("111%07b%03b%03b\n", compBinary, destBinary, jumpBinary)
 }
