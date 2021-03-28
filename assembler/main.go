@@ -95,6 +95,7 @@ func main() {
 					var canUseAddress int
 					canUseAddress, addressCounter = symboltable.GetCanUseAddressAndCounter(isUseAddressMap, addressCounter)
 					isUseAddressMap[canUseAddress] = true
+					symbolTableMap[symbol] = canUseAddress
 					outLine = fmt.Sprintf("0%015b\n", canUseAddress)
 				}
 
