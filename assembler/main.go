@@ -81,7 +81,6 @@ func main() {
 			} else {
 
 				address, exists := symbolTableMap[symbol]
-
 				if exists {
 					// もし存在する場合は、adressをそれに追加する
 					outLine = fmt.Sprintf("0%015b\n", address)
@@ -93,7 +92,6 @@ func main() {
 					symbolTableMap[symbol] = canUseAddress
 					outLine = fmt.Sprintf("0%015b\n", canUseAddress)
 				}
-
 			}
 
 		case parser.CCommand:
