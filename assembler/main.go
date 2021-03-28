@@ -3,6 +3,7 @@ package main
 import (
 	"assembler/pkg/code"
 	"assembler/pkg/common"
+	"assembler/pkg/common/jsonutil"
 	"assembler/pkg/parser"
 	"assembler/pkg/symboltable"
 	"bufio"
@@ -54,7 +55,7 @@ func main() {
 
 	scanner := bufio.NewScanner(fp)
 	var lineCounter int
-	addressCounter := 0
+	addressCounter := 16
 	for scanner.Scan() {
 
 		line := scanner.Text()
@@ -67,10 +68,13 @@ func main() {
 		}
 
 		// debug
-		fmt.Println(lineCounter, "行目")
+		if lineCounter < 8850 {
+			// fmt.Println(lineCounter, "行目")
+			// fmt.Println("line is ", line)
+		}
+
 		lineCounter++
 		// debug
-		fmt.Println("line is ", line)
 
 		var outLine string
 		// A命令のとき
@@ -80,13 +84,23 @@ func main() {
 			symbol := parser.GetSymbol(line, commandType)
 
 			i, err := common.StrToUint(symbol)
-			fmt.Printf("symbol=[%s]\n", symbol)
+
+			if lineCounter < 8850 {
+				// fmt.Printf("symbol=[%s]\n", symbol)
+			}
+
 			if err == nil {
+
 				// 数字の場合
 				outLine = fmt.Sprintf("0%015b\n", i)
 			} else {
 
 				address, exists := symbolTableMap[symbol]
+
+				if symbol == "ponggame.0" {
+					fmt.Println("ponggame.0")
+				}
+
 				if exists {
 					// もし存在する場合は、adressをそれに追加する
 					outLine = fmt.Sprintf("0%015b\n", address)
@@ -97,6 +111,11 @@ func main() {
 					isUseAddressMap[canUseAddress] = true
 					symbolTableMap[symbol] = canUseAddress
 					outLine = fmt.Sprintf("0%015b\n", canUseAddress)
+
+					if symbol == "ponggame.0" && !exists {
+						log.Println("address is ", canUseAddress)
+						jsonutil.Print(symbolTableMap)
+					}
 				}
 
 			}
