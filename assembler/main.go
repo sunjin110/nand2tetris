@@ -1,6 +1,7 @@
 package main
 
 import (
+	"assembler/pkg/parser"
 	"bufio"
 	"flag"
 	"fmt"
@@ -30,7 +31,15 @@ func main() {
 
 	scanner := bufio.NewScanner(fp)
 	for scanner.Scan() {
-		fmt.Println(scanner.Text())
+		line := scanner.Text()
+
+		// コマンドのタイプを判別する
+		commandType := parser.GetCommandType(line)
+		if commandType == parser.NoneCommand {
+			// NoneCommandの場合は何もしない
+			continue
+		}
+
 	}
 
 }
