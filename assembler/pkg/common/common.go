@@ -13,8 +13,9 @@ func Uint2bytes(i uint64, size int) []byte {
 	return bytes[8-size : 8]
 }
 
+// StrToUint 10進数の文字列を数字に治す
 func StrToUint(str string) uint {
-	i, _ := strconv.ParseUint(str, 8, 0)
+	i, _ := strconv.ParseUint(str, 10, 0)
 	return uint(i)
 }
 

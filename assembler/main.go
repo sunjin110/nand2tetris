@@ -42,7 +42,9 @@ func main() {
 	defer hackFile.Close()
 
 	scanner := bufio.NewScanner(fp)
+	var lineCounter int
 	for scanner.Scan() {
+
 		line := scanner.Text()
 
 		// コマンドのタイプを判別する
@@ -51,6 +53,12 @@ func main() {
 			// NoneCommandの場合は何もしない
 			continue
 		}
+
+		// debug
+		fmt.Println(lineCounter, "行目")
+		lineCounter++
+		// debug
+		fmt.Println("line is ", line)
 
 		var outLine string
 		// A命令のとき || L命令のとき
@@ -61,6 +69,7 @@ func main() {
 			// 数字の場合
 			i := common.StrToUint(symbol)
 			outLine = fmt.Sprintf("0%015b\n", i)
+			fmt.Println("outline is ", outLine, " num is ", i)
 
 		case parser.CCommand:
 			dest, comp, jump := parser.GetCMemonic(line, commandType)

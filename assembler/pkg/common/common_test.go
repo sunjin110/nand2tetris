@@ -1,9 +1,7 @@
 package common_test
 
 import (
-	"assembler/pkg/common"
 	"fmt"
-	"log"
 	"strconv"
 	"testing"
 
@@ -55,13 +53,14 @@ func Test(t *testing.T) {
 			// parseUint("1000000")
 			// parseUint("0010101")
 			// parseUint("1010101")
+			parseUint("0000000000001000")
 
 		})
 
 		g.It("StrToUint", func() {
 
-			result := common.StrToUint("111")
-			log.Println("result is ", result)
+			// result := common.StrToUint("111")
+			// log.Println("result is ", result)
 
 		})
 	})
