@@ -104,6 +104,26 @@ func GetCanUseAddressAndCounter(isUseAddressMap map[int]bool, addressCounter int
 
 }
 
+// // GetCanUseAddressAndCounter 使用できるAddressを探索する、
+// // ２つ目の引数に、スキップしたカウンタを取得する
+// func GetCanUseAddressAndCounter(isUseAddressMap map[int]bool, addressCounter int) (int, int) {
+
+// 	for {
+
+// 		if !isUseAddressMap[addressCounter] {
+// 			// 使用していないアドレスを見つけた場合、
+// 			// そのアドレスを使用済みにして、返す
+// 			// カウンタも1プラスする
+// 			// isUseAddressMap[addressCounter] = true
+// 			return addressCounter, addressCounter + 1
+// 		}
+
+// 		// そのアドレスが使用されている場合、カウンタを1プラスして次に備える
+// 		addressCounter++
+// 	}
+
+// }
+
 // // AddEntry テーブルにkey:symbol, value:addressのペアを追加する
 // func AddEntry(symbolTableMap SymbolTableMap, symbol string, address int) SymbolTableMap {
 // 	symbolTableMap[symbol] = address

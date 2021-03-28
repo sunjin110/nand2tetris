@@ -3,7 +3,6 @@ package main
 import (
 	"assembler/pkg/code"
 	"assembler/pkg/common"
-	"assembler/pkg/common/jsonutil"
 	"assembler/pkg/parser"
 	"assembler/pkg/symboltable"
 	"bufio"
@@ -54,8 +53,7 @@ func main() {
 	defer hackFile.Close()
 
 	scanner := bufio.NewScanner(fp)
-	var lineCounter int
-	addressCounter := 16
+	addressCounter := 16 // 未定義のcounterからスタート(0からでも正常に動く)
 	for scanner.Scan() {
 
 		line := scanner.Text()
@@ -67,15 +65,6 @@ func main() {
 			continue
 		}
 
-		// debug
-		if lineCounter < 8850 {
-			// fmt.Println(lineCounter, "行目")
-			// fmt.Println("line is ", line)
-		}
-
-		lineCounter++
-		// debug
-
 		var outLine string
 		// A命令のとき
 		switch commandType {
@@ -85,10 +74,6 @@ func main() {
 
 			i, err := common.StrToUint(symbol)
 
-			if lineCounter < 8850 {
-				// fmt.Printf("symbol=[%s]\n", symbol)
-			}
-
 			if err == nil {
 
 				// 数字の場合
@@ -96,10 +81,6 @@ func main() {
 			} else {
 
 				address, exists := symbolTableMap[symbol]
-
-				if symbol == "ponggame.0" {
-					fmt.Println("ponggame.0")
-				}
 
 				if exists {
 					// もし存在する場合は、adressをそれに追加する
@@ -111,11 +92,6 @@ func main() {
 					isUseAddressMap[canUseAddress] = true
 					symbolTableMap[symbol] = canUseAddress
 					outLine = fmt.Sprintf("0%015b\n", canUseAddress)
-
-					if symbol == "ponggame.0" && !exists {
-						log.Println("address is ", canUseAddress)
-						jsonutil.Print(symbolTableMap)
-					}
 				}
 
 			}
@@ -144,11 +120,6 @@ func main() {
 func getCBinary(line string, commandType parser.CommandType) string {
 
 	dest, comp, jump := parser.GetCMemonic(line, commandType)
-
-	// fmt.Println("jum is ", jump)
-	// fmt.Printf("dest=[%s]\n", dest)
-	// fmt.Printf("comp=[%s]\n", comp)
-	// fmt.Printf("jump=[%s]\n", jump)
 
 	destBinary := code.ConvDest(dest)
 	compBinary := code.ConvComp(comp)
