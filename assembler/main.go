@@ -80,6 +80,7 @@ func main() {
 			symbol := parser.GetSymbol(line, commandType)
 
 			i, err := common.StrToUint(symbol)
+			fmt.Printf("symbol=[%s]\n", symbol)
 			if err == nil {
 				// 数字の場合
 				outLine = fmt.Sprintf("0%015b\n", i)
@@ -125,9 +126,9 @@ func getCBinary(line string, commandType parser.CommandType) string {
 	dest, comp, jump := parser.GetCMemonic(line, commandType)
 
 	// fmt.Println("jum is ", jump)
-	fmt.Printf("dest=[%s]\n", dest)
-	fmt.Printf("comp=[%s]\n", comp)
-	fmt.Printf("jump=[%s]\n", jump)
+	// fmt.Printf("dest=[%s]\n", dest)
+	// fmt.Printf("comp=[%s]\n", comp)
+	// fmt.Printf("jump=[%s]\n", jump)
 
 	destBinary := code.ConvDest(dest)
 	compBinary := code.ConvComp(comp)

@@ -32,7 +32,8 @@ func GetCommandType(line string) CommandType {
 	}
 
 	// 無駄な空白を取る
-	command := strings.TrimSpace(line)
+	// command := strings.TrimSpace(line)
+	command := trimeLine(line)
 
 	// @で始まる命令は、A命令
 	if strings.HasPrefix(command, "@") {
@@ -55,14 +56,16 @@ func GetSymbol(line string, commandType CommandType) string {
 		panic("想定されないコマンドが渡されました")
 	}
 
+	command := trimeLine(line)
+
 	if commandType == ACommand {
 		// @symbol -> symbol
-		return line[1:]
+		return command[1:]
 	}
 
 	// 前と後ろを削除する
 	// (symbol) -> symbol
-	return line[1 : len(line)-1]
+	return command[1 : len(command)-1]
 }
 
 // GetCMemonic C命令のニーモニックを
@@ -74,32 +77,40 @@ func GetCMemonic(line string, commandType CommandType) (string, string, string) 
 		panic("C命令以外は想定していません")
 	}
 
-	eqlIndex := strings.Index(line, "=")
-	semicolonIndex := strings.Index(line, ";")
+	// 無駄な空白とかを削除する
+	command := trimeLine(line)
+
+	eqlIndex := strings.Index(command, "=")
+	semicolonIndex := strings.Index(command, ";")
 
 	// dest
 	var dest string
 	if eqlIndex > 0 {
-		dest = line[:eqlIndex]
+		dest = command[:eqlIndex]
 	}
 
 	// jump
 	var jump string
 	if semicolonIndex != -1 {
-		jump = line[semicolonIndex+1:]
+		jump = command[semicolonIndex+1:]
 		jump = jump[:3]
 	}
 
 	// comp
 	compPreIndex := 0
-	compSufIndex := len(line)
+	compSufIndex := len(command)
 	if eqlIndex > 0 {
 		compPreIndex = eqlIndex + 1
 	}
 	if semicolonIndex > 0 {
 		compSufIndex = semicolonIndex
 	}
-	comp := line[compPreIndex:compSufIndex]
+	comp := command[compPreIndex:compSufIndex]
 
 	return strings.TrimSpace(dest), strings.TrimSpace(comp), strings.TrimSpace(jump)
+}
+
+// 不要な空白や、コメントを削除する
+func trimeLine(line string) string {
+	return strings.TrimSpace(strings.Split(line, "//")[0])
 }
