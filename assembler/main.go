@@ -40,6 +40,12 @@ func main() {
 			continue
 		}
 
+		// A命令のとき || L命令のとき
+		// switch commandType {
+		// case parser.ACommand, parser.LCommand:
+		// 	symbol :=
+		// }
+
 	}
 
 }
