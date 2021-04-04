@@ -85,5 +85,20 @@ const (
 	MemorySegmentLocal = "local"
 
 	// MemorySegmentStatic スタティック変数を格納する、スタティック変数は、同じ.vmファイルの全ての関数で共有される
+	MemorySegmentStatic = "static"
 
+	// MemorySegmentConstant 0から32767までの範囲を全ての定数値を持つ擬似セグメント
+	MemorySegmentConstant = "constant"
+
+	// MemorySegmentThis 汎用セグメント: TODO
+	MemorySegmentThis = "this"
+
+	// MemorySegmentThat 汎用セグメント: TODO
+	MemorySegmentThat = "that"
+
+	// MemorySegmentPointer thisとthatセグメントのベースアドレス(参照)を持つ2つの要素からなるセグメント
+	MemorySegmentPointer = "pointer"
+
+	// MemorySegmentTemp 固定された8つの要素からなるセグメント。一時的な変数を格納するために用いる
+	MemorySegmentTemp = "temp"
 )
