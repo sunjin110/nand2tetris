@@ -1,6 +1,9 @@
 package codewriter
 
-import "os"
+import (
+	"os"
+	"vm-translator/pkg/model"
+)
 
 // CodeWriter .
 type CodeWriter struct {
@@ -31,7 +34,7 @@ func (c *CodeWriter) WriteArithmetic(command string) {
 }
 
 // WritePushPop C_PUSH, C_POPコマンドをアセンブリコードに変換し、それを書き込む
-func (c *CodeWriter) WritePushPop(command string) {
+func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string, index int) {
 	// TODO
 }
 

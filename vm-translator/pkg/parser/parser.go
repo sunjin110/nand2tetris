@@ -37,11 +37,6 @@ func New(filePath string) (*Parser, error) {
 	}, nil
 }
 
-// HasMoreCommands 次の行が存在するか?
-// func (p *Parser) HasMoreCommands() bool {
-// 	return false
-// }
-
 // Next 次の行に進む
 // 戻りの値がfalseの場合は、何も存在しないということ
 func (p *Parser) Next() bool {
