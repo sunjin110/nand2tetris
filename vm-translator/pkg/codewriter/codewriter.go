@@ -2,6 +2,7 @@ package codewriter
 
 import (
 	"os"
+	"vm-translator/pkg/common/chk"
 	"vm-translator/pkg/model"
 )
 
@@ -41,4 +42,10 @@ func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string,
 // Close .
 func (c *CodeWriter) Close() {
 	c.file.Close()
+}
+
+// 実際にfileに書き込む
+func write(file *os.File, outLine string) {
+	_, err := file.WriteString(outLine)
+	chk.SE(err)
 }
