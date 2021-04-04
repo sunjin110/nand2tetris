@@ -1,6 +1,7 @@
 package codewriter
 
 import (
+	"errors"
 	"os"
 	"vm-translator/pkg/common/chk"
 	"vm-translator/pkg/model"
@@ -36,6 +37,24 @@ func (c *CodeWriter) WriteArithmetic(command string) {
 
 // WritePushPop C_PUSH, C_POPコマンドをアセンブリコードに変換し、それを書き込む
 func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string, index int) {
+
+	switch commandType {
+	case model.CommandTypePush:
+
+		switch segment {
+		case model.MemorySegmentConstant:
+
+			// write(c.file, )
+
+		default:
+			chk.SE(errors.New("未実装"))
+		}
+
+	case model.CommandTypePop:
+	default:
+		chk.SE(errors.New("対応していません"))
+	}
+
 	// TODO
 }
 
