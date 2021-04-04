@@ -10,7 +10,7 @@ type CodeWriter struct {
 
 // New .
 func New(filePath string) (*CodeWriter, error) {
-	fp, err := os.Open(filePath)
+	fp, err := os.Create(filePath)
 	if err != nil {
 		return nil, err
 	}

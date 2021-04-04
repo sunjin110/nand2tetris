@@ -2,7 +2,11 @@ package parser
 
 import (
 	"bufio"
+	"errors"
 	"os"
+	"strconv"
+	"strings"
+	"vm-translator/pkg/common/chk"
 	"vm-translator/pkg/model"
 )
 
@@ -39,19 +43,24 @@ func New(filePath string) (*Parser, error) {
 // }
 
 // Next 次の行に進む
-// HasMoreCommandsがtrueの場合のみ呼ばれる想定
+// 戻りの値がfalseの場合は、何も存在しないということ
 func (p *Parser) Next() bool {
-	// TODO 次のCommandを取得する
 
 	// スキャンする、もし何もなければfalseを返す
 	if !p.scanner.Scan() {
 		return false
 	}
 
-	// TODO 空白とか取り除く
-	p.Command = p.scanner.Text()
+	command := trimeLine(p.scanner.Text())
+	if command == "" {
+		// もし空白の場合は次
+		return p.Next()
+	}
 
-	// TODO CommandTypeも判別しておく
+	p.Command = command
+
+	// CommandTypeを判別
+	p.CommandType = getCommandType(command)
 
 	return true
 }
@@ -59,11 +68,17 @@ func (p *Parser) Next() bool {
 // Arg1 1つ目の引数を取得する
 func (p *Parser) Arg1() string {
 
-	// C_ARTHMETICの場合, add, subなどが返される
-
 	// C_RETURNの場合は、呼ばれないようにする
+	if p.CommandType == model.CommandTypeReturn {
+		chk.SE(errors.New("returnでこのmethodを使うのは想定していない"))
+	}
 
-	return "TODO"
+	// 算術の場合は、コマンド自体を返す
+	if p.CommandType == model.CommandTypeArithmetic {
+		return strings.Split(p.Command, " ")[0]
+	}
+
+	return strings.Split(p.Command, " ")[1]
 }
 
 // Arg2 2つ目の引数を取得する
@@ -71,10 +86,43 @@ func (p *Parser) Arg2() int {
 
 	// C_PUSH, C_POP, C_FUNCTION, C_CALLの場合のみ呼ぶ
 
+	if p.CommandType == model.CommandTypePush ||
+		p.CommandType == model.CommandTypePop ||
+		p.CommandType == model.CommandTypeCall {
+		seg := strings.Split(p.Command, " ")[2]
+		i, err := strconv.Atoi(seg)
+		if err != nil {
+			panic(err)
+		}
+		return i
+	}
+
+	chk.SE(errors.New("対象のCommandTypeは対応していない"))
 	return 0
 }
 
 // Close fileをcloseする
 func (p *Parser) Close() {
 	p.file.Close()
+}
+
+// 不要な空白や、コメントを削除する
+func trimeLine(line string) string {
+	return strings.TrimSpace(strings.Split(line, "//")[0])
+}
+
+// コマンドタイプを判別する
+func getCommandType(command string) model.CommandType {
+
+	if command == "" {
+		panic("コマンドが空です")
+	}
+
+	cmd := strings.Split(command, " ")[0]
+
+	commandType, exists := model.Arg1CommandTypeMap[cmd]
+	if !exists {
+		chk.SE(errors.New("定義されていないコマンドがきました"))
+	}
+	return commandType
 }
