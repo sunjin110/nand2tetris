@@ -13,15 +13,21 @@
 // @SP
 // A=D
 
+// SPの値をglobal stackのポジションのする
+@256
+D=A
+@SP
+M=D
+
 // TODO 256にデータ1を追加する
 @1 // 1はpush conatant 1の定数
 D=A
-@256
+@SP
 M=D
 // TODO SPの値を1プラスする
 
 @2
 D=A
-@257
+@SP
 M=D
 
