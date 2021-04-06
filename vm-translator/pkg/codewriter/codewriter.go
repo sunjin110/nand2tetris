@@ -2,6 +2,7 @@ package codewriter
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"vm-translator/pkg/common/chk"
 	"vm-translator/pkg/model"
@@ -45,6 +46,21 @@ func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string,
 		case model.MemorySegmentConstant:
 
 			// write(c.file, )
+
+			// @1 // 1はpush conatant 1の定数
+			// D=A
+			// @256(SP)
+			// M=D
+			// TODO SPの値を+1する
+
+			asm := fmt.Sprintf(`
+			@%d
+			D=A
+			@SP
+			M=D
+			// TODO SPの値を+1する
+			`, index)
+			write(c.file, asm)
 
 		default:
 			chk.SE(errors.New("未実装"))
