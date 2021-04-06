@@ -23,11 +23,11 @@ M=D
 @1 // 1はpush conatant 1の定数
 D=A
 @SP
-M=D
+AM=D
 // TODO SPの値を1プラスする
 
-@2
-D=A
-@SP
-M=D
+// @2
+// D=A
+// @SP
+// M=D
 
