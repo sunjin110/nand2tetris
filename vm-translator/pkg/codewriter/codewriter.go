@@ -23,6 +23,12 @@ const (
 	pushConstant = "@%d\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
 	pushLocal    = "@%d\nD=A\n@LCL\nM=D+M\nA=M\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@%d\nD=A\n@LCL\nM=M-D\n"
 	popLocal     = "@%d\nD=A\n@LCL\nM=D+M\n@SP\nM=M-1\nA=M\nD=M\n@LCL\nA=M\nM=D\n@%d\nD=A\n@LCL\nM=M-D\n"
+	pushArg      = "@%d\nD=A\n@ARG\nM=D+M\nA=M\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@%d\nD=A\n@ARG\nM=M-D\n"
+	popArg       = "@%d\nD=A\n@ARG\nM=D+M\n@SP\nM=M-1\nA=M\nD=M\n@ARG\nA=M\nM=D\n@%d\nD=A\n@ARG\nM=M-D\n"
+	pushThis     = "@%d\nD=A\n@THIS\nM=D+M\nA=M\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@%d\nD=A\n@THIS\nM=M-D\n"
+	popThis      = "@%d\nD=A\n@THIS\nM=D+M\n@SP\nM=M-1\nA=M\nD=M\n@THIS\nA=M\nM=D\n@%d\nD=A\n@THIS\nM=M-D\n"
+	pushThat     = "@%d\nD=A\n@THAT\nM=D+M\nA=M\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@%d\nD=A\n@THAT\nM=M-D\n"
+	popThat      = "@%d\nD=A\n@THAT\nM=D+M\n@SP\nM=M-1\nA=M\nD=M\n@THAT\nA=M\nM=D\n@%d\nD=A\n@THAT\nM=M-D\n"
 )
 
 // CodeWriter .
@@ -85,12 +91,12 @@ func (c *CodeWriter) WriteArithmetic(command string) {
 // WritePushPop C_PUSH, C_POPコマンドをアセンブリコードに変換し、それを書き込む
 func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string, index int) {
 
+	var asm string
 	switch segment {
 	case model.MemorySegmentConstant: // constant
 		switch commandType {
 		case model.CommandTypePush:
-			asm := fmt.Sprintf(pushConstant, index)
-			write(c.file, asm)
+			asm = fmt.Sprintf(pushConstant, index)
 		case model.CommandTypePop:
 			chk.SE(errors.New("constantはpopできません"))
 		}
@@ -98,18 +104,33 @@ func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string,
 	case model.MemorySegmentLocal: // local
 		switch commandType {
 		case model.CommandTypePush:
-			asm := fmt.Sprintf(pushLocal, index, index)
-			write(c.file, asm)
+			asm = fmt.Sprintf(pushLocal, index, index)
 		case model.CommandTypePop:
-			asm := fmt.Sprintf(popLocal, index, index)
-			write(c.file, asm)
+			asm = fmt.Sprintf(popLocal, index, index)
 		}
 
 	case model.MemorySegmentArgument: // argument
-
+		switch commandType {
+		case model.CommandTypePush:
+			asm = fmt.Sprintf(pushArg, index, index)
+		case model.CommandTypePop:
+			asm = fmt.Sprintf(popArg, index, index)
+		}
 	case model.MemorySegmentThis: // this
+		switch commandType {
+		case model.CommandTypePush:
+			asm = fmt.Sprintf(pushThis, index, index)
+		case model.CommandTypePop:
+			asm = fmt.Sprintf(popThis, index, index)
+		}
 
 	case model.MemorySegmentThat: // that
+		switch commandType {
+		case model.CommandTypePush:
+			asm = fmt.Sprintf(pushThat, index, index)
+		case model.CommandTypePop:
+			asm = fmt.Sprintf(popThat, index, index)
+		}
 
 	case model.MemorySegmentPointer: // pointer
 
@@ -120,6 +141,12 @@ func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string,
 	default:
 		chk.SE(errors.New("想定していないsegmentが渡されました"))
 	}
+
+	if asm == "" {
+		chk.SE(errors.New("PushPopに失敗しました"))
+	}
+
+	write(c.file, asm)
 
 	// switch commandType {
 	// case model.CommandTypePush:
