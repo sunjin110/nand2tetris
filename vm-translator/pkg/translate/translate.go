@@ -26,6 +26,10 @@ func Translate(outputFileName string, pathList []string) {
 	for i, path := range pathList {
 		parser, err := parser.New(path)
 		codeWriter.SetVmFileName(fmt.Sprintf("%d", i))
+		// /を_に変換しています、file名に「_」が入らない前提で実装!!!
+		// file名に「_」が含まれている場合区別がつかなくなってしまう可能性がある
+		// その場合はおとなしくiをuniqueなものとして使う
+		// codeWriter.SetVmFileName(strings.ReplaceAll(path, "/", "_"))
 		chk.SE(err)
 
 		// 解析をしていく
