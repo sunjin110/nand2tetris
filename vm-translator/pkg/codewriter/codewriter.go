@@ -10,6 +10,9 @@ import (
 
 const (
 	add = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nM=D+M\n@SP\nM=M-1\n"
+	sub = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nM=M-D\n@SP\nM=M-1\n"
+	neg = "@SP\nA=M-1\nM=-M\n"
+	eq  = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nD=D-M\nM=-1\n@EQ_%s_%d\nD;JEQ\n@SP\nA=M-1\nA=A-1\nM=0\n(EQ_%s_%d)\n\n@SP\nM=M-1\n"
 
 	pushConstant = "@%d\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
 )
@@ -18,6 +21,7 @@ const (
 type CodeWriter struct {
 	file       *os.File
 	VmFileName string // どのVMファイルを変換中か
+	LabelCount int32  // ラベルをアトミックにするためのカウント
 }
 
 // New .
@@ -43,6 +47,16 @@ func (c *CodeWriter) WriteArithmetic(command string) {
 	switch command {
 	case "add":
 		asm := add
+		write(c.file, asm)
+	case "sub":
+		asm := sub
+		write(c.file, asm)
+	case "neg":
+		asm := neg
+		write(c.file, asm)
+	case "eq":
+		asm := fmt.Sprintf(eq, c.VmFileName, c.LabelCount, c.VmFileName, c.LabelCount)
+		c.LabelCount += 1
 		write(c.file, asm)
 	default:
 		chk.SE(errors.New("未実装"))

@@ -23,8 +23,9 @@ func Translate(outputFileName string, pathList []string) {
 	}()
 
 	// コードをparseしていく
-	for _, path := range pathList {
+	for i, path := range pathList {
 		parser, err := parser.New(path)
+		codeWriter.SetVmFileName(fmt.Sprintf("%d", i))
 		chk.SE(err)
 
 		// 解析をしていく
