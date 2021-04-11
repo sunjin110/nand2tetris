@@ -10,10 +10,6 @@ D=A
 @LCL
 M=D
 
-// とりあえずこれを再現する
-// push constant 10
-// pop local 0
-
 // push constant 10
 @3
 D=A
@@ -64,23 +60,5 @@ M=M+1
 @5
 D=A
 
-@LCL
-M=M-D
-
-
-===
-@5
-D=A
-@LCL
-M=D+M
-A=M
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1
-@5
-D=A
 @LCL
 M=M-D
