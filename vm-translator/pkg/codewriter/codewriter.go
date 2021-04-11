@@ -14,7 +14,7 @@ const (
 	neg = "@SP\nA=M-1\nM=-M\n"
 	eq  = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nD=D-M\nM=-1\n@EQ_%s_%d\nD;JEQ\n@SP\nA=M-1\nA=A-1\nM=0\n(EQ_%s_%d)\n@SP\nM=M-1\n"
 	gt  = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nD=M-D\nM=-1\n@GT_%s_%d\nD;JGT\n@SP\nA=M-1\nA=A-1\nM=0\n(GT_%s_%d)\n@SP\nM=M-1\n"
-	lt  = ""
+	lt  = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nD=M-D\nM=-1\n@LT_%s_%d\nD;JLT\n@SP\nA=M-1\nA=A-1\nM=0\n(LT_%s_%d)\n@SP\nM=M-1\n"
 	and = ""
 	or  = ""
 	not = ""
@@ -62,6 +62,14 @@ func (c *CodeWriter) WriteArithmetic(command string) {
 	case "eq":
 		asm := fmt.Sprintf(eq, c.VmFileName, c.LabelCount, c.VmFileName, c.LabelCount)
 		c.LabelCount += 1
+		write(c.file, asm)
+	case "gt":
+		c.LabelCount += 1
+		asm := fmt.Sprintf(gt, c.VmFileName, c.LabelCount, c.VmFileName, c.LabelCount)
+		write(c.file, asm)
+	case "lt":
+		c.LabelCount += 1
+		asm := fmt.Sprintf(lt, c.VmFileName, c.LabelCount, c.VmFileName, c.LabelCount)
 		write(c.file, asm)
 	default:
 		chk.SE(errors.New("未実装"))
