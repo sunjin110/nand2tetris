@@ -33,6 +33,24 @@ func (c *CodeWriter) SetVmFileName(fileName string) {
 
 // WriteArithmetic 与えられた算術コマンドをアセンブリコードに変換して、それを書き込む
 func (c *CodeWriter) WriteArithmetic(command string) {
+
+	switch command {
+	case "add":
+		asm := fmt.Sprintf(`
+@SP
+A=M-1
+D=M
+M=0
+A=A-1
+M=D+M
+@SP
+M=M-1
+`)
+		write(c.file, asm)
+	default:
+		chk.SE(errors.New("未実装"))
+	}
+
 	// TODO
 }
 
@@ -45,21 +63,16 @@ func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string,
 		switch segment {
 		case model.MemorySegmentConstant:
 
-			// write(c.file, )
-
-			// @1 // 1はpush conatant 1の定数
-			// D=A
-			// @256(SP)
-			// M=D
-			// TODO SPの値を+1する
-
+			// push constant %d
 			asm := fmt.Sprintf(`
-			@%d
-			D=A
-			@SP
-			M=D
-			// TODO SPの値を+1する
-			`, index)
+@%d
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+`, index)
 			write(c.file, asm)
 
 		default:
