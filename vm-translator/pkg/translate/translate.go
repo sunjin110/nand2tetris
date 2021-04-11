@@ -30,8 +30,6 @@ func Translate(outputFileName string, pathList []string) {
 
 		// 解析をしていく
 		for parser.Next() {
-			fmt.Println("command is ", parser.Command)
-
 			switch parser.CommandType {
 			case model.CommandTypeArithmetic:
 				codeWriter.WriteArithmetic(parser.Command)
