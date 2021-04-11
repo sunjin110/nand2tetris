@@ -8,6 +8,12 @@ import (
 	"vm-translator/pkg/model"
 )
 
+const (
+	add = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nM=D+M\n@SP\nM=M-1\n"
+
+	pushConstant = "@%d\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
+)
+
 // CodeWriter .
 type CodeWriter struct {
 	file       *os.File
@@ -36,16 +42,7 @@ func (c *CodeWriter) WriteArithmetic(command string) {
 
 	switch command {
 	case "add":
-		asm := fmt.Sprintf(`
-@SP
-A=M-1
-D=M
-M=0
-A=A-1
-M=D+M
-@SP
-M=M-1
-`)
+		asm := add
 		write(c.file, asm)
 	default:
 		chk.SE(errors.New("未実装"))
@@ -64,15 +61,7 @@ func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string,
 		case model.MemorySegmentConstant:
 
 			// push constant %d
-			asm := fmt.Sprintf(`
-@%d
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1
-`, index)
+			asm := fmt.Sprintf(pushConstant, index)
 			write(c.file, asm)
 
 		default:
