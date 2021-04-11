@@ -34,6 +34,9 @@ const (
 	popPointer  = "@SP\nM=M-1\nA=M\nD=M\n@%s\nM=D\n"      // index:0 => THIS, index:1 = THAT
 	pushTemp    = "@%d\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n" // %d = 5 + index
 	popTemp     = "@SP\nM=M-1\nA=M\nD=M\n@%d\nM=D\n"      // %d = 5 + index
+
+	pushStatic = "@Static_%s_%d\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
+	popStatic  = "@SP\nM=M-1\nA=M\nD=M\n@Static_%s_%d\nM=D\n"
 )
 
 // CodeWriter .
@@ -164,6 +167,12 @@ func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string,
 		}
 
 	case model.MemorySegmentStatic: // static
+		switch commandType {
+		case model.CommandTypePush:
+			asm = fmt.Sprintf(pushStatic, c.VmFileName, index)
+		case model.CommandTypePop:
+			asm = fmt.Sprintf(popStatic, c.VmFileName, index)
+		}
 
 	default:
 		chk.SE(errors.New("想定していないsegmentが渡されました"))
@@ -175,52 +184,7 @@ func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string,
 
 	write(c.file, asm)
 
-	// switch commandType {
-	// case model.CommandTypePush:
-
-	// 	switch segment {
-	// 	case model.MemorySegmentConstant:
-
-	// 		// push constant %d
-	// 		asm := fmt.Sprintf(pushConstant, index)
-	// 		write(c.file, asm)
-
-	// 	default:
-	// 		chk.SE(errors.New("未実装"))
-	// 	}
-
-	// case model.CommandTypePop:
-	// default:
-	// 	chk.SE(errors.New("対応していません"))
-	// }
-
-	// TODO
 }
-
-// // WritePushPop C_PUSH, C_POPコマンドをアセンブリコードに変換し、それを書き込む
-// func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string, index int) {
-
-// 	switch commandType {
-// 	case model.CommandTypePush:
-
-// 		switch segment {
-// 		case model.MemorySegmentConstant:
-
-// 			// push constant %d
-// 			asm := fmt.Sprintf(pushConstant, index)
-// 			write(c.file, asm)
-
-// 		default:
-// 			chk.SE(errors.New("未実装"))
-// 		}
-
-// 	case model.CommandTypePop:
-// 	default:
-// 		chk.SE(errors.New("対応していません"))
-// 	}
-
-// 	// TODO
-// }
 
 // Close .
 func (c *CodeWriter) Close() {
