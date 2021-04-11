@@ -29,6 +29,11 @@ const (
 	popThis      = "@%d\nD=A\n@THIS\nM=D+M\n@SP\nM=M-1\nA=M\nD=M\n@THIS\nA=M\nM=D\n@%d\nD=A\n@THIS\nM=M-D\n"
 	pushThat     = "@%d\nD=A\n@THAT\nM=D+M\nA=M\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@%d\nD=A\n@THAT\nM=M-D\n"
 	popThat      = "@%d\nD=A\n@THAT\nM=D+M\n@SP\nM=M-1\nA=M\nD=M\n@THAT\nA=M\nM=D\n@%d\nD=A\n@THAT\nM=M-D\n"
+
+	pushPointer = "@%s\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n" // index:0 => THIS, index:1 = THAT
+	popPointer  = "@SP\nM=M-1\nA=M\nD=M\n@%s\nM=D\n"      // index:0 => THIS, index:1 = THAT
+	pushTemp    = "@%d\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n" // %d = 5 + index
+	popTemp     = "@SP\nM=M-1\nA=M\nD=M\n@%d\nM=D\n"      // %d = 5 + index
 )
 
 // CodeWriter .
@@ -134,7 +139,29 @@ func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string,
 
 	case model.MemorySegmentPointer: // pointer
 
-	case model.MemorySegmentTemp: // temp
+		var name string
+		if index == 0 {
+			name = "THIS"
+		} else if index == 1 {
+			name = "THAT"
+		} else {
+			chk.SE(errors.New("pointerは0, 1以外の参照はできません"))
+		}
+
+		switch commandType {
+		case model.CommandTypePush:
+			asm = fmt.Sprintf(pushPointer, name)
+		case model.CommandTypePop:
+			asm = fmt.Sprintf(popPointer, name)
+		}
+
+	case model.MemorySegmentTemp: // temp -> index + 5
+		switch commandType {
+		case model.CommandTypePush:
+			asm = fmt.Sprintf(pushTemp, index+5)
+		case model.CommandTypePop:
+			asm = fmt.Sprintf(popTemp, index+5)
+		}
 
 	case model.MemorySegmentStatic: // static
 
