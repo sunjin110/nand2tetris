@@ -14,20 +14,42 @@
 // A=D
 
 // SPの値をglobal stackのポジションのする
-@256
+@20
 D=A
 @SP
 M=D
 
-// TODO 256にデータ1を追加する
-@1 // 1はpush conatant 1の定数
+// push constant 7 : address: 256に7を追加する
+@7
 D=A
+
 @SP
-AM=D
-// TODO SPの値を1プラスする
+A=M
+M=D
 
-// @2
-// D=A
-// @SP
-// M=D
+// SPを+1する
+@SP
+M=M+1
 
+// push constant 8 address: 267に8を追加する
+@8
+D=A
+
+@SP
+A=M
+M=D
+
+@SP
+M=M+1
+
+// add
+@SP
+A=M-1
+D=M
+M=0
+A=A-1
+M=D+M
+
+// SPを-1にする
+@SP
+M=M-1
