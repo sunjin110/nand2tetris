@@ -9,6 +9,7 @@ import (
 )
 
 const (
+	// Airthmetic命令セット
 	add = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nM=D+M\n@SP\nM=M-1\n"
 	sub = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nM=M-D\n@SP\nM=M-1\n"
 	neg = "@SP\nA=M-1\nM=-M\n"
@@ -51,26 +52,26 @@ func (c *CodeWriter) WriteArithmetic(command string) {
 
 	var asm string
 	switch command {
-	case "add":
+	case model.ArithmeticAdd:
 		asm = add
-	case "sub":
+	case model.AirthmeticSub:
 		asm = sub
-	case "neg":
+	case model.AirthmeticNeg:
 		asm = neg
-	case "eq":
+	case model.AirthmeticEq:
 		asm = fmt.Sprintf(eq, c.VmFileName, c.LabelCount, c.VmFileName, c.LabelCount)
 		c.LabelCount += 1
-	case "gt":
+	case model.AirthmeticGt:
 		asm = fmt.Sprintf(gt, c.VmFileName, c.LabelCount, c.VmFileName, c.LabelCount)
 		c.LabelCount += 1
-	case "lt":
+	case model.AirthmeticLt:
 		asm = fmt.Sprintf(lt, c.VmFileName, c.LabelCount, c.VmFileName, c.LabelCount)
 		c.LabelCount += 1
-	case "and":
+	case model.AirthmeticAnd:
 		asm = and
-	case "or":
+	case model.AirthmeticOr:
 		asm = or
-	case "not":
+	case model.AirthmeticNot:
 		asm = not
 	default:
 		chk.SE(errors.New("想定していないArthmeticコマンドが渡されました"))
