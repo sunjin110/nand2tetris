@@ -15,9 +15,9 @@ const (
 	eq  = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nD=D-M\nM=-1\n@EQ_%s_%d\nD;JEQ\n@SP\nA=M-1\nA=A-1\nM=0\n(EQ_%s_%d)\n@SP\nM=M-1\n"
 	gt  = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nD=M-D\nM=-1\n@GT_%s_%d\nD;JGT\n@SP\nA=M-1\nA=A-1\nM=0\n(GT_%s_%d)\n@SP\nM=M-1\n"
 	lt  = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nD=M-D\nM=-1\n@LT_%s_%d\nD;JLT\n@SP\nA=M-1\nA=A-1\nM=0\n(LT_%s_%d)\n@SP\nM=M-1\n"
-	and = ""
-	or  = ""
-	not = ""
+	and = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nM=D&M\n@SP\nM=M-1\n"
+	or  = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nM=D|M\n@SP\nM=M-1\n"
+	not = "@SP\nA=M-1\nM=!M\n"
 
 	pushConstant = "@%d\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
 )
@@ -49,33 +49,34 @@ func (c *CodeWriter) SetVmFileName(fileName string) {
 // WriteArithmetic 与えられた算術コマンドをアセンブリコードに変換して、それを書き込む
 func (c *CodeWriter) WriteArithmetic(command string) {
 
+	var asm string
 	switch command {
 	case "add":
-		asm := add
-		write(c.file, asm)
+		asm = add
 	case "sub":
-		asm := sub
-		write(c.file, asm)
+		asm = sub
 	case "neg":
-		asm := neg
-		write(c.file, asm)
+		asm = neg
 	case "eq":
-		asm := fmt.Sprintf(eq, c.VmFileName, c.LabelCount, c.VmFileName, c.LabelCount)
+		asm = fmt.Sprintf(eq, c.VmFileName, c.LabelCount, c.VmFileName, c.LabelCount)
 		c.LabelCount += 1
-		write(c.file, asm)
 	case "gt":
-		asm := fmt.Sprintf(gt, c.VmFileName, c.LabelCount, c.VmFileName, c.LabelCount)
+		asm = fmt.Sprintf(gt, c.VmFileName, c.LabelCount, c.VmFileName, c.LabelCount)
 		c.LabelCount += 1
-		write(c.file, asm)
 	case "lt":
-		asm := fmt.Sprintf(lt, c.VmFileName, c.LabelCount, c.VmFileName, c.LabelCount)
+		asm = fmt.Sprintf(lt, c.VmFileName, c.LabelCount, c.VmFileName, c.LabelCount)
 		c.LabelCount += 1
-		write(c.file, asm)
+	case "and":
+		asm = and
+	case "or":
+		asm = or
+	case "not":
+		asm = not
 	default:
-		chk.SE(errors.New("未実装"))
+		chk.SE(errors.New("想定していないArthmeticコマンドが渡されました"))
 	}
 
-	// TODO
+	write(c.file, asm)
 }
 
 // WritePushPop C_PUSH, C_POPコマンドをアセンブリコードに変換し、それを書き込む
