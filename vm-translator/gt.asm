@@ -3,7 +3,7 @@ D=A
 @SP
 M=D
 
-@7
+@9
 D=A
 @SP
 A=M
@@ -24,17 +24,34 @@ A=M-1
 D=M
 M=0
 A=A-1
-D=D-M // x-y
+D=M-D // x-y
 M=-1 // 先に-1を入れる
-@EQ
-D;JEQ
+@GT
+D;JGT
 @SP
 A=M-1
 A=A-1
 M=0
-(EQ)
+(GT)
 @SP
 M=M-1
 
 
+===
 
+@SP
+A=M-1
+D=M
+M=0
+A=A-1
+D=M-D
+M=-1
+@GT_%s_%d
+D;JGT
+@SP
+A=M-1
+A=A-1
+M=0
+(GT_%s_%d)
+@SP
+M=M-1

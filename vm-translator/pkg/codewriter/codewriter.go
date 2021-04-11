@@ -12,7 +12,12 @@ const (
 	add = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nM=D+M\n@SP\nM=M-1\n"
 	sub = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nM=M-D\n@SP\nM=M-1\n"
 	neg = "@SP\nA=M-1\nM=-M\n"
-	eq  = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nD=D-M\nM=-1\n@EQ_%s_%d\nD;JEQ\n@SP\nA=M-1\nA=A-1\nM=0\n(EQ_%s_%d)\n\n@SP\nM=M-1\n"
+	eq  = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nD=D-M\nM=-1\n@EQ_%s_%d\nD;JEQ\n@SP\nA=M-1\nA=A-1\nM=0\n(EQ_%s_%d)\n@SP\nM=M-1\n"
+	gt  = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nD=M-D\nM=-1\n@GT_%s_%d\nD;JGT\n@SP\nA=M-1\nA=A-1\nM=0\n(GT_%s_%d)\n@SP\nM=M-1\n"
+	lt  = ""
+	and = ""
+	or  = ""
+	not = ""
 
 	pushConstant = "@%d\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
 )
