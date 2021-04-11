@@ -64,12 +64,12 @@ func (c *CodeWriter) WriteArithmetic(command string) {
 		c.LabelCount += 1
 		write(c.file, asm)
 	case "gt":
-		c.LabelCount += 1
 		asm := fmt.Sprintf(gt, c.VmFileName, c.LabelCount, c.VmFileName, c.LabelCount)
+		c.LabelCount += 1
 		write(c.file, asm)
 	case "lt":
-		c.LabelCount += 1
 		asm := fmt.Sprintf(lt, c.VmFileName, c.LabelCount, c.VmFileName, c.LabelCount)
+		c.LabelCount += 1
 		write(c.file, asm)
 	default:
 		chk.SE(errors.New("未実装"))
