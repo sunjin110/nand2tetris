@@ -90,10 +90,10 @@ const (
 	// MemorySegmentConstant 0から32767までの範囲を全ての定数値を持つ擬似セグメント
 	MemorySegmentConstant = "constant"
 
-	// MemorySegmentThis 汎用セグメント: TODO
+	// MemorySegmentThis 汎用セグメント
 	MemorySegmentThis = "this"
 
-	// MemorySegmentThat 汎用セグメント: TODO
+	// MemorySegmentThat 汎用セグメント
 	MemorySegmentThat = "that"
 
 	// MemorySegmentPointer thisとthatセグメントのベースアドレス(参照)を持つ2つの要素からなるセグメント
