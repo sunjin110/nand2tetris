@@ -63,6 +63,12 @@ func (c *CodeWriter) SetVmFileName(fileName string) {
 	c.VmFileName = fileName
 }
 
+// WriteInit VMの初期化、出力ファイルの先頭に配置
+func (c *CodeWriter) WriteInit() {
+
+	// TODO write...
+}
+
 // WriteArithmetic 与えられた算術コマンドをアセンブリコードに変換して、それを書き込む
 func (c *CodeWriter) WriteArithmetic(command string) {
 
@@ -184,6 +190,38 @@ func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string,
 
 	write(c.file, asm)
 
+}
+
+// WriteLabel labelコマンドを行うアセンブリコードの生成
+func (c *CodeWriter) WriteLabel(label string) {
+	// TODO
+}
+
+// WriteGoto gotoコマンドを行うアセンブリコードの生成
+func (c *CodeWriter) WriteGoto(label string) {
+	// TODO
+}
+
+// WriteIf ifコマンドを行うアセンブリコードの生成
+func (c *CodeWriter) WriteIf(label string) {
+	// TODO
+}
+
+// WriteCall callコマンドを行うアセンブリコードを生成
+// funcName callするfunction名
+// numArgs 引数の数
+func (c *CodeWriter) WriteCall(funcName string, numArgs int) {
+	// TODO
+}
+
+// WriteReturn returnコマンドを行うアセンブリコードを生成
+func (c *CodeWriter) WriteReturn() {
+	// TODO
+}
+
+// WriteFunction functionコマンドを行うアセンブリコードを生成
+func (c *CodeWriter) WriteFunction(funcName string, numLocals int) {
+	// TODO
 }
 
 // Close .

@@ -22,6 +22,9 @@ func Translate(outputFileName string, pathList []string) {
 		codeWriter.Close()
 	}()
 
+	// init
+	codeWriter.WriteInit()
+
 	// コードをparseしていく
 	for i, path := range pathList {
 		parser, err := parser.New(path)
@@ -39,6 +42,18 @@ func Translate(outputFileName string, pathList []string) {
 				codeWriter.WriteArithmetic(parser.Command)
 			case model.CommandTypePop, model.CommandTypePush:
 				codeWriter.WritePushPop(parser.CommandType, parser.Arg1(), parser.Arg2())
+			case model.CommandTypeLabel:
+				codeWriter.WriteLabel(parser.Arg1())
+			case model.CommandTypeGoto:
+				codeWriter.WriteGoto(parser.Arg1())
+			case model.CommandTypeIf:
+				codeWriter.WriteIf(parser.Arg1()) // ex) if-goto END
+			case model.CommandTypeFunction:
+				codeWriter.WriteFunction(parser.Arg1(), parser.Arg2())
+			case model.CommandTypeReturn:
+				codeWriter.WriteReturn()
+			case model.CommandTypeCall:
+				codeWriter.WriteCall(parser.Arg1(), parser.Arg2())
 			default:
 				panic("まだこれ以外は対応していません")
 			}
