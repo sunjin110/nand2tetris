@@ -42,6 +42,9 @@ const (
 	popStatic  = "@SP\nM=M-1\nA=M\nD=M\n@Static_%s_%d\nM=D\n"
 
 	label = "(%s)\n" // (LABEL_NAME)
+
+	// ifGoto = "@SP\nA=M-1\nD=M\n@%s\nD;JNE\n" // %s is label name
+	ifGoto = "@SP\nA=M-1\nD=M\n@SP\nM=M-1\n@%s\nD;JNE\n"
 )
 
 // CodeWriter .
@@ -209,7 +212,10 @@ func (c *CodeWriter) WriteGoto(label string) {
 
 // WriteIf ifコマンドを行うアセンブリコードの生成
 func (c *CodeWriter) WriteIf(label string) {
-	// TODO
+	// 一つ前のstackのでーたを取得する
+	// そいつが0でない場合は、Labelにループさせる
+	asm := fmt.Sprintf(ifGoto, label)
+	write(c.file, asm)
 }
 
 // WriteCall callコマンドを行うアセンブリコードを生成
