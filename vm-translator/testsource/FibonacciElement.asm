@@ -96,11 +96,11 @@ A=M-1
 D=M
 @SP
 M=M-1
-@IF_TRUE
+@Main.fibonacci$IF_TRUE
 D;JNE
-@IF_FALSE
+@Main.fibonacci$IF_FALSE
 0;JMP
-(IF_TRUE)
+(Main.fibonacci$IF_TRUE)
 @0
 D=A
 @ARG
@@ -168,7 +168,7 @@ M=D
 @R14
 A=M
 0;JMP
-(IF_FALSE)
+(Main.fibonacci$IF_FALSE)
 @0
 D=A
 @ARG
@@ -447,6 +447,6 @@ M=D
 @Main.fibonacci
 0;JMP
 (RET_ADDRESS_CALL_3)
-(WHILE)
-@WHILE
+(Sys.init$WHILE)
+@Sys.init$WHILE
 0;JMP

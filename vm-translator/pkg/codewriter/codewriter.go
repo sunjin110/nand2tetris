@@ -41,9 +41,9 @@ const (
 	pushStatic = "@Static_%s_%d\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
 	popStatic  = "@SP\nM=M-1\nA=M\nD=M\n@Static_%s_%d\nM=D\n"
 
-	label  = "(%s)\n"                                    // (LABEL_NAME)
-	ifGoto = "@SP\nA=M-1\nD=M\n@SP\nM=M-1\n@%s\nD;JNE\n" // %s is label name
-	goTo   = "@%s\n0;JMP\n"                              // %s is label name
+	labelAsm = "(%s)\n"                                    // (LABEL_NAME)
+	ifGoto   = "@SP\nA=M-1\nD=M\n@SP\nM=M-1\n@%s\nD;JNE\n" // %s is label name
+	goTo     = "@%s\n0;JMP\n"                              // %s is label name
 
 	funcNameSet = "(%s)\n"                                                   // functionのラベルを追加する
 	funcInit    = "@%d\nD=A\n@LCL\nM=D+M\nA=M\nM=0\n@%d\nD=A\n@LCL\nM=M-D\n" // 引数の数だけLocalの値を0で初期化する
@@ -51,19 +51,19 @@ const (
 	returnAsm = "@LCL\nD=M\n@R13\nM=D\n@5\nD=A\n@R13\nA=M-D\nD=M\n@R14\nM=D\n@SP\nA=M-1\nD=M\n@ARG\nA=M\nM=D\n@ARG\nD=M+1\n@SP\nM=D\n@1\nD=A\n@R13\nA=M-D\nD=M\n@THAT\nM=D\n@2\nD=A\n@R13\nA=M-D\nD=M\n@THIS\nM=D\n@3\nD=A\n@R13\nA=M-D\nD=M\n@ARG\nM=D\n@4\nD=A\n@R13\nA=M-D\nD=M\n@LCL\nM=D\n@R14\nA=M\n0;JMP\n"
 
 	// call
-	// callAsm = "@%s\nD=A\n@SP\nM=D\n@SP\nM=M+1\n@LCL\nD=A\n@SP\nM=D\n@SP\nM=M+1\n@ARG\nD=A\n@SP\nM=D\n@SP\nM=M+1\n@THIS\nD=A\n@SP\nM=D\n@SP\nM=M+1\n@THAT\nD=A\n@SP\nM=D\n@SP\nM=M+1\n@%d\nD=A\n@SP\nD=M-D\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@%s\n0;JMP\n(%s)\n"
-
 	callAsm = "@%s\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@ARG\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@5\nD=A\n@%d\nD=D+A\n@SP\nD=M-D\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@%s\n0;JMP\n(%s)\n"
 
 	returnAddressCollLabelPattern = "RET_ADDRESS_CALL_%d" // callの戻り値として使用するlabelのパターン
+	uniqueLabelPattern            = "%s$%s"               // function別で同じLabelが使用されるが、それをuniqueなlabelとして変換するためのパターン
 )
 
 // CodeWriter .
 type CodeWriter struct {
-	file       *os.File
-	VmFileName string // どのVMファイルを変換中か
-	LabelCount int32  // ラベルをアトミックにするためのカウント
-	CallCount  int32  // callしたときに、戻り値として使用するlabelをアトミックにするためのカウント
+	file        *os.File
+	VmFileName  string // どのVMファイルを変換中か
+	LabelCount  int32  // ラベルをアトミックにするためのカウント
+	CallCount   int32  // callしたときに、戻り値として使用するlabelをアトミックにするためのカウント
+	NowFunction string // labelをfunction別で同じものを使用しても大丈夫なようにuniqueにするためのもの
 }
 
 // New .
@@ -214,15 +214,19 @@ func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string,
 }
 
 // WriteLabel labelコマンドを行うアセンブリコードの生成
-func (c *CodeWriter) WriteLabel(l string) {
-	asm := fmt.Sprintf(label, l)
+func (c *CodeWriter) WriteLabel(label string) {
+
+	l := fmt.Sprintf(uniqueLabelPattern, c.NowFunction, label) // uniqueなラベルにするため
+	asm := fmt.Sprintf(labelAsm, l)
 	write(c.file, asm)
 }
 
 // WriteGoto gotoコマンドを行うアセンブリコードの生成
 func (c *CodeWriter) WriteGoto(label string) {
 	// 無条件でジャンプする
-	asm := fmt.Sprintf(goTo, label)
+
+	l := fmt.Sprintf(uniqueLabelPattern, c.NowFunction, label) // uniqueなlabelにするため
+	asm := fmt.Sprintf(goTo, l)
 	write(c.file, asm)
 }
 
@@ -230,7 +234,9 @@ func (c *CodeWriter) WriteGoto(label string) {
 func (c *CodeWriter) WriteIf(label string) {
 	// 一つ前のstackのでーたを取得する
 	// そいつが0でない場合は、Labelにループさせる
-	asm := fmt.Sprintf(ifGoto, label)
+
+	l := fmt.Sprintf(uniqueLabelPattern, c.NowFunction, label) // uniqueなlabelにするため
+	asm := fmt.Sprintf(ifGoto, l)
 	write(c.file, asm)
 }
 
@@ -250,6 +256,9 @@ func (c *CodeWriter) WriteCall(funcName string, numArgs int) {
 
 // WriteFunction functionコマンドを行うアセンブリコードを生成
 func (c *CodeWriter) WriteFunction(funcName string, numLocals int) {
+
+	// uniqueなlabelにするためにfunctionNameを上書きする
+	c.NowFunction = funcName
 
 	// functionのラベルを追加する
 	asm := fmt.Sprintf(funcNameSet, funcName)
