@@ -3,6 +3,7 @@ package parser
 import (
 	"bufio"
 	"errors"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -117,6 +118,7 @@ func getCommandType(command string) model.CommandType {
 
 	commandType, exists := model.Arg1CommandTypeMap[cmd]
 	if !exists {
+		log.Println("cmd is ", cmd)
 		chk.SE(errors.New("定義されていないコマンドがきました"))
 	}
 	return commandType

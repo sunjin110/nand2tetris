@@ -9,6 +9,9 @@ import (
 )
 
 const (
+	// init
+	initCode = "@256\nD=A\n@SP\nM=D\n@300\nD=A\n@LCL\nM=D\n@400\nD=A\n@ARG\nM=D\n"
+
 	// Airthmetic命令セット
 	add = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nM=D+M\n@SP\nM=M-1\n"
 	sub = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nM=M-D\n@SP\nM=M-1\n"
@@ -37,6 +40,8 @@ const (
 
 	pushStatic = "@Static_%s_%d\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
 	popStatic  = "@SP\nM=M-1\nA=M\nD=M\n@Static_%s_%d\nM=D\n"
+
+	label = "(%s)\n" // (LABEL_NAME)
 )
 
 // CodeWriter .
@@ -65,8 +70,7 @@ func (c *CodeWriter) SetVmFileName(fileName string) {
 
 // WriteInit VMの初期化、出力ファイルの先頭に配置
 func (c *CodeWriter) WriteInit() {
-
-	// TODO write...
+	write(c.file, initCode)
 }
 
 // WriteArithmetic 与えられた算術コマンドをアセンブリコードに変換して、それを書き込む
@@ -193,8 +197,9 @@ func (c *CodeWriter) WritePushPop(commandType model.CommandType, segment string,
 }
 
 // WriteLabel labelコマンドを行うアセンブリコードの生成
-func (c *CodeWriter) WriteLabel(label string) {
-	// TODO
+func (c *CodeWriter) WriteLabel(l string) {
+	asm := fmt.Sprintf(label, l)
+	write(c.file, asm)
 }
 
 // WriteGoto gotoコマンドを行うアセンブリコードの生成

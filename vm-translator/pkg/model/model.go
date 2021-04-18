@@ -102,3 +102,11 @@ const (
 	// MemorySegmentTemp 固定された8つの要素からなるセグメント。一時的な変数を格納するために用いる
 	MemorySegmentTemp = "temp"
 )
+
+const (
+	// Label .
+	Label = "label"
+
+	// IfGoto .
+	IfGoto = "if-goto"
+)

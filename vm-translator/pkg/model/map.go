@@ -13,5 +13,7 @@ var Arg1CommandTypeMap = map[string]CommandType{
 	AirthmeticNot:    CommandTypeArithmetic,
 	MemoryAccessPush: CommandTypePush,
 	MemoryAccessPop:  CommandTypePop,
+	Label:            CommandTypeLabel,
+	IfGoto:           CommandTypeIf,
 	// TODO いっぱいある
 }
