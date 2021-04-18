@@ -44,6 +44,16 @@ const (
 	label  = "(%s)\n"                                    // (LABEL_NAME)
 	ifGoto = "@SP\nA=M-1\nD=M\n@SP\nM=M-1\n@%s\nD;JNE\n" // %s is label name
 	goTo   = "@%s\n0;JMP\n"                              // %s is label name
+
+	funcNameSet = "(%s)\n"                                                   // functionのラベルを追加する
+	funcInit    = "@%d\nD=A\n@LCL\nM=D+M\nA=M\nM=0\n@%d\nD=A\n@LCL\nM=M-D\n" // 引数の数だけLocalの値を0で初期化する
+
+	// return
+	// returnAsm = "@LCL\nD=M\n@R13\nM=D\n@5\nD=A\n@R13\nA=M-D\nD=M\n@R14\nM=D\n@ARG\nD=M+1\n@SP\nM=D\n@1\nD=A\n@R13\nA=M-D\nD=M\n@THAT\nM=D\n@2\nD=A\n@R13\nA=M-D\nD=M\n@THIS\nM=D\n@3\nD=A\n@R13\nA=M-D\nD=M\n@ARG\nM=D\n@4\nD=A\n@R13\nA=M-D\nD=M\n@LCL\nM=D\n@R14\nA=M\n0;JMP\n"
+
+	returnAsm = "@LCL\nD=M\n@R13\nM=D\n@5\nD=A\n@R13\nA=M-D\nD=M\n@R14\nM=D\n@SP\nA=M-1\nD=M\n@ARG\nA=M\nM=D\n@ARG\nD=M+1\n@SP\nM=D\n@1\nD=A\n@R13\nA=M-D\nD=M\n@THAT\nM=D\n@2\nD=A\n@R13\nA=M-D\nD=M\n@THIS\nM=D\n@3\nD=A\n@R13\nA=M-D\nD=M\n@ARG\nM=D\n@4\nD=A\n@R13\nA=M-D\nD=M\n@LCL\nM=D\n@R14\nA=M\n0;JMP\n"
+
+	// returnAsm = "@LCL\nD=M\n@R13\nM=D\n@R13\nD=M\n@5\nA=D-A\nD=M\n@R14\nM=D\n@SP\nA=M-1\nD=M\n@ARG\nA=M\nM=D\n@ARG\nD=M+1\n@SP\nM=D\n@R13\nA=M-1\nD=M\n@THAT\nM=D\n@R13\nD=M\n@2\nA=D-A\nD=M\n@THIS\nM=D\n@R13\nD=M\n@3\nA=D-A\nD=M\n@ARG\nM=D\n@R13\nD=M\n@4\nA=D-A\nD=M\n@LCL\nM=D\n@R14\nA=M\n0;JMP\n"
 )
 
 // CodeWriter .
@@ -226,14 +236,29 @@ func (c *CodeWriter) WriteCall(funcName string, numArgs int) {
 	// TODO
 }
 
-// WriteReturn returnコマンドを行うアセンブリコードを生成
-func (c *CodeWriter) WriteReturn() {
-	// TODO
-}
-
 // WriteFunction functionコマンドを行うアセンブリコードを生成
 func (c *CodeWriter) WriteFunction(funcName string, numLocals int) {
-	// TODO
+
+	// debug
+	write(c.file, "// func\n")
+
+	// functionのラベルを追加する
+	asm := fmt.Sprintf(funcNameSet, funcName)
+
+	// numLocals個のLocal変数をすべて0で初期化する
+	for i := 0; i < numLocals; i++ {
+		asm += fmt.Sprintf(funcInit, i, i)
+	}
+	write(c.file, asm)
+}
+
+// WriteReturn returnコマンドを行うアセンブリコードを生成
+func (c *CodeWriter) WriteReturn() {
+
+	// debug
+	write(c.file, "// return\n")
+
+	write(c.file, returnAsm)
 }
 
 // Close .

@@ -112,4 +112,10 @@ const (
 
 	// Goto .
 	Goto = "goto"
+
+	// Function .
+	Function = "function"
+
+	// Return .
+	Return = "return"
 )

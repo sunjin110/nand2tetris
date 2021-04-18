@@ -16,5 +16,7 @@ var Arg1CommandTypeMap = map[string]CommandType{
 	Label:            CommandTypeLabel,
 	IfGoto:           CommandTypeIf,
 	Goto:             CommandTypeGoto,
+	Function:         CommandTypeFunction,
+	Return:           CommandTypeReturn,
 	// TODO いっぱいある
 }

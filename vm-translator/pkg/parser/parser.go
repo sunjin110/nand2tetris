@@ -84,7 +84,8 @@ func (p *Parser) Arg2() int {
 
 	if p.CommandType == model.CommandTypePush ||
 		p.CommandType == model.CommandTypePop ||
-		p.CommandType == model.CommandTypeCall {
+		p.CommandType == model.CommandTypeCall ||
+		p.CommandType == model.CommandTypeFunction {
 		seg := strings.Split(p.Command, " ")[2]
 		i, err := strconv.Atoi(seg)
 		if err != nil {
