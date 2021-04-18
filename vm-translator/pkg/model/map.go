@@ -18,5 +18,6 @@ var Arg1CommandTypeMap = map[string]CommandType{
 	Goto:             CommandTypeGoto,
 	Function:         CommandTypeFunction,
 	Return:           CommandTypeReturn,
+	Call:             CommandTypeCall,
 	// TODO いっぱいある
 }

@@ -118,4 +118,7 @@ const (
 
 	// Return .
 	Return = "return"
+
+	// Call .
+	Call = "call"
 )

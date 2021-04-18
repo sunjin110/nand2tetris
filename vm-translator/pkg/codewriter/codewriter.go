@@ -10,7 +10,7 @@ import (
 
 const (
 	// init
-	initCode = "@256\nD=A\n@SP\nM=D\n@300\nD=A\n@LCL\nM=D\n@400\nD=A\n@ARG\nM=D\n"
+	initSp = "@256\nD=A\n@SP\nM=D\n"
 
 	// Airthmetic命令セット
 	add = "@SP\nA=M-1\nD=M\nM=0\nA=A-1\nM=D+M\n@SP\nM=M-1\n"
@@ -49,6 +49,13 @@ const (
 	funcInit    = "@%d\nD=A\n@LCL\nM=D+M\nA=M\nM=0\n@%d\nD=A\n@LCL\nM=M-D\n" // 引数の数だけLocalの値を0で初期化する
 
 	returnAsm = "@LCL\nD=M\n@R13\nM=D\n@5\nD=A\n@R13\nA=M-D\nD=M\n@R14\nM=D\n@SP\nA=M-1\nD=M\n@ARG\nA=M\nM=D\n@ARG\nD=M+1\n@SP\nM=D\n@1\nD=A\n@R13\nA=M-D\nD=M\n@THAT\nM=D\n@2\nD=A\n@R13\nA=M-D\nD=M\n@THIS\nM=D\n@3\nD=A\n@R13\nA=M-D\nD=M\n@ARG\nM=D\n@4\nD=A\n@R13\nA=M-D\nD=M\n@LCL\nM=D\n@R14\nA=M\n0;JMP\n"
+
+	// call
+	// callAsm = "@%s\nD=A\n@SP\nM=D\n@SP\nM=M+1\n@LCL\nD=A\n@SP\nM=D\n@SP\nM=M+1\n@ARG\nD=A\n@SP\nM=D\n@SP\nM=M+1\n@THIS\nD=A\n@SP\nM=D\n@SP\nM=M+1\n@THAT\nD=A\n@SP\nM=D\n@SP\nM=M+1\n@%d\nD=A\n@SP\nD=M-D\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@%s\n0;JMP\n(%s)\n"
+
+	callAsm = "@%s\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@ARG\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@5\nD=A\n@%d\nD=D+A\n@SP\nD=M-D\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@%s\n0;JMP\n(%s)\n"
+
+	returnAddressCollLabelPattern = "RET_ADDRESS_CALL_%d" // callの戻り値として使用するlabelのパターン
 )
 
 // CodeWriter .
@@ -56,6 +63,7 @@ type CodeWriter struct {
 	file       *os.File
 	VmFileName string // どのVMファイルを変換中か
 	LabelCount int32  // ラベルをアトミックにするためのカウント
+	CallCount  int32  // callしたときに、戻り値として使用するlabelをアトミックにするためのカウント
 }
 
 // New .
@@ -77,7 +85,9 @@ func (c *CodeWriter) SetVmFileName(fileName string) {
 
 // WriteInit VMの初期化、出力ファイルの先頭に配置
 func (c *CodeWriter) WriteInit() {
-	write(c.file, initCode)
+	// write(c.file, initCode)
+	write(c.file, initSp)
+	c.WriteCall("Sys.init", 0)
 }
 
 // WriteArithmetic 与えられた算術コマンドをアセンブリコードに変換して、それを書き込む
@@ -228,7 +238,14 @@ func (c *CodeWriter) WriteIf(label string) {
 // funcName callするfunction名
 // numArgs 引数の数
 func (c *CodeWriter) WriteCall(funcName string, numArgs int) {
-	// TODO
+
+	returnAddressCollLabel := fmt.Sprintf(returnAddressCollLabelPattern, c.CallCount)
+	// asm := fmt.Sprintf(callAsm, returnAddressCollLabel, numArgs+5, funcName, returnAddressCollLabel)
+	asm := fmt.Sprintf(callAsm, returnAddressCollLabel, numArgs, funcName, returnAddressCollLabel)
+	write(c.file, asm)
+
+	// call countを+1する
+	c.CallCount++
 }
 
 // WriteFunction functionコマンドを行うアセンブリコードを生成
