@@ -249,7 +249,6 @@ func (c *CodeWriter) WriteIf(label string) {
 func (c *CodeWriter) WriteCall(funcName string, numArgs int) {
 
 	returnAddressCollLabel := fmt.Sprintf(returnAddressCollLabelPattern, c.CallCount)
-	// asm := fmt.Sprintf(callAsm, returnAddressCollLabel, numArgs+5, funcName, returnAddressCollLabel)
 	asm := fmt.Sprintf(callAsm, returnAddressCollLabel, numArgs, funcName, returnAddressCollLabel)
 	write(c.file, asm)
 
