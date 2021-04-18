@@ -54,7 +54,11 @@ const (
 	callAsm = "@%s\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@ARG\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@5\nD=A\n@%d\nD=D+A\n@SP\nD=M-D\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@%s\n0;JMP\n(%s)\n"
 
 	returnAddressCollLabelPattern = "RET_ADDRESS_CALL_%d" // callの戻り値として使用するlabelのパターン
-	uniqueLabelPattern            = "%s$%s"               // function別で同じLabelが使用されるが、それをuniqueなlabelとして変換するためのパターン
+
+	// function別で同じLabelが使用されるが、それをuniqueなlabelとして変換するためのパターン
+	// もし、別ファイルで同じfunctionが発生した場合は、ファイルでも分けること
+	// ただこのVMの仕様で、functionは必ずpublicなので問題はないはず
+	uniqueLabelPattern = "%s$%s"
 )
 
 // CodeWriter .
