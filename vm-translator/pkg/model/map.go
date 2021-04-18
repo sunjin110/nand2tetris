@@ -15,5 +15,6 @@ var Arg1CommandTypeMap = map[string]CommandType{
 	MemoryAccessPop:  CommandTypePop,
 	Label:            CommandTypeLabel,
 	IfGoto:           CommandTypeIf,
+	Goto:             CommandTypeGoto,
 	// TODO いっぱいある
 }

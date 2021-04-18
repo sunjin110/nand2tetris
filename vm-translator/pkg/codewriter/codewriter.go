@@ -41,10 +41,9 @@ const (
 	pushStatic = "@Static_%s_%d\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
 	popStatic  = "@SP\nM=M-1\nA=M\nD=M\n@Static_%s_%d\nM=D\n"
 
-	label = "(%s)\n" // (LABEL_NAME)
-
-	// ifGoto = "@SP\nA=M-1\nD=M\n@%s\nD;JNE\n" // %s is label name
-	ifGoto = "@SP\nA=M-1\nD=M\n@SP\nM=M-1\n@%s\nD;JNE\n"
+	label  = "(%s)\n"                                    // (LABEL_NAME)
+	ifGoto = "@SP\nA=M-1\nD=M\n@SP\nM=M-1\n@%s\nD;JNE\n" // %s is label name
+	goTo   = "@%s\n0;JMP\n"                              // %s is label name
 )
 
 // CodeWriter .
@@ -207,7 +206,9 @@ func (c *CodeWriter) WriteLabel(l string) {
 
 // WriteGoto gotoコマンドを行うアセンブリコードの生成
 func (c *CodeWriter) WriteGoto(label string) {
-	// TODO
+	// 無条件でジャンプする
+	asm := fmt.Sprintf(goTo, label)
+	write(c.file, asm)
 }
 
 // WriteIf ifコマンドを行うアセンブリコードの生成

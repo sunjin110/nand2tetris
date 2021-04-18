@@ -109,4 +109,7 @@ const (
 
 	// IfGoto .
 	IfGoto = "if-goto"
+
+	// Goto .
+	Goto = "goto"
 )
