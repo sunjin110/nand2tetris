@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	// init
+	// initSp StackPointの最初のアドレスを指定する
 	initSp = "@256\nD=A\n@SP\nM=D\n"
 
 	// Airthmetic命令セット
@@ -85,9 +85,8 @@ func (c *CodeWriter) SetVmFileName(fileName string) {
 
 // WriteInit VMの初期化、出力ファイルの先頭に配置
 func (c *CodeWriter) WriteInit() {
-	// write(c.file, initCode)
 	write(c.file, initSp)
-	c.WriteCall("Sys.init", 0)
+	c.WriteCall("Sys.init", 0) // 必ず最初はSys.initをcallする
 }
 
 // WriteArithmetic 与えられた算術コマンドをアセンブリコードに変換して、それを書き込む
