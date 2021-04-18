@@ -235,8 +235,8 @@ func (c *CodeWriter) WriteGoto(label string) {
 
 // WriteIf ifコマンドを行うアセンブリコードの生成
 func (c *CodeWriter) WriteIf(label string) {
-	// 一つ前のstackのでーたを取得する
-	// そいつが0でない場合は、Labelにループさせる
+	// 一つ前のstackのデータを取得する
+	// そいつが0でない場合は、Labelにジャンプさせる
 
 	l := fmt.Sprintf(uniqueLabelPattern, c.NowFunction, label) // uniqueなlabelにするため
 	asm := fmt.Sprintf(ifGoto, l)
