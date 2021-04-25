@@ -1,6 +1,7 @@
 package main
 
 import (
+	"compiler/pkg/analyzer"
 	"flag"
 	"fmt"
 	"os"
@@ -55,6 +56,8 @@ func main() {
 	outputFileName := fmt.Sprintf("%s%s", dir, XmlExt)
 
 	fmt.Println("output file name is ", outputFileName)
+
+	analyzer.Analyzer(outputFileName, pathList)
 }
 
 // dirwark ディレクトリ内のファイルを取得すr
