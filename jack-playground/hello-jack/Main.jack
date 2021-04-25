@@ -1,0 +1,8 @@
+// hello world
+class Main {
+    function void main() {
+        do Output.printString("Hello World\n");
+        do Output.println();
+        return;
+    }
+}
