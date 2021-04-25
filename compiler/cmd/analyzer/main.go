@@ -19,9 +19,6 @@ const (
 	// JackExt Jack言語の拡張子
 	JackExt = ".jack"
 
-	// VmExt Vm拡張子
-	// VmExt = ".vm"
-
 	// XmlExt Xml拡張子
 	XmlExt = ".xml"
 )
@@ -39,8 +36,6 @@ func main() {
 
 	// source
 	dir := args[0]
-
-	// file一覧を取得する
 
 	// file一覧を取得する
 	pathList, err := dirwark(dir)
