@@ -31,6 +31,8 @@ func New(filePath string) (*Tokenizer, error) {
 // NextToken 次のTokenに進む
 func (t *Tokenizer) NextToken() bool {
 
+	// P233のページで分ける
+
 	return false
 }
 
