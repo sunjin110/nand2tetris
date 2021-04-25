@@ -1,0 +1,23 @@
+// List クラスは抽象化されたリンクリストを提供する
+class List {
+    field int data;
+    field List next;
+
+    // new
+    constructor List new(int car, List cdr) {
+        let data = car;
+        let next = cdr;
+        return this;
+    }
+
+    // dispose 最後尾に到達するまで再規定にListが確保したメモリを破棄する
+    method void dispose() {
+        if (~(next = null)) {
+            do next.dispose();
+        }
+
+        // OSのルーチンを用意て、このObjectが持つメモリをリサイクル
+        do Memory.deAlloc(this);
+        return;
+    }
+}

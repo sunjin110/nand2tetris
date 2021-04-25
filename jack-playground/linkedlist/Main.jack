@@ -1,0 +1,21 @@
+// Listを使用する
+class Main {
+
+    function void main() {
+
+        var List list;
+        let list = Main.create235();
+
+        do list.dispose();
+
+        return;
+    }
+
+    function List create235() {
+        var List v;
+        let v = List.new(5, null);
+        let v = List.new(2, List.new(3, v));
+        return v;
+    }
+
+}
