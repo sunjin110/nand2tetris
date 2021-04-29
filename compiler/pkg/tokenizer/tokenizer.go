@@ -175,12 +175,7 @@ func (t *Tokenizer) createTokenList(line string) []string {
 
 	var sb strings.Builder
 
-	log.Println("line is ", line)
 	for idx, c := range line {
-
-		if len(line) <= idx-1 {
-			log.Printf("index:%d , char is %s  先読み:%s\n", idx, string(c), string(line[idx+1]))
-		}
 
 		// もし複数行コメントモードの場合、*or/以外は受け付けない
 		if t.isMultiLineCommentMode {
