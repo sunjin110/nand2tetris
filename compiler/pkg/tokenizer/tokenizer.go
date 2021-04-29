@@ -44,7 +44,12 @@ func init() {
 type Tokenizer struct {
 	file    *os.File       // file(.jack)
 	scanner *bufio.Scanner // fileのscanner
-	Line    string         // 現在の行
+	line    string         // 現在の行
+	Token   string         // 現在のToken
+
+	nowLineTokenList  []string // 現在の行のtokenList
+	nowLineTokenCount int      // 現在の行のtokenの数を取得
+	nowTokenLineIndex int      // 現在のtokenが現在の行の何個目か？
 }
 
 // New .
@@ -63,13 +68,35 @@ func New(filePath string) (*Tokenizer, error) {
 // NextToken 次のTokenに進む
 func (t *Tokenizer) NextToken() bool {
 
-	// P233のページで分ける
+	nextTokenIdx := t.nowTokenLineIndex + 1
 
-	return false
+	// もしLineが空の場合は、NextLineを呼ぶ
+	// また、現在のTokenの長さよりも、呼ぼうとしているidxの長さがあふれる場合は、次
+	// この時点でfalseの場合は、次のtokenは存在しない
+	if t.line == "" || nextTokenIdx >= len(t.nowLineTokenList) {
+		if !t.nextLine() {
+			return false
+		}
+
+		// lineが取れたので、そこからtokenのリストを生成する
+		tokenList := createTokenList(t.line)
+		t.nowLineTokenList = tokenList
+		t.nowTokenLineIndex = 0
+		t.nowLineTokenCount = len(tokenList)
+
+		// 行の初回なので、先頭をそのままTokenにセットして終わる
+		t.Token = tokenList[0]
+		return true
+	}
+
+	// 次のリストのTokenを取得する
+	t.Token = t.nowLineTokenList[nextTokenIdx]
+	t.nowTokenLineIndex = nextTokenIdx
+	return true
 }
 
-// NextLine 次の行に進む
-func (t *Tokenizer) NextLine() bool {
+// nextLine 次の行に進む
+func (t *Tokenizer) nextLine() bool {
 
 	// スキャンする、もし何もなければfalseを返す
 	if !t.scanner.Scan() {
@@ -79,15 +106,15 @@ func (t *Tokenizer) NextLine() bool {
 	line := trimeLine(t.scanner.Text())
 	if line == "" {
 		// もし空白の場合は次
-		return t.NextLine()
+		return t.nextLine()
 	}
 
-	t.Line = line
+	t.line = line
 	return true
 }
 
-// CreateTokenList ListからTokenリストを取得する
-func CreateTokenList(line string) []string {
+// createTokenList ListからTokenリストを取得する
+func createTokenList(line string) []string {
 	// 適切に分解していく必要がある
 
 	// 文字を一文字ずつ解析していく?
