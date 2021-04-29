@@ -3,7 +3,6 @@ package tokenizer
 import (
 	"bufio"
 	"compiler/pkg/common/chk"
-	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -209,8 +208,6 @@ func (t *Tokenizer) createTokenList(line string) []string {
 		// もし「*」が来る場合は、
 		if c == '/' && len(line) > idx-1 {
 			nextC := rune(line[idx+1])
-
-			log.Println(string(c) + string(nextC))
 
 			if nextC == '*' {
 				// 「/*」が検出されたので、複数行コメントモードに入る
