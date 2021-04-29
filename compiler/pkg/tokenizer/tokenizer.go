@@ -39,9 +39,7 @@ func init() {
 	}
 }
 
-// Jack言語をparseする機構
-
-// Parser .
+// Tokenizer Jack言語をToken単位で分割する機構
 type Tokenizer struct {
 	file              *os.File       // file(.jack)
 	scanner           *bufio.Scanner // fileのscanner
