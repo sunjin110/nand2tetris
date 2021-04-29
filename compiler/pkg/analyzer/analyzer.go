@@ -27,21 +27,6 @@ func Analyzer(outputFileName string, pathList []string) {
 
 		}
 
-		// // 1行ずつ読んでいく
-		// for t.NextLine() {
-
-		// 	line := t.Line
-
-		// 	tokenList := tokenizer.CreateTokenList(line)
-		// 	log.Println("token list is ", jsonutil.Marshal(tokenList))
-		// 	for _, token := range tokenList {
-		// 		fmt.Println("token is ", token)
-		// 		tokenType := tokenizer.GetTokenType(token)
-		// 		log.Println("tokenType is ", tokenType)
-		// 	}
-
-		// }
-
 	}
 
 }

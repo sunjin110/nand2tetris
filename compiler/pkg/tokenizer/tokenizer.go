@@ -48,7 +48,6 @@ type Tokenizer struct {
 	Token   string         // 現在のToken
 
 	nowLineTokenList  []string // 現在の行のtokenList
-	nowLineTokenCount int      // 現在の行のtokenの数を取得
 	nowTokenLineIndex int      // 現在のtokenが現在の行の何個目か？
 }
 
@@ -82,7 +81,6 @@ func (t *Tokenizer) NextToken() bool {
 		tokenList := createTokenList(t.line)
 		t.nowLineTokenList = tokenList
 		t.nowTokenLineIndex = 0
-		t.nowLineTokenCount = len(tokenList)
 
 		// 行の初回なので、先頭をそのままTokenにセットして終わる
 		t.Token = tokenList[0]
