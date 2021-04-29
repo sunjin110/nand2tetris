@@ -2,6 +2,7 @@ package tokenizer_test
 
 import (
 	"compiler/pkg/tokenizer"
+	"fmt"
 	"log"
 	"testing"
 
@@ -23,6 +24,17 @@ func Test(t *testing.T) {
 
 			g.Assert(result == tokenizer.KeyWordClass).IsTrue()
 
+		})
+
+		g.It("trim ", func() {
+
+			hoge := "abcdefg"
+
+			hogeTrim := hoge[1 : len(hoge)-1]
+
+			fmt.Println("hoge trim is ", hogeTrim)
+
+			g.Assert(hogeTrim).Eql("bcdef")
 		})
 
 	})

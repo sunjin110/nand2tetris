@@ -2,6 +2,7 @@ package tokenizer
 
 import (
 	"bufio"
+	"compiler/pkg/common/chk"
 	"os"
 	"strconv"
 	"strings"
@@ -42,13 +43,12 @@ func init() {
 
 // Parser .
 type Tokenizer struct {
-	file    *os.File       // file(.jack)
-	scanner *bufio.Scanner // fileのscanner
-	line    string         // 現在の行
-	Token   string         // 現在のToken
-
-	nowLineTokenList  []string // 現在の行のtokenList
-	nowTokenLineIndex int      // 現在のtokenが現在の行の何個目か？
+	file              *os.File       // file(.jack)
+	scanner           *bufio.Scanner // fileのscanner
+	line              string         // 現在の行
+	Token             string         // 現在のToken
+	nowLineTokenList  []string       // 現在の行のtokenList
+	nowTokenLineIndex int            // 現在のtokenが現在の行の何個目か？
 }
 
 // New .
@@ -93,6 +93,54 @@ func (t *Tokenizer) NextToken() bool {
 	return true
 }
 
+// GetSymbol 現在のTokenがsymbolの場合、どのsymbolかを習得する
+// tokenTypeがsymbol以外の場合はError
+func (t *Tokenizer) GetSymbol() rune {
+
+	tokenType := GetTokenType(t.Token)
+	if tokenType != TokenTypeSymbol {
+		panic("GetSymbolはTokenTypeがSymbol以外の場合は取得できません")
+	}
+
+	return rune(t.Token[0])
+}
+
+// GetIdentifier 現在のTokenがidentifierの場合の、変数名を習得する
+func (t *Tokenizer) GetIdentifier() string {
+
+	tokenType := GetTokenType(t.Token)
+	if tokenType != TokenTypeIdentifier {
+		panic("GetIdentifierはTokenTypeがIdentifier以外の場合は取得できません")
+	}
+
+	return t.Token
+}
+
+// GetIntVal 現在のTokenがIntConstの場合の値を習得する
+func (t *Tokenizer) GetIntVal() int {
+
+	tokenType := GetTokenType(t.Token)
+	if tokenType != TokenTypeIntConst {
+		panic("GetIntValはTokenTypeがIntConst以外の場合は取得できません")
+	}
+
+	i, err := strconv.Atoi(t.Token)
+	chk.SE(err)
+	return i
+}
+
+// GetStringVal 現在のTokenがStringConstの場合の値を習得する
+func (t *Tokenizer) GetStringVal() string {
+
+	tokenType := GetTokenType(t.Token)
+	if tokenType != TokenTypeStringConst {
+		panic("GetStringValはTokenTypeがStringConst以外の場合は取得できません")
+	}
+
+	// 両端を取り除く
+	return t.Token[1 : len(t.Token)-1]
+}
+
 // nextLine 次の行に進む
 func (t *Tokenizer) nextLine() bool {
 
@@ -113,12 +161,11 @@ func (t *Tokenizer) nextLine() bool {
 
 // createTokenList ListからTokenリストを取得する
 func createTokenList(line string) []string {
-	// 適切に分解していく必要がある
 
-	// 文字を一文字ずつ解析していく?
-
+	// 文字を一文字ずつ解析していく
 	var tokenList []string
 
+	// 文字列「"」で包まれている間は、空白やその他のsymbolが来ても無効化する必要がある
 	var isStringConstMode bool
 
 	var sb strings.Builder
