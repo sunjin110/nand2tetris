@@ -94,15 +94,30 @@ func CreateTokenList(line string) []string {
 
 	var tokenList []string
 
+	var isStringConstMode bool
+
 	var sb strings.Builder
 	for _, c := range line {
 
-		// TODO 文字列「"」が来たとき、次の「"」がくるまで文字列として判断する
+		// 文字列「"」が来たとき、次の「"」がくるまで文字列として判断する
+		if isStringConstMode {
+			sb.WriteRune(c)
+
+			// もし"が来た場合は、文字列モード終了
+			if c == '"' {
+				isStringConstMode = false
+			}
+			continue
+		}
 
 		// 空白の場合
 		if c == space {
 			// spaceが来たので区切る
-			tokenList = append(tokenList, sb.String())
+
+			token := sb.String()
+			if token != "" {
+				tokenList = append(tokenList, token)
+			}
 			sb.Reset() // StringBuilderのリセット
 			continue
 		}
@@ -119,6 +134,11 @@ func CreateTokenList(line string) []string {
 			// 今回のシンボルを1つのtokenとして追加する
 			tokenList = append(tokenList, string(c))
 			continue
+		}
+
+		// もしダブルクォートが来た場合は文字列モード
+		if c == '"' {
+			isStringConstMode = true
 		}
 
 		// それ以外の単語なので、ただただ追加する
