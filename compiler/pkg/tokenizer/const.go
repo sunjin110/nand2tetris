@@ -5,19 +5,19 @@ type TokenType string
 
 const (
 	// TokenTypeKeyWord 予約後のtoken
-	TokenTypeKeyWord = "KEYWORD"
+	TokenTypeKeyWord = "keyword"
 
 	// TokenTypeSymbol 演算子などのシンボルのtoken
-	TokenTypeSymbol = "SYMBOL"
+	TokenTypeSymbol = "symbol"
 
 	// TokenTypeIdentifier 変数名
-	TokenTypeIdentifier = "IDENTIFIER"
+	TokenTypeIdentifier = "identifier"
 
 	// TokenTypeIntConst 数字
-	TokenTypeIntConst = "INT_CONST"
+	TokenTypeIntConst = "integerConstant"
 
 	// TokenTypeStringConst 文字列
-	TokenTypeStringConst = "STRING_CONST"
+	TokenTypeStringConst = "stringConstant"
 )
 
 // KeyWord キーワード

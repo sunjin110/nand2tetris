@@ -9,7 +9,7 @@ import (
 )
 
 // symbolList シンボルのリスト
-var symbolList []rune = []rune{'{', '}', '(', ')', '.', ',', ';', '+', '-', '*', '/', '&', '|', '<', '>', '=', '~'}
+var symbolList []rune = []rune{'{', '}', '(', ')', '[', ']', '.', ',', ';', '+', '-', '*', '/', '&', '|', '<', '>', '=', '~'}
 
 // keywordList キーワードのリスト
 var keywordList []string = []string{"class", "constructor", "function", "method", "field", "static", "var", "int", "char", "boolean", "void", "true", "false", "null", "this", "let", "do", "if", "else", "while", "return"}
@@ -179,6 +179,11 @@ func createTokenList(line string) []string {
 			}
 			continue
 		}
+
+		// コメントアウトの「/** */」に対応する
+		// if sb.String() == "/**" {
+		//
+		// }
 
 		// 空白の場合
 		if c == space {

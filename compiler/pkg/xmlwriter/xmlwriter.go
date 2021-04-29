@@ -36,7 +36,7 @@ func (x *XmlWriter) WriteToken(tokenType tokenizer.TokenType, tokenVal string) {
 		value = "&amp;"
 	}
 
-	outLine := fmt.Sprintf("<%s>%s</%s>\n", tokenType, value, tokenType)
+	outLine := fmt.Sprintf("<%s> %s </%s>\n", tokenType, value, tokenType)
 	write(x.file, outLine)
 
 }
