@@ -55,7 +55,10 @@
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> let </keyword>
-<identifier> a[i] </identifier>
+<identifier> a </identifier>
+<symbol> [ </symbol>
+<identifier> i </identifier>
+<symbol> ] </symbol>
 <symbol> = </symbol>
 <identifier> Keyboard </identifier>
 <symbol> . </symbol>
@@ -94,7 +97,10 @@
 <symbol> = </symbol>
 <identifier> sum </identifier>
 <symbol> + </symbol>
-<identifier> a[i] </identifier>
+<identifier> a </identifier>
+<symbol> [ </symbol>
+<identifier> i </identifier>
+<symbol> ] </symbol>
 <symbol> ; </symbol>
 <keyword> let </keyword>
 <identifier> i </identifier>

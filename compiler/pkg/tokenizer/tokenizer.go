@@ -12,7 +12,8 @@ import (
 var symbolList []rune = []rune{'{', '}', '(', ')', '[', ']', '.', ',', ';', '+', '-', '*', '/', '&', '|', '<', '>', '=', '~'}
 
 // keywordList キーワードのリスト
-var keywordList []string = []string{"class", "constructor", "function", "method", "field", "static", "var", "int", "char", "boolean", "void", "true", "false", "null", "this", "let", "do", "if", "else", "while", "return"}
+var keywordList []string = []string{"class", "constructor", "function", "method", "field", "static", "var", "int",
+	"char", "boolean", "void", "true", "false", "null", "this", "let", "do", "if", "else", "while", "return"}
 
 var symbolMap map[rune]bool
 var keywordMap map[string]bool

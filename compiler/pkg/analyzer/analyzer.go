@@ -14,18 +14,22 @@ func Analyzer(outputFileName string, pathList []string) {
 	jsonutil.Print(pathList)
 
 	// Tokenizerテスト用のxxxT.xmlのファイルを作成するxmlWriterを作成
-	outputFileNameSplit := strings.Split(outputFileName, ".")
-	outputFileTName := fmt.Sprintf("%sT.%s", outputFileNameSplit[0], outputFileNameSplit[1])
-	xmlWriterT, err := xmlwriter.New(outputFileTName)
-	chk.SE(err)
-	defer func() {
-		xmlWriterT.Close()
-	}()
+	// outputFileNameSplit := strings.Split(outputFileName, ".")
+	// outputFileTName := fmt.Sprintf("%sT.%s", outputFileNameSplit[0], outputFileNameSplit[1])
+	// xmlWriterT, err := xmlwriter.New(outputFileTName)
+	// chk.SE(err)
+	// defer func() {
+	// 	xmlWriterT.Close()
+	// }()
 
 	// コードをparseする
 	for _, path := range pathList {
 
 		fmt.Println("path is ", path)
+
+		// Tokenizerテスト用のxxxT.xmlのファイルを作成する
+		xmlWriterT, err := xmlwriter.New(strings.Split(path, ".")[0] + "T.xml")
+		chk.SE(err)
 
 		t, err := tokenizer.New(path)
 		chk.SE(err)
@@ -38,7 +42,6 @@ func Analyzer(outputFileName string, pathList []string) {
 			tokenType := tokenizer.GetTokenType(token)
 			switch tokenType {
 			case tokenizer.TokenTypeKeyWord:
-				// keyword := tokenizer.GetKeyWord(token)
 				xmlWriterT.WriteToken(tokenType, token)
 			case tokenizer.TokenTypeSymbol:
 				symbol := t.GetSymbol()
@@ -55,8 +58,10 @@ func Analyzer(outputFileName string, pathList []string) {
 			default:
 				panic("定義されていないtokenType")
 			}
-
 		}
+
+		// Tokenizerテスト用のxxxT.xmlのファイルを閉じる
+		xmlWriterT.Close()
 
 	}
 
