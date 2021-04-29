@@ -3,6 +3,7 @@ package tokenizer
 import (
 	"bufio"
 	"compiler/pkg/common/chk"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -42,12 +43,13 @@ func init() {
 
 // Tokenizer Jack言語をToken単位で分割する機構
 type Tokenizer struct {
-	file              *os.File       // file(.jack)
-	scanner           *bufio.Scanner // fileのscanner
-	line              string         // 現在の行
-	Token             string         // 現在のToken
-	nowLineTokenList  []string       // 現在の行のtokenList
-	nowTokenLineIndex int            // 現在のtokenが現在の行の何個目か？
+	file                   *os.File       // file(.jack)
+	scanner                *bufio.Scanner // fileのscanner
+	line                   string         // 現在の行
+	Token                  string         // 現在のToken
+	nowLineTokenList       []string       // 現在の行のtokenList
+	nowTokenLineIndex      int            // 現在のtokenが現在の行の何個目か？
+	isMultiLineCommentMode bool           // /* */ というコメント内かどうかを判定するもの
 }
 
 // New .
@@ -77,7 +79,11 @@ func (t *Tokenizer) NextToken() bool {
 		}
 
 		// lineが取れたので、そこからtokenのリストを生成する
-		tokenList := createTokenList(t.line)
+		tokenList := t.createTokenList(t.line)
+		if len(tokenList) == 0 {
+			return t.NextToken()
+		}
+
 		t.nowLineTokenList = tokenList
 		t.nowTokenLineIndex = 0
 
@@ -159,7 +165,7 @@ func (t *Tokenizer) nextLine() bool {
 }
 
 // createTokenList ListからTokenリストを取得する
-func createTokenList(line string) []string {
+func (t *Tokenizer) createTokenList(line string) []string {
 
 	// 文字を一文字ずつ解析していく
 	var tokenList []string
@@ -168,9 +174,31 @@ func createTokenList(line string) []string {
 	var isStringConstMode bool
 
 	var sb strings.Builder
-	for _, c := range line {
+
+	log.Println("line is ", line)
+	for idx, c := range line {
+
+		if len(line) <= idx-1 {
+			log.Printf("index:%d , char is %s  先読み:%s\n", idx, string(c), string(line[idx+1]))
+		}
+
+		// もし複数行コメントモードの場合、*or/以外は受け付けない
+		if t.isMultiLineCommentMode {
+
+			// もし「/」が来た場合、一つ前の単語が「*」かどうかを確認もしそうなら
+			// 複数行コメントを終了する
+			if c == '/' && idx > 0 {
+				beforeC := rune(line[idx-1])
+				if beforeC == '*' {
+					// 「*/」が検出されたので、複数行コメントモードを解除する
+					t.isMultiLineCommentMode = false
+				}
+			}
+			continue
+		}
 
 		// 文字列「"」が来たとき、次の「"」がくるまで文字列として判断する
+		// 複数行コメントモードではないことを前提とする /* */
 		if isStringConstMode {
 			sb.WriteRune(c)
 
@@ -181,10 +209,28 @@ func createTokenList(line string) []string {
 			continue
 		}
 
-		// コメントアウトの「/** */」に対応する
-		// if sb.String() == "/**" {
-		//
-		// }
+		// もし、「/」が来たときにその次に「*」が来ているかどうかを先読みする
+		// 「/」がその一列の最後の文字の場合は検証する必要はない
+		// もし「*」が来る場合は、
+		if c == '/' && len(line) > idx-1 {
+			nextC := rune(line[idx+1])
+
+			log.Println(string(c) + string(nextC))
+
+			if nextC == '*' {
+				// 「/*」が検出されたので、複数行コメントモードに入る
+				t.isMultiLineCommentMode = true
+
+				// 入る前にsbの中身がある場合は追加する
+				beforeToken := sb.String()
+				if beforeToken != "" {
+					tokenList = append(tokenList, beforeToken)
+					sb.Reset()
+				}
+
+				continue
+			}
+		}
 
 		// 空白の場合
 		if c == space {
