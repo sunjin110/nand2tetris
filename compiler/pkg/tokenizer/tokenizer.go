@@ -2,22 +2,29 @@ package tokenizer
 
 import (
 	"bufio"
-	"log"
 	"os"
 	"strings"
 )
 
-// var symbolMap map[rune]bool = map[rune]bool{
-// 	'{': true,
-// 	'}': true,
-// 	'(': true,
-// 	''
-// }
+// symbolList シンボルのリスト
+var symbolList []rune = []rune{'{', '}', '(', ')', '.', ',', ';', '+', '-', '*', '/', '&', '|', '<', '>', '=', '~'}
 
-// const symbolList = [1, 2]
-var (
-// symbolList = ['{', ]
+var symbolMap map[rune]bool
+
+const (
+	// space
+	space = ' '
 )
+
+func init() {
+
+	symbolMap = map[rune]bool{}
+	// symbolmapを作成する
+	for _, symbol := range symbolList {
+		symbolMap[symbol] = true
+	}
+
+}
 
 // Jack言語をparseする機構
 
@@ -68,52 +75,43 @@ func (t *Tokenizer) NextLine() bool {
 }
 
 // CreateTokenList ListからTokenリストを取得する
-// TODO 文字列に空白が含まれるため、そいつを別Tokenとして扱わないようにする必要がある
 func CreateTokenList(line string) []string {
-	// return strings.Split(line, " ")
-
 	// 適切に分解していく必要がある
 
 	// 文字を一文字ずつ解析していく?
-	log.Println("line is ", line)
 
 	var tokenList []string
 
 	var sb strings.Builder
 	for _, c := range line {
 
-		// もし空白の場合は
-		log.Println("c is ", string(c), " : ", c)
-
-		switch c {
-		case 32: // space
+		// 空白の場合
+		if c == space {
+			// spaceが来たので区切る
 			tokenList = append(tokenList, sb.String())
-			sb.Reset() // sbのリセット
-		case 59, // ;
-			46, // .
-			40, // (
-			41: // )
+			sb.Reset() // StringBuilderのリセット
+			continue
+		}
 
+		// symbolかどうかを判定する
+		if symbolMap[c] {
+			// 1つ前の塊を1つ
 			beforeToken := sb.String()
 			if beforeToken != "" {
 				tokenList = append(tokenList, sb.String())
+				sb.Reset()
 			}
 
+			// 今回のシンボルを1つのtokenとして追加する
 			tokenList = append(tokenList, string(c))
-			sb.Reset()
-		// case 46: // .
-		// 	tokenList = append(tokenList, sb.String())
-		// 	tokenList =
-		default:
-			sb.WriteRune(c)
+			continue
 		}
 
+		// それ以外の単語なので、ただただ追加する
+		sb.WriteRune(c)
 	}
 
-	// tokenList = append(tokenList, sb.String())
-
 	return tokenList
-
 }
 
 // 不要な空白や、コメントを削除する
