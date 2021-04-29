@@ -5,6 +5,7 @@ import (
 	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/tokenizer"
 	"fmt"
+	"log"
 )
 
 // Analyzer Xmlに変換する
@@ -25,6 +26,7 @@ func Analyzer(outputFileName string, pathList []string) {
 			line := t.Line
 
 			tokenList := tokenizer.CreateTokenList(line)
+			log.Println("token list is ", jsonutil.Marshal(tokenList))
 			for _, token := range tokenList {
 				fmt.Println("token is ", token)
 			}

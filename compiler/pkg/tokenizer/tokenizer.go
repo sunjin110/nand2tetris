@@ -3,13 +3,18 @@ package tokenizer
 import (
 	"bufio"
 	"os"
+	"strconv"
 	"strings"
 )
 
 // symbolList シンボルのリスト
 var symbolList []rune = []rune{'{', '}', '(', ')', '.', ',', ';', '+', '-', '*', '/', '&', '|', '<', '>', '=', '~'}
 
+// keywordList キーワードのリスト
+var keywordList []string = []string{"class", "constructor", "function", "method", "field", "static", "var", "int", "char", "boolean", "void", "true", "false", "null", "this", "let", "do", "if", "else", "while", "return"}
+
 var symbolMap map[rune]bool
+var keywordMap map[string]bool
 
 const (
 	// space
@@ -18,10 +23,17 @@ const (
 
 func init() {
 
+	// symbol
 	symbolMap = map[rune]bool{}
 	// symbolmapを作成する
 	for _, symbol := range symbolList {
 		symbolMap[symbol] = true
+	}
+
+	// keyword
+	keywordMap = map[string]bool{}
+	for _, keyword := range keywordList {
+		keywordMap[keyword] = true
 	}
 
 }
@@ -85,6 +97,8 @@ func CreateTokenList(line string) []string {
 	var sb strings.Builder
 	for _, c := range line {
 
+		// TODO 文字列「"」が来たとき、次の「"」がくるまで文字列として判断する
+
 		// 空白の場合
 		if c == space {
 			// spaceが来たので区切る
@@ -112,6 +126,49 @@ func CreateTokenList(line string) []string {
 	}
 
 	return tokenList
+}
+
+// GetTokenType トークンタイプを取得する
+func GetTokenType(token string) TokenType {
+
+	// 空文字の場合は、error
+	if token == "" {
+		panic("空文字がtokenとして認識されていました")
+	}
+
+	// keywordトークンタイプかどうかを確認する
+	if _, ok := keywordMap[token]; ok {
+		return TokenTypeKeyWord
+	}
+
+	// symbolトークンタイプかどうかを確認する
+	if len(token) == 1 {
+		// runeにする
+		r := rune(token[0])
+		if _, ok := symbolMap[r]; ok {
+			return TokenTypeSymbol
+		}
+	}
+
+	// ユニコード文字列のタイプかどうかを確認する
+	if strings.HasPrefix(token, "\"") && strings.HasSuffix(token, "\"") {
+		return TokenTypeStringConst
+	}
+
+	// 数字かどうかを確認
+	_, err := strconv.Atoi(token)
+	if err == nil {
+		// 数字に変換できたので、IntConst
+		return TokenTypeIntConst
+	}
+
+	// それ以外の場合は変数
+	return TokenTypeIdentifier
+}
+
+// GetKeyWord キーワードを取得する
+func GetKeyWord(token string) KeyWord {
+	return ""
 }
 
 // 不要な空白や、コメントを削除する
