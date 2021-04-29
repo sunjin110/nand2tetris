@@ -21,6 +21,7 @@ const (
 	space = ' '
 )
 
+// 使用するmapを作成する
 func init() {
 
 	// symbol
@@ -35,7 +36,6 @@ func init() {
 	for _, keyword := range keywordList {
 		keywordMap[keyword] = true
 	}
-
 }
 
 // Jack言語をparseする機構
@@ -188,7 +188,20 @@ func GetTokenType(token string) TokenType {
 
 // GetKeyWord キーワードを取得する
 func GetKeyWord(token string) KeyWord {
-	return ""
+
+	tokenType := GetTokenType(token)
+	if tokenType != TokenTypeKeyWord {
+		panic("TokenType: Keyword でないので、KeyWordを取得できません")
+	}
+
+	// 予約後を大文字にしたものがkeywordのconstなので、文字をuppserしてそのまま返しています、
+	// 決してらくしたいからとかじゃない
+
+	if keywordMap[token] {
+		return KeyWord(strings.ToUpper(token))
+	}
+
+	panic("存在しないkeyword")
 }
 
 // 不要な空白や、コメントを削除する
