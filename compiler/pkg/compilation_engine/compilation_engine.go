@@ -94,22 +94,33 @@ func (c *CompilationEngine) compileClassVarDec() []*ClassVarDec {
 		c.nextToken()
 		varType := c.getToken()
 
-		// names TODO ,がある場合に連続して追加する必要がある
-		c.nextToken()
-		name := c.getToken()
+		// 変数名 (同時宣言しているものがあるので、それもチェックする)
+		var varNameList []string
+		for {
+			c.nextToken()
+			name := c.getToken()
+			varNameList = append(varNameList, name)
+
+			c.nextToken()
+			if c.getToken() == "," {
+				continue
+			}
+
+			break
+		}
 
 		// make
 		classVarDec := &ClassVarDec{
 			VarKind:     VariableKind(varKind),
 			VarType:     VariableType(varType),
-			VarNameList: []string{name}, // TODO
+			VarNameList: varNameList,
 		}
 
 		classVarDecList = append(classVarDecList, classVarDec)
 
-		c.nextToken()
+		// check
 		if c.getToken() != ";" {
-			panic(";があれ")
+			panic(";が足りないです")
 		}
 
 		// next チェック
