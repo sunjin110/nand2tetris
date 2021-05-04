@@ -1,6 +1,7 @@
 package compilation_engine
 
 import (
+	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/tokenizer"
 	"log"
 )
@@ -190,9 +191,16 @@ func (c *CompilationEngine) compileSubroutine() []*SubRoutineDec {
 
 		subRoutineDecList = append(subRoutineDecList, subRoutineDec)
 
+		// } check
+		c.nextToken()
+		if c.getToken() != "}" {
+			panic("SubRoutineの「}」がありません")
+		}
+
 		// 次もsubroutineかどうかを確認
 		// 違うなら、roopから外れる
 		c.nextToken()
+		log.Println("次のやつ", c.getToken())
 		if !IsSubRoutineDecPrefixToken(c.getToken()) {
 			break
 		}
@@ -291,7 +299,6 @@ func (c *CompilationEngine) compileVarDec() []*VarDec {
 		// すでに他のtokenに移っている場合は、skip
 		c.nextToken()
 		if !IsVarDecPrefixToken(c.getToken()) {
-			log.Println("ver dec is ", c.getToken())
 			break
 		}
 	}
@@ -302,7 +309,6 @@ func (c *CompilationEngine) compileVarDec() []*VarDec {
 // compileStatements 一連の文をコンパイルする。波括弧"{}"は含まない
 func (c *CompilationEngine) compileStatements() []Statement {
 
-	// c.nextToken()
 	if !IsStatementPrefixToken(c.getToken()) {
 		// statementの宣言がありませんでした
 		return nil
@@ -318,6 +324,11 @@ func (c *CompilationEngine) compileStatements() []Statement {
 			letStatement := c.compileLet()
 			statementList = append(statementList, letStatement)
 		case IfStatementPrefix:
+			ifStatement := c.compileIf()
+			statementList = append(statementList, ifStatement)
+
+			// TODO ここに到達しない
+			log.Println("if statmenet is ", jsonutil.Marshal(ifStatement))
 
 		case WhileStatementPrefix:
 
@@ -326,18 +337,15 @@ func (c *CompilationEngine) compileStatements() []Statement {
 			statementList = append(statementList, doStatement)
 		case ReturnStatementPrefix:
 			// ここで必ずreturnする
-
 			returnStatement := c.compileReturn()
-
 			statementList = append(statementList, returnStatement)
-
 			return statementList
 		}
 
 		// 次に進める
 		// この段階で、次のprefixがstatementでない場合は、Error(Returnがない)
 		c.nextToken()
-		// log.Println("hoge is ", c.getToken())
+		log.Println("hoge is ", c.getToken())
 		if !IsStatementPrefixToken(c.getToken()) {
 			panic("Statementに「return」が指定されていません")
 		}
@@ -467,8 +475,54 @@ func (c *CompilationEngine) compileReturn() *ReturnStatement {
 }
 
 // compileIf if文をコンパイルする。else文を伴う可能性がある
-func compileIf() {
+func (c *CompilationEngine) compileIf() *IfStatement {
 
+	if c.getToken() != string(IfStatementPrefix) {
+		panic("ifのsatementではありません")
+	}
+
+	// ( check
+	c.nextToken()
+	if c.getToken() != "(" {
+		panic("ifのstatementに「(」がありません")
+	}
+
+	// expression
+	c.nextToken()
+	conditionalExpression := c.compileExpression()
+
+	// ) check
+	if c.getToken() != ")" {
+		panic("ifのstatementに「)」がありません")
+	}
+
+	// { check
+	c.nextToken()
+	if c.getToken() != "{" {
+		panic("ifのstatementに「{」がありません")
+	}
+
+	// statement
+	c.nextToken()
+	statementList := c.compileStatements()
+
+	// } check
+	if c.getToken() != "}" {
+		panic("ifのstatmenetに「}」がありません")
+	}
+
+	// elseがあるかどうか?
+	c.nextToken()
+	var elseStatementList []Statement
+	if c.getToken() == "else" {
+		elseStatementList = c.compileStatements()
+	}
+
+	return &IfStatement{
+		ConditionalExpression: conditionalExpression,
+		StatementList:         statementList,
+		ElseStatementList:     elseStatementList,
+	}
 }
 
 // compileExpression 式をコンパイルする
