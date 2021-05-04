@@ -172,6 +172,9 @@ func (c *CompilationEngine) compileSubroutine() []*SubRoutineDec {
 		// 先に型を宣言して、処理する形を遵守する
 		varDecList := c.compileVarDec()
 
+		// statement
+		statementList := c.compileStatements()
+
 		subRoutineDec := &SubRoutineDec{
 			RoutineKind:    SubRoutineKind(subRoutineKind),
 			ReturnType:     VariableType(returnType),
@@ -179,7 +182,7 @@ func (c *CompilationEngine) compileSubroutine() []*SubRoutineDec {
 			ParameterList:  parameterList,
 			SubRoutineBody: &SubRoutineBody{
 				VarDecList:    varDecList,
-				StatementList: []*Statement{},
+				StatementList: statementList,
 			},
 		}
 
@@ -294,7 +297,35 @@ func (c *CompilationEngine) compileVarDec() []*VarDec {
 }
 
 // compileStatements 一連の文をコンパイルする。波括弧"{}"は含まない
-func compileStatements() {
+func (c *CompilationEngine) compileStatements() []*Statement {
+
+	c.nextToken()
+	if !IsStatementPrefixToken(c.getToken()) {
+		// statementの宣言がありませんでした
+		return nil
+	}
+
+	var statementList []*Statement
+
+	for {
+
+		statementType := c.getToken()
+		switch statementType {
+		case LetStatementPrefix:
+
+		case IfStatementPrefix:
+
+		case WhileStatementPrefix:
+
+		case DoStatementPrefix:
+
+		case ReturnStatementPrefix:
+			// ここで必ずreturnする
+
+			return statementList
+		}
+
+	}
 
 }
 

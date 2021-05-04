@@ -2,6 +2,23 @@ package compilation_engine
 
 // 文章の構造宣言
 
+const (
+	// LetStatementPrefix .
+	LetStatementPrefix = "let"
+
+	// IfStatementPrefix .
+	IfStatementPrefix = "if"
+
+	// WhileStatementPrefix .
+	WhileStatementPrefix = "while"
+
+	// DoStatementPrefix .
+	DoStatementPrefix = "do"
+
+	// ReturnStatementPrefix .
+	ReturnStatementPrefix = "return"
+)
+
 // Statement 一番大きな単位
 // TODO interface化
 type Statement interface {
@@ -34,7 +51,7 @@ type WhileStatement struct {
 
 // DoStatement doの文
 type DoStatement struct {
-	SubroutineCall SubRoutineCall
+	SubroutineCall *SubRoutineCall
 }
 
 // ReturnStatement return文
