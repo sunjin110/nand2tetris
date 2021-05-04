@@ -2,6 +2,7 @@ package compilation_engine
 
 import (
 	"compiler/pkg/tokenizer"
+	"log"
 )
 
 // tokenizerから入力を受け取り、構文解析された構造を出力ファイルに出力する
@@ -137,6 +138,75 @@ func (c *CompilationEngine) compileClassVarDec() []*ClassVarDec {
 
 // compileSubroutine メソッド、ファンクション、コンストラクタをコンパイルする
 func (c *CompilationEngine) compileSubroutine() []*SubRoutineDec {
+
+	// check
+	t := c.getToken()
+	log.Println("subroutine prefix is ", t)
+
+	// サブルーチンかどうか
+	if !IsSubRoutineDecPrefixToken(t) {
+		return nil
+	}
+
+	var subRoutineDecList []*SubRoutineDec
+	for {
+
+		// function or constructor or method
+		subRoutineKind := c.getToken()
+
+		// void or any type
+		c.nextToken()
+		returnType := c.getToken()
+
+		// sub routine name
+		c.nextToken()
+		subRoutineName := c.getToken()
+
+		// TODO 引数
+		c.nextToken()
+		if c.getToken() == "(" {
+			panic("SubRoutineに(がありませんでした")
+		}
+
+		var parameterList []*Parameter
+		c.nextToken()
+		for {
+
+			// もし)がきたら終了
+			if c.getToken() == ")" {
+				break
+			}
+
+			// 引数の型
+			paramType := c.getToken()
+
+			// 引数名
+			c.nextToken()
+			paramName := c.getToken()
+
+			// ではない場合は、type
+			parameter := &Parameter{
+				ParamType: VariableType(paramType),
+				ParamName: paramName,
+			}
+
+			parameterList = append(parameterList, parameter)
+
+			c.nextToken()
+		}
+
+		subRoutineDec := &SubRoutineDec{
+			RoutineKind:    SubRoutineKind(subRoutineKind),
+			ReturnType:     VariableType(returnType),
+			SubRoutineName: subRoutineName,
+			ParameterList:  parameterList,
+			SubRoutineBody: &SubRoutineBody{},
+		}
+
+		subRoutineDecList = append(subRoutineDecList, subRoutineDec)
+
+	}
+
 	return nil
 }
 
