@@ -11,7 +11,7 @@ const (
 	FieldVariableKind VariableKind = "field"
 
 	// LocalVariableKind ローカル変数、Method内でのみ使用される
-	LocalVariableKind VariableKind = "local"
+	LocalVariableKind VariableKind = "var"
 
 	// ParamVariableKind 引数の変数
 	ParamVariableKind VariableKind = "param"

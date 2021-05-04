@@ -82,7 +82,7 @@ func (c *CompilationEngine) compileClassVarDec() []*ClassVarDec {
 	// classの宣言があるかどうかを確認
 
 	// static or fieldという文字がない場合は、varDecが存在しないので、nilで返す
-	if !IsClassVarDecPrefixTokne(t) {
+	if !IsClassVarDecPrefixToken(t) {
 		return nil
 	}
 	var classVarDecList []*ClassVarDec
@@ -124,10 +124,9 @@ func (c *CompilationEngine) compileClassVarDec() []*ClassVarDec {
 		}
 
 		// next チェック
-		// すでに他のtokenに写っている場合は、skip
+		// すでに他のtokenに移っている場合は、skip
 		c.nextToken()
-		checkStr := c.getToken()
-		if !IsClassVarDecPrefixTokne(checkStr) {
+		if !IsClassVarDecPrefixToken(c.getToken()) {
 			break
 		}
 	}
@@ -163,14 +162,25 @@ func (c *CompilationEngine) compileSubroutine() []*SubRoutineDec {
 		// parameter
 		parameterList := c.compileParameterList()
 
+		// check {
+		c.nextToken()
+		if c.getToken() != "{" {
+			panic("subRoutineで{がありませんでした")
+		}
+
 		// subRoutineBody
+		// 先に型を宣言して、処理する形を遵守する
+		varDecList := c.compileVarDec()
 
 		subRoutineDec := &SubRoutineDec{
 			RoutineKind:    SubRoutineKind(subRoutineKind),
 			ReturnType:     VariableType(returnType),
 			SubRoutineName: subRoutineName,
 			ParameterList:  parameterList,
-			SubRoutineBody: &SubRoutineBody{},
+			SubRoutineBody: &SubRoutineBody{
+				VarDecList:    varDecList,
+				StatementList: []*Statement{},
+			},
 		}
 
 		subRoutineDecList = append(subRoutineDecList, subRoutineDec)
@@ -230,8 +240,57 @@ func (c *CompilationEngine) compileParameterList() []*Parameter {
 }
 
 // compileVarDec var宣言をコンパイルする
-func compileVarDec() {
+func (c *CompilationEngine) compileVarDec() []*VarDec {
 
+	c.nextToken()
+	if !IsVarDecPrefixToken(c.getToken()) {
+		// var宣言がありませんでした
+		return nil
+	}
+
+	var varDecList []*VarDec
+	for {
+
+		// type
+		c.nextToken()
+		varType := c.getToken()
+
+		// 変数名 (同時宣言をしているものがあるので、それもチェックする)
+		var varNameList []string
+		for {
+			c.nextToken()
+			name := c.getToken()
+			varNameList = append(varNameList, name)
+
+			c.nextToken()
+			if c.getToken() == "," {
+				continue
+			}
+			break
+		}
+
+		// make
+		varDec := &VarDec{
+			Type:     VariableType(varType),
+			NameList: varNameList,
+		}
+
+		varDecList = append(varDecList, varDec)
+
+		// check
+		if c.getToken() != ";" {
+			panic(";が足りないです")
+		}
+
+		// next チェック
+		// すでに他のtokenに移っている場合は、skip
+		c.nextToken()
+		if !IsVarDecPrefixToken(c.getToken()) {
+			break
+		}
+	}
+
+	return varDecList
 }
 
 // compileStatements 一連の文をコンパイルする。波括弧"{}"は含まない
