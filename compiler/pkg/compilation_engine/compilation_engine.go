@@ -297,7 +297,7 @@ func (c *CompilationEngine) compileVarDec() []*VarDec {
 }
 
 // compileStatements 一連の文をコンパイルする。波括弧"{}"は含まない
-func (c *CompilationEngine) compileStatements() []*Statement {
+func (c *CompilationEngine) compileStatements() []Statement {
 
 	c.nextToken()
 	if !IsStatementPrefixToken(c.getToken()) {
@@ -305,7 +305,7 @@ func (c *CompilationEngine) compileStatements() []*Statement {
 		return nil
 	}
 
-	var statementList []*Statement
+	var statementList []Statement
 
 	for {
 

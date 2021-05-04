@@ -26,7 +26,7 @@ type SubRoutineDec struct {
 // SubRoutineBody .
 type SubRoutineBody struct {
 	VarDecList    []*VarDec // 型の宣言など
-	StatementList []*Statement
+	StatementList []Statement
 }
 
 // Parameter 引数
