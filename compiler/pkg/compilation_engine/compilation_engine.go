@@ -2,6 +2,7 @@ package compilation_engine
 
 import (
 	"compiler/pkg/tokenizer"
+	"log"
 )
 
 // tokenizerから入力を受け取り、構文解析された構造を出力ファイルに出力する
@@ -170,6 +171,7 @@ func (c *CompilationEngine) compileSubroutine() []*SubRoutineDec {
 
 		// subRoutineBody
 		// 先に型を宣言して、処理する形を遵守する
+		c.nextToken()
 		varDecList := c.compileVarDec()
 
 		// statement
@@ -245,7 +247,7 @@ func (c *CompilationEngine) compileParameterList() []*Parameter {
 // compileVarDec var宣言をコンパイルする
 func (c *CompilationEngine) compileVarDec() []*VarDec {
 
-	c.nextToken()
+	// c.nextToken()
 	if !IsVarDecPrefixToken(c.getToken()) {
 		// var宣言がありませんでした
 		return nil
@@ -289,6 +291,7 @@ func (c *CompilationEngine) compileVarDec() []*VarDec {
 		// すでに他のtokenに移っている場合は、skip
 		c.nextToken()
 		if !IsVarDecPrefixToken(c.getToken()) {
+			log.Println("ver dec is ", c.getToken())
 			break
 		}
 	}
@@ -299,7 +302,8 @@ func (c *CompilationEngine) compileVarDec() []*VarDec {
 // compileStatements 一連の文をコンパイルする。波括弧"{}"は含まない
 func (c *CompilationEngine) compileStatements() []Statement {
 
-	c.nextToken()
+	// c.nextToken()
+	log.Println("statement is ", c.getToken())
 	if !IsStatementPrefixToken(c.getToken()) {
 		// statementの宣言がありませんでした
 		return nil
@@ -312,7 +316,8 @@ func (c *CompilationEngine) compileStatements() []Statement {
 		statementType := c.getToken()
 		switch statementType {
 		case LetStatementPrefix:
-
+			letStatement := c.compileLet()
+			statementList = append(statementList, letStatement)
 		case IfStatementPrefix:
 
 		case WhileStatementPrefix:
@@ -322,7 +327,19 @@ func (c *CompilationEngine) compileStatements() []Statement {
 		case ReturnStatementPrefix:
 			// ここで必ずreturnする
 
+			returnStatement := c.compileReturn()
+
+			statementList = append(statementList, returnStatement)
+
 			return statementList
+		}
+
+		// 次に進める
+		// この段階で、次のprefixがstatementでない場合は、Error(Returnがない)
+		c.nextToken()
+		// log.Println("hoge is ", c.getToken())
+		if !IsStatementPrefixToken(c.getToken()) {
+			panic("Statementに「return」が指定されていません")
 		}
 
 	}
@@ -335,8 +352,48 @@ func compileDo() {
 }
 
 // compileLet let文をコンパイルする
-func compileLet() {
+func (c *CompilationEngine) compileLet() *LetStatement {
 
+	if c.getToken() != string(LetStatementPrefix) {
+		panic("letのstatementではありません")
+	}
+
+	// name
+	c.nextToken()
+	destVarName := c.getToken()
+
+	// arrayかどうかを判定する
+	var arrayExpression *Expression
+	c.nextToken()
+	if c.getToken() == "[" {
+		arrayExpression = c.compileExpression()
+
+		c.nextToken()
+		if c.getToken() != "]" {
+			panic("let式のarrayに「]」がありませんでした")
+		}
+	}
+
+	// = check
+	if c.getToken() != string(EqlOp) {
+		panic("let式に=がありません")
+	}
+
+	// 代入する式を取得する
+	c.nextToken()
+	expression := c.compileExpression()
+
+	// 「;」check
+	c.nextToken()
+	if c.getToken() != ";" {
+		panic("Let式の最後に「;」がありません")
+	}
+
+	return &LetStatement{
+		DestVarName:     destVarName,
+		ArrayExpression: arrayExpression,
+		Expression:      expression,
+	}
 }
 
 // compileWhile while文をコンパイルする
@@ -345,8 +402,22 @@ func compileWhile() {
 }
 
 // compileReturn return文をコンパイルする
-func compileReturn() {
+func (c *CompilationEngine) compileReturn() *ReturnStatement {
 
+	if c.getToken() != string(ReturnStatementPrefix) {
+		panic("returnのstatementではありません")
+	}
+
+	returnExpression := c.compileExpression()
+
+	c.nextToken()
+	if c.getToken() != ";" {
+		panic("returnに「;」が含まれていませんでした")
+	}
+
+	return &ReturnStatement{
+		ReturnExpression: returnExpression,
+	}
 }
 
 // compileIf if文をコンパイルする。else文を伴う可能性がある
@@ -355,8 +426,9 @@ func compileIf() {
 }
 
 // compileExpression 式をコンパイルする
-func compileExpression() {
+func (c *CompilationEngine) compileExpression() *Expression {
 
+	return &Expression{}
 }
 
 // compileTerm termをコンパイルする
