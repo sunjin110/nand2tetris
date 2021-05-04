@@ -85,8 +85,7 @@ func (*ValNameConstantTerm) GetTermType() string {
 
 // SubRoutineCall termでもあるんやで
 type SubRoutineCall struct {
-	ClassName      *string
-	VarName        *string
+	ClassOrVarName string // 空白の場合は指定なし
 	SubRoutineName string
 	ExpressionList []*Expression
 }

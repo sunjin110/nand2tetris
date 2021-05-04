@@ -303,7 +303,6 @@ func (c *CompilationEngine) compileVarDec() []*VarDec {
 func (c *CompilationEngine) compileStatements() []Statement {
 
 	// c.nextToken()
-	log.Println("statement is ", c.getToken())
 	if !IsStatementPrefixToken(c.getToken()) {
 		// statementの宣言がありませんでした
 		return nil
@@ -323,7 +322,8 @@ func (c *CompilationEngine) compileStatements() []Statement {
 		case WhileStatementPrefix:
 
 		case DoStatementPrefix:
-
+			doStatement := c.compileDo()
+			statementList = append(statementList, doStatement)
 		case ReturnStatementPrefix:
 			// ここで必ずreturnする
 
@@ -347,8 +347,57 @@ func (c *CompilationEngine) compileStatements() []Statement {
 }
 
 // compileDo do文をコンパイルする
-func compileDo() {
+func (c *CompilationEngine) compileDo() *DoStatement {
 
+	if c.getToken() != string(DoStatementPrefix) {
+		panic("doのstatementではありません")
+	}
+
+	c.nextToken()
+	tmp := c.getToken()
+
+	// ClassName or varNameがあるかどうか
+	var classOrVarName string
+	var subRoutineName string
+	c.nextToken()
+	if c.getToken() == "." {
+		classOrVarName = tmp
+
+		// soubRoutineName
+		c.nextToken()
+		subRoutineName = c.getToken()
+
+		c.nextToken()
+	} else {
+		subRoutineName = tmp
+	}
+
+	// ( check
+	if c.getToken() != "(" {
+		panic("SubRoutineCallで「(」がありません")
+	}
+
+	// expresstionList
+	expressionList := c.compileExpressionList()
+
+	// ) check
+	if c.getToken() != ")" {
+		panic("SubRoutineCallで「)」がありません")
+	}
+
+	// ; check
+	c.nextToken()
+	if c.getToken() != ";" {
+		panic("SubRoutineCallで「;」がありません")
+	}
+
+	return &DoStatement{
+		SubroutineCall: &SubRoutineCall{
+			ClassOrVarName: classOrVarName,
+			SubRoutineName: subRoutineName,
+			ExpressionList: expressionList,
+		},
+	}
 }
 
 // compileLet let文をコンパイルする
@@ -368,7 +417,6 @@ func (c *CompilationEngine) compileLet() *LetStatement {
 	if c.getToken() == "[" {
 		arrayExpression = c.compileExpression()
 
-		c.nextToken()
 		if c.getToken() != "]" {
 			panic("let式のarrayに「]」がありませんでした")
 		}
@@ -384,7 +432,6 @@ func (c *CompilationEngine) compileLet() *LetStatement {
 	expression := c.compileExpression()
 
 	// 「;」check
-	c.nextToken()
 	if c.getToken() != ";" {
 		panic("Let式の最後に「;」がありません")
 	}
@@ -410,7 +457,6 @@ func (c *CompilationEngine) compileReturn() *ReturnStatement {
 
 	returnExpression := c.compileExpression()
 
-	c.nextToken()
 	if c.getToken() != ";" {
 		panic("returnに「;」が含まれていませんでした")
 	}
@@ -428,15 +474,22 @@ func compileIf() {
 // compileExpression 式をコンパイルする
 func (c *CompilationEngine) compileExpression() *Expression {
 
+	// TODO
+	c.nextToken()
+
 	return &Expression{}
+}
+
+// compileExpressionList コンマで分離された式のリスト(空白の可能性もある)をコンパイルする
+func (c *CompilationEngine) compileExpressionList() []*Expression {
+
+	// TODO
+	c.nextToken()
+
+	return nil
 }
 
 // compileTerm termをコンパイルする
 func compileTerm() {
-
-}
-
-// compileExpressionList コンマで分離された式のリスト(空白の可能性もある)をコンパイルする
-func compileExpressionList() {
 
 }

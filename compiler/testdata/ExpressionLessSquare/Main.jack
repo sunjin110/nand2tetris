@@ -15,8 +15,9 @@ class Main {
         var SquareGame game;
         // let game1 = game2;
         let game = game;
-        // do game.run();
-        // do game.dispose();
+        do game.run();
+        // do run();
+        do game.dispose();
         return;
     }
 
