@@ -2,7 +2,6 @@ package compilation_engine
 
 import (
 	"compiler/pkg/tokenizer"
-	"log"
 )
 
 // tokenizerから入力を受け取り、構文解析された構造を出力ファイルに出力する
@@ -141,7 +140,6 @@ func (c *CompilationEngine) compileSubroutine() []*SubRoutineDec {
 
 	// check
 	t := c.getToken()
-	log.Println("subroutine prefix is ", t)
 
 	// サブルーチンかどうか
 	if !IsSubRoutineDecPrefixToken(t) {
@@ -162,38 +160,10 @@ func (c *CompilationEngine) compileSubroutine() []*SubRoutineDec {
 		c.nextToken()
 		subRoutineName := c.getToken()
 
-		// TODO 引数
-		c.nextToken()
-		if c.getToken() == "(" {
-			panic("SubRoutineに(がありませんでした")
-		}
+		// parameter
+		parameterList := c.compileParameterList()
 
-		var parameterList []*Parameter
-		c.nextToken()
-		for {
-
-			// もし)がきたら終了
-			if c.getToken() == ")" {
-				break
-			}
-
-			// 引数の型
-			paramType := c.getToken()
-
-			// 引数名
-			c.nextToken()
-			paramName := c.getToken()
-
-			// ではない場合は、type
-			parameter := &Parameter{
-				ParamType: VariableType(paramType),
-				ParamName: paramName,
-			}
-
-			parameterList = append(parameterList, parameter)
-
-			c.nextToken()
-		}
+		// subRoutineBody
 
 		subRoutineDec := &SubRoutineDec{
 			RoutineKind:    SubRoutineKind(subRoutineKind),
@@ -205,14 +175,58 @@ func (c *CompilationEngine) compileSubroutine() []*SubRoutineDec {
 
 		subRoutineDecList = append(subRoutineDecList, subRoutineDec)
 
+		// 次もsubroutineかどうかを確認
+		// 違うなら、roopから外れる
+		c.nextToken()
+		if !IsSubRoutineDecPrefixToken(c.getToken()) {
+			break
+		}
+
 	}
 
-	return nil
+	return subRoutineDecList
 }
 
 // compileParameterList パラメータのリスト(空の可能性もある)をコンパイルする。カッコ"()"は含まない
-func compileParameterList() {
+func (c *CompilationEngine) compileParameterList() []*Parameter {
 
+	c.nextToken()
+	if c.getToken() != "(" {
+		panic("引数の(がありませんでした")
+	}
+
+	var parameterList []*Parameter
+	c.nextToken()
+	for {
+
+		// もし)がきたら終了
+		if c.getToken() == ")" {
+			break
+		}
+
+		// 引数の型
+		paramType := c.getToken()
+
+		// 引数名
+		c.nextToken()
+		paramName := c.getToken()
+
+		// ではない場合は、type
+		parameter := &Parameter{
+			ParamType: VariableType(paramType),
+			ParamName: paramName,
+		}
+
+		parameterList = append(parameterList, parameter)
+
+		c.nextToken()
+		if c.getToken() == "," {
+			c.nextToken()
+			continue
+		}
+	}
+
+	return parameterList
 }
 
 // compileVarDec var宣言をコンパイルする
