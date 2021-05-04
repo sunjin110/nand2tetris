@@ -20,7 +20,6 @@ const (
 )
 
 // Statement 一番大きな単位
-// TODO interface化
 type Statement interface {
 	GetStatementType() string
 }
