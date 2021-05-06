@@ -18,6 +18,7 @@ func IsVarDecPrefixToken(token string) bool {
 
 // IsStatementPrefixToken statementの先頭のtokenかどうかを判定する
 func IsStatementPrefixToken(token string) bool {
+
 	return token == LetStatementPrefix ||
 		token == IfStatementPrefix ||
 		token == WhileStatementPrefix ||

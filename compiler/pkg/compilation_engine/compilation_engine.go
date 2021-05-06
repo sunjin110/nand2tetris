@@ -319,6 +319,7 @@ func (c *CompilationEngine) compileStatements() []Statement {
 	for {
 
 		statementType := c.getToken()
+		log.Println("statement type is ", statementType)
 		switch statementType {
 		case LetStatementPrefix:
 			letStatement := c.compileLet()
@@ -343,14 +344,16 @@ func (c *CompilationEngine) compileStatements() []Statement {
 		}
 
 		// 次に進める
-		// この段階で、次のprefixがstatementでない場合は、Error(Returnがない)
+		// この段階で、次のprefixがstatementでない場合は、終了
 		c.nextToken()
-		log.Println("hoge is ", c.getToken())
+		log.Println("compile statementsの最後", c.getToken())
 		if !IsStatementPrefixToken(c.getToken()) {
-			panic("Statementに「return」が指定されていません")
+			break
 		}
 
 	}
+
+	return statementList
 
 }
 
@@ -514,8 +517,20 @@ func (c *CompilationEngine) compileIf() *IfStatement {
 	// elseがあるかどうか?
 	c.nextToken()
 	var elseStatementList []Statement
+
 	if c.getToken() == "else" {
+		log.Println("else start")
+		c.nextToken()
+
+		// { チェック
+		if c.getToken() != "{" {
+			panic("elseの次の「{」がありません")
+		}
+
+		c.nextToken()
 		elseStatementList = c.compileStatements()
+		log.Println("else statment list is ", jsonutil.Marshal(elseStatementList))
+		log.Println("else end")
 	}
 
 	return &IfStatement{
