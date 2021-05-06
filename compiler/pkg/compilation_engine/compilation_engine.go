@@ -421,6 +421,7 @@ func (c *CompilationEngine) compileLet() *LetStatement {
 	var arrayExpression *Expression
 	c.nextToken()
 	if c.getToken() == "[" {
+		c.nextToken()
 		arrayExpression = c.compileExpression()
 
 		if c.getToken() != "]" {
@@ -435,6 +436,7 @@ func (c *CompilationEngine) compileLet() *LetStatement {
 
 	// 代入する式を取得する
 	c.nextToken()
+	log.Println("let token is ", c.getToken())
 	expression := c.compileExpression()
 
 	// 「;」check
@@ -461,6 +463,7 @@ func (c *CompilationEngine) compileReturn() *ReturnStatement {
 		panic("returnのstatementではありません")
 	}
 
+	c.nextToken()
 	returnExpression := c.compileExpression()
 
 	if c.getToken() != ";" {
@@ -535,10 +538,68 @@ func (c *CompilationEngine) compileIf() *IfStatement {
 // compileExpression 式をコンパイルする
 func (c *CompilationEngine) compileExpression() *Expression {
 
-	// TODO
-	c.nextToken()
+	// Expresionかどうかを判定する
+	if !IsExpressionPrefixToken(c.getToken()) {
+		// 式ではない場合は、スキップする
+		return nil
+	}
 
-	return &Expression{}
+	log.Println("expressionだよ")
+
+	// TODO Expressionを処理していく
+	// c.nextToken()
+
+	// token := c.getToken()
+	// log.Println("expression token is ", token)
+
+	// 先頭の必須termを解析する
+	var initTerm Term
+
+	initTokenType := tokenizer.GetTokenType(c.getToken())
+
+	// // 数字に変換できる場合は、数字const
+	// if i, err := strconv.Atoi(c.getToken()); err == nil {
+	// 	initTerm = &IntegerConstTerm{
+	// 		Val: i,
+	// 	}
+	// } else if strings.HasPrefix(c.getToken(), "\"") && strings.HasSuffix(c.getToken(), "\"") {
+	// 	// 両端が「"」の場合は文字列
+	// 	val := c.Tknz.GetStringVal()
+	// 	initTerm = &StringConstTerm{
+	// 		Val: val,
+	// 	}
+	// }
+
+	// var opTermList []*OpTerm
+
+	// for {
+
+	// 	token := c.getToken()
+
+	// 	// 数字にできる場合は、数字term
+	// 	// i, err := strconv.Atoi(token)
+	// 	// if err == nil {
+	// 	// 	if term == nil {
+	// 	// 		term = &IntegerConstTerm{}
+	// 	// 	}
+	// 	// }
+
+	// 	if i, err := strconv.Atoi(token); err == nil {
+
+	// 		// もし、先頭の場合は
+
+	// 	}
+
+	// }
+
+	// TODO 先に、変数term、文字列term、数字termだけ処理する
+
+	// log.Println("expression token is ", c.getToken())
+
+	return &Expression{
+		InitTerm:   term,
+		OpTermList: opTermList,
+	}
 }
 
 // compileExpressionList コンマで分離された式のリスト(空白の可能性もある)をコンパイルする

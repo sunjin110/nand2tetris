@@ -1,5 +1,10 @@
 package compilation_engine
 
+import (
+	"strconv"
+	"unicode"
+)
+
 // IsClassVarDecPrefixToken Classのfield宣言の先頭かどうかを判定する
 func IsClassVarDecPrefixToken(token string) bool {
 	return token == string(StaticVariableKind) || token == string(FieldVariableKind)
@@ -24,4 +29,72 @@ func IsStatementPrefixToken(token string) bool {
 		token == WhileStatementPrefix ||
 		token == DoStatementPrefix ||
 		token == ReturnStatementPrefix
+}
+
+// IsExpressionPrefixToken expressionの先頭のtokenかどうかを判定する
+func IsExpressionPrefixToken(token string) bool {
+
+	// アルファベット or
+	// 数字only or
+	// ( or
+	// [ or
+	// - or
+	// ~ の場合は、Expressionの先頭のもの
+
+	// 空白の場合は、Error
+	if token == "" {
+		panic("Expressionのtokenが空です")
+	}
+
+	// 先頭が(の場合OK
+	if rune(token[0]) == '(' {
+		return true
+	}
+
+	// 先頭が[の場合OK
+	if rune(token[0]) == '[' {
+		return true
+	}
+
+	// 先頭が"の場合はOK
+	if rune(token[0]) == '"' {
+		return true
+	}
+
+	// 先頭がUnaryOkの場合OK
+	if rune(token[0]) == rune(HypenUnaryOp) || rune(token[0]) == rune(TildeUnaryOp) {
+		return true
+	}
+
+	// 数字に変換できるならOK
+	_, err := strconv.Atoi(token)
+	if err == nil {
+		return true
+	}
+
+	// 変数ならOK
+	return isVariableToken(token)
+}
+
+// 指定したtokenが変数(先頭がアルファベット, それ以外はアルファベットor数字orアンダースコア)
+func isVariableToken(token string) bool {
+
+	// 空白の場合は、除外
+	if token == "" {
+		return false
+	}
+
+	// 先頭の文字は、アルファベットまたは_でない場合はだめ
+	if !unicode.IsLetter(rune(token[0])) && rune(token[0]) != '_' {
+		return false
+	}
+
+	for _, s := range token {
+
+		// 変数、数字、アンダースコアではない場合は、変数ではない
+		if !unicode.IsLetter(s) && !unicode.IsNumber(s) && s != '_' {
+			return false
+		}
+	}
+	return true
 }

@@ -14,6 +14,8 @@ func Analyzer(outputFileName string, pathList []string) {
 
 	for _, path := range pathList {
 
+		log.Println("read file is ", path)
+
 		t, err := tokenizer.New(path)
 		chk.SE(err)
 
@@ -24,49 +26,6 @@ func Analyzer(outputFileName string, pathList []string) {
 		c := compilationEngine.Class
 		log.Println("class is ", jsonutil.Marshal(c))
 	}
-
-	// // コードをparseする
-	// for _, path := range pathList {
-
-	// 	fmt.Println("path is ", path)
-
-	// 	// Tokenizerテスト用のxxxT.xmlのファイルを作成する
-	// 	xmlWriterT, err := xmlwriter.New(strings.Split(path, ".")[0] + "T.xml")
-	// 	chk.SE(err)
-
-	// 	t, err := tokenizer.New(path)
-	// 	chk.SE(err)
-
-	// 	// tokenを一つずつ取得する
-	// 	for t.NextToken() {
-
-	// 		token := t.Token
-
-	// 		tokenType := tokenizer.GetTokenType(token)
-	// 		switch tokenType {
-	// 		case tokenizer.TokenTypeKeyWord:
-	// 			xmlWriterT.WriteToken(tokenType, token)
-	// 		case tokenizer.TokenTypeSymbol:
-	// 			symbol := t.GetSymbol()
-	// 			xmlWriterT.WriteToken(tokenType, string(symbol))
-	// 		case tokenizer.TokenTypeIdentifier:
-	// 			identifier := t.GetIdentifier()
-	// 			xmlWriterT.WriteToken(tokenType, identifier)
-	// 		case tokenizer.TokenTypeIntConst:
-	// 			intVal := t.GetIntVal()
-	// 			xmlWriterT.WriteToken(tokenType, fmt.Sprintf("%d", intVal))
-	// 		case tokenizer.TokenTypeStringConst:
-	// 			strVal := t.GetStringVal()
-	// 			xmlWriterT.WriteToken(tokenType, strVal)
-	// 		default:
-	// 			panic("定義されていないtokenType")
-	// 		}
-	// 	}
-
-	// 	// Tokenizerテスト用のxxxT.xmlのファイルを閉じる
-	// 	xmlWriterT.Close()
-
-	// }
 
 }
 

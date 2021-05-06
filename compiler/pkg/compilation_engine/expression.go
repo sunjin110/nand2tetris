@@ -156,7 +156,7 @@ const (
 	HypenUnaryOp UnaryOp = '-'
 
 	// TildeUnaryOp .
-	TildeUnaryOp UnaryOp = '!'
+	TildeUnaryOp UnaryOp = '~'
 )
 
 // KeywordConstant .
