@@ -1,7 +1,6 @@
 package compilation_engine
 
 import (
-	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/tokenizer"
 	"log"
 )
@@ -327,10 +326,6 @@ func (c *CompilationEngine) compileStatements() []Statement {
 		case IfStatementPrefix:
 			ifStatement := c.compileIf()
 			statementList = append(statementList, ifStatement)
-
-			// TODO ここに到達しない
-			log.Println("if statmenet is ", jsonutil.Marshal(ifStatement))
-
 		case WhileStatementPrefix:
 
 		case DoStatementPrefix:
@@ -519,7 +514,6 @@ func (c *CompilationEngine) compileIf() *IfStatement {
 	var elseStatementList []Statement
 
 	if c.getToken() == "else" {
-		log.Println("else start")
 		c.nextToken()
 
 		// { チェック
@@ -529,8 +523,6 @@ func (c *CompilationEngine) compileIf() *IfStatement {
 
 		c.nextToken()
 		elseStatementList = c.compileStatements()
-		log.Println("else statment list is ", jsonutil.Marshal(elseStatementList))
-		log.Println("else end")
 	}
 
 	return &IfStatement{
