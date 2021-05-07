@@ -26,6 +26,8 @@ class Square {
    method void draw() {
       do Screen.setColor(x);
       do Screen.drawRectangle(x, y, x, y);
+      // do Screen.setColor(this);
+      // do Screen.drawRectangle(this, this, this, this);
       return;
    }
 

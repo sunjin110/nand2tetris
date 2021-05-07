@@ -1,8 +1,12 @@
 package compilation_engine
 
 import (
+	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/tokenizer"
+	"fmt"
 	"log"
+	"strconv"
+	"strings"
 )
 
 // tokenizerから入力を受け取り、構文解析された構造を出力ファイルに出力する
@@ -384,11 +388,12 @@ func (c *CompilationEngine) compileDo() *DoStatement {
 	}
 
 	// expresstionList
+	c.nextToken()
 	expressionList := c.compileExpressionList()
 
 	// ) check
 	if c.getToken() != ")" {
-		panic("SubRoutineCallで「)」がありません")
+		panic(fmt.Sprintf("SubRoutineCallで「)」がありません:%s", c.getToken()))
 	}
 
 	// ; check
@@ -438,6 +443,8 @@ func (c *CompilationEngine) compileLet() *LetStatement {
 	c.nextToken()
 	log.Println("let token is ", c.getToken())
 	expression := c.compileExpression()
+
+	log.Println("hogehogehgoe is ", c.getToken())
 
 	// 「;」check
 	if c.getToken() != ";" {
@@ -538,80 +545,171 @@ func (c *CompilationEngine) compileIf() *IfStatement {
 // compileExpression 式をコンパイルする
 func (c *CompilationEngine) compileExpression() *Expression {
 
-	// Expresionかどうかを判定する
-	if !IsExpressionPrefixToken(c.getToken()) {
+	// Termかどうかを判定する
+	if !IsTermPrefixToken(c.getToken()) {
 		// 式ではない場合は、スキップする
 		return nil
 	}
 
-	log.Println("expressionだよ")
+	initTerm := c.compileTerm()
 
-	// TODO Expressionを処理していく
-	// c.nextToken()
+	log.Println("init term is ", jsonutil.Marshal(initTerm))
 
-	// token := c.getToken()
-	// log.Println("expression token is ", token)
+	log.Println("init term後のtoken", c.getToken())
 
-	// 先頭の必須termを解析する
-	var initTerm Term
+	var opTermList []*OpTerm
+	for {
 
-	initTokenType := tokenizer.GetTokenType(c.getToken())
+		// Opがあることを確認する
+		var op Op
+		switch Op(c.getToken()[0]) {
+		case PlusOp, MinusOp, AsteriskOp,
+			SlashOp, AndOp, PipeOp, LessThanOp,
+			GreaterThanOp, EqlOp:
 
-	// // 数字に変換できる場合は、数字const
-	// if i, err := strconv.Atoi(c.getToken()); err == nil {
-	// 	initTerm = &IntegerConstTerm{
-	// 		Val: i,
-	// 	}
-	// } else if strings.HasPrefix(c.getToken(), "\"") && strings.HasSuffix(c.getToken(), "\"") {
-	// 	// 両端が「"」の場合は文字列
-	// 	val := c.Tknz.GetStringVal()
-	// 	initTerm = &StringConstTerm{
-	// 		Val: val,
-	// 	}
-	// }
+			op = Op(c.getToken()[0])
+		default:
+			log.Println("戻すときのtoken", c.getToken())
+			return &Expression{
+				InitTerm:   initTerm,
+				OpTermList: opTermList,
+			}
+		}
 
-	// var opTermList []*OpTerm
+		// term
+		c.nextToken()
+		term := c.compileTerm()
 
-	// for {
+		opTerm := &OpTerm{
+			Operation: op,
+			OpTerm:    term,
+		}
 
-	// 	token := c.getToken()
+		opTermList = append(opTermList, opTerm)
 
-	// 	// 数字にできる場合は、数字term
-	// 	// i, err := strconv.Atoi(token)
-	// 	// if err == nil {
-	// 	// 	if term == nil {
-	// 	// 		term = &IntegerConstTerm{}
-	// 	// 	}
-	// 	// }
-
-	// 	if i, err := strconv.Atoi(token); err == nil {
-
-	// 		// もし、先頭の場合は
-
-	// 	}
-
-	// }
-
-	// TODO 先に、変数term、文字列term、数字termだけ処理する
-
-	// log.Println("expression token is ", c.getToken())
-
-	return &Expression{
-		InitTerm:   term,
-		OpTermList: opTermList,
 	}
+
 }
 
 // compileExpressionList コンマで分離された式のリスト(空白の可能性もある)をコンパイルする
 func (c *CompilationEngine) compileExpressionList() []*Expression {
 
-	// TODO
-	c.nextToken()
+	// expressionListを追加する必要がない場合は早期returnする
+	if !IsExpressionListPrefixToken(c.getToken()) {
+		return nil
+	}
 
-	return nil
+	var expressionList []*Expression
+
+	for {
+
+		expression := c.compileExpression()
+		if expression != nil {
+			expressionList = append(expressionList, expression)
+		}
+
+		// もし「,」でない場合は終了
+		if c.getToken() != "," {
+			break
+		}
+		c.nextToken()
+	}
+
+	return expressionList
 }
 
 // compileTerm termをコンパイルする
-func compileTerm() {
+// TODO nextのことをまだ、unaryとか()のやつは考えられていない
+// そもそもまだ未完成
+func (c *CompilationEngine) compileTerm() Term {
 
+	token := c.getToken()
+
+	// 数字に変換できる場合は、数字const
+	if i, err := strconv.Atoi(token); err == nil {
+		c.nextToken()
+		return &IntegerConstTerm{
+			Val: i,
+		}
+	}
+
+	// 文字列
+	if strings.HasPrefix(token, "\"") && strings.HasSuffix(token, "\"") {
+		val := c.Tknz.GetStringVal()
+		c.nextToken()
+		return &StringConstTerm{
+			Val: val,
+		}
+	}
+
+	// unary付きの場合
+	if rune(token[0]) == '-' || rune(token[0]) == '~' {
+
+		unaryOp := UnaryOp(token[0])
+
+		c.nextToken()
+		term := c.compileTerm()
+
+		return &UnaryOpTerm{
+			UnaryOp: unaryOp,
+			Term:    term,
+		}
+	}
+
+	// keyword const
+	if token == string(TrueKeyword) ||
+		token == string(FalseKeyword) ||
+		token == string(NullKeyword) ||
+		token == string(ThisKeyword) {
+
+		c.nextToken()
+
+		return &KeyWordConstTerm{
+			KeyWord: KeywordConstant(token),
+		}
+	}
+
+	// 先頭が(の場合はなんかうまいことする
+	if rune(token[0]) == '(' {
+
+		c.nextToken()
+		expression := c.compileExpression()
+
+		// TODO )を調べる
+
+		return &ExpressionTerm{
+			Expression: expression,
+		}
+	}
+
+	// 変数
+	if isVariableToken(token) {
+
+		valName := token
+
+		// もし「[」がある場合は式を取得する
+		var arrayExpression *Expression
+		c.nextToken()
+		if c.getToken() == "[" {
+
+			c.nextToken()
+			arrayExpression = c.compileExpression()
+		}
+
+		log.Println("変数termを調べ終わったあとのtoken is ", c.getToken())
+
+		return &ValNameConstantTerm{
+			ValName:         valName,
+			ArrayExpression: arrayExpression,
+		}
+	}
+
+	// それ以外はsubroutine
+	// subRoutineCall :=
+	// if subRoutineCall != nil {
+	// return subRoutineCall
+	// }
+
+	// TODO SubRoutineCallとそれ以外
+	return nil
 }

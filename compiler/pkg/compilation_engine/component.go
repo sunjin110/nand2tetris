@@ -31,19 +31,17 @@ func IsStatementPrefixToken(token string) bool {
 		token == ReturnStatementPrefix
 }
 
-// IsExpressionPrefixToken expressionの先頭のtokenかどうかを判定する
-func IsExpressionPrefixToken(token string) bool {
+// IsExpressionListPrefixToken expression listのものかどうかを判断する
+func IsExpressionListPrefixToken(token string) bool {
+	return IsTermPrefixToken(token)
+}
 
-	// アルファベット or
-	// 数字only or
-	// ( or
-	// [ or
-	// - or
-	// ~ の場合は、Expressionの先頭のもの
+// IsTermPrefixToken termの先頭のtokenかどうかを判定する
+func IsTermPrefixToken(token string) bool {
 
 	// 空白の場合は、Error
 	if token == "" {
-		panic("Expressionのtokenが空です")
+		panic("Termのtokenが空です")
 	}
 
 	// 先頭が(の場合OK
@@ -74,6 +72,7 @@ func IsExpressionPrefixToken(token string) bool {
 
 	// 変数ならOK
 	return isVariableToken(token)
+
 }
 
 // 指定したtokenが変数(先頭がアルファベット, それ以外はアルファベットor数字orアンダースコア)

@@ -95,7 +95,7 @@ func (*SubRoutineCall) GetTermType() string {
 	return SubRoutineCallType
 }
 
-// ExpressionTerm .
+// ExpressionTerm ()に包まれているterm
 type ExpressionTerm struct {
 	Expression *Expression
 }
