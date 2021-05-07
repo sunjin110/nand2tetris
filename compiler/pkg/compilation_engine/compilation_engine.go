@@ -2,7 +2,6 @@ package compilation_engine
 
 import (
 	"compiler/pkg/common/chk"
-	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/tokenizer"
 	"fmt"
 	"log"
@@ -201,18 +200,14 @@ func (c *CompilationEngine) compileSubroutine() []*SubRoutineDec {
 		subRoutineDecList = append(subRoutineDecList, subRoutineDec)
 
 		// } check
-		// log.Println("err前位のtoken", c.getToken())
 		c.nextToken()
-		// log.Println("hioghedklsjafkljfsa;l is ", c.getToken())
 		if c.getToken() != "}" {
-			log.Println("subRoutine decList is ", jsonutil.Marshal(subRoutineDecList))
 			c.SyntaxError("SubRoutineの「}」がありません")
 		}
 
 		// 次もsubroutineかどうかを確認
 		// 違うなら、roopから外れる
 		c.nextToken()
-		log.Println("次のやつ", c.getToken())
 		if !IsSubRoutineDecPrefixToken(c.getToken()) {
 			break
 		}
