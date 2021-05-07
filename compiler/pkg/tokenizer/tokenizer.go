@@ -43,8 +43,10 @@ func init() {
 // Tokenizer Jack言語をToken単位で分割する機構
 type Tokenizer struct {
 	file                   *os.File       // file(.jack)
+	FileName               string         //
 	scanner                *bufio.Scanner // fileのscanner
 	line                   string         // 現在の行
+	LineNum                int            // 行数番号(エラー時に使用する)
 	Token                  string         // 現在のToken
 	nowLineTokenList       []string       // 現在の行のtokenList
 	nowTokenLineIndex      int            // 現在のtokenが現在の行の何個目か？
@@ -59,8 +61,9 @@ func New(filePath string) (*Tokenizer, error) {
 	}
 
 	return &Tokenizer{
-		file:    fp,
-		scanner: bufio.NewScanner(fp),
+		file:     fp,
+		FileName: filePath,
+		scanner:  bufio.NewScanner(fp),
 	}, nil
 }
 
@@ -147,6 +150,8 @@ func (t *Tokenizer) GetStringVal() string {
 
 // nextLine 次の行に進む
 func (t *Tokenizer) nextLine() bool {
+
+	t.LineNum += 1
 
 	// スキャンする、もし何もなければfalseを返す
 	if !t.scanner.Scan() {

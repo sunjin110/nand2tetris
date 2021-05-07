@@ -1,6 +1,7 @@
 package compilation_engine
 
 import (
+	"compiler/pkg/common/chk"
 	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/tokenizer"
 	"fmt"
@@ -22,6 +23,11 @@ func New(t *tokenizer.Tokenizer) *CompilationEngine {
 	return &CompilationEngine{
 		Tknz: t,
 	}
+}
+
+// SyntaxError 構文Error
+func (c *CompilationEngine) SyntaxError(errMsg string) {
+	chk.SE(fmt.Errorf("SyntaxError: \n\tfile:%s:%d\n\terr-msg:%s\n\tnow-token: %s", c.Tknz.FileName, c.Tknz.LineNum, errMsg, c.getToken()))
 }
 
 // nextToken 次のtokenに移動
@@ -47,7 +53,7 @@ func (c *CompilationEngine) compileClass() {
 	// 一番頭、Classかどうかを判定する
 	c.nextToken()
 	if tokenizer.GetKeyWord(c.getToken()) != tokenizer.KeyWordClass {
-		panic("classではありませんでした")
+		c.SyntaxError("classではありませんでした")
 	}
 
 	// クラス名を取得する
@@ -57,7 +63,7 @@ func (c *CompilationEngine) compileClass() {
 	// {
 	c.nextToken()
 	if c.getToken() != "{" {
-		panic("構文Error: classで「{」がありません")
+		c.SyntaxError("構文Error: classで「{」がありません")
 	}
 
 	c.nextToken()
@@ -125,7 +131,7 @@ func (c *CompilationEngine) compileClassVarDec() []*ClassVarDec {
 
 		// check
 		if c.getToken() != ";" {
-			panic(";が足りないです")
+			c.SyntaxError(";が足りないです")
 		}
 
 		// next チェック
@@ -170,7 +176,7 @@ func (c *CompilationEngine) compileSubroutine() []*SubRoutineDec {
 		// check {
 		c.nextToken()
 		if c.getToken() != "{" {
-			panic("subRoutineで{がありませんでした")
+			c.SyntaxError("subRoutineで{がありませんでした")
 		}
 
 		// subRoutineBody
@@ -195,9 +201,12 @@ func (c *CompilationEngine) compileSubroutine() []*SubRoutineDec {
 		subRoutineDecList = append(subRoutineDecList, subRoutineDec)
 
 		// } check
+		// log.Println("err前位のtoken", c.getToken())
 		c.nextToken()
+		// log.Println("hioghedklsjafkljfsa;l is ", c.getToken())
 		if c.getToken() != "}" {
-			panic("SubRoutineの「}」がありません")
+			log.Println("subRoutine decList is ", jsonutil.Marshal(subRoutineDecList))
+			c.SyntaxError("SubRoutineの「}」がありません")
 		}
 
 		// 次もsubroutineかどうかを確認
@@ -218,7 +227,7 @@ func (c *CompilationEngine) compileParameterList() []*Parameter {
 
 	c.nextToken()
 	if c.getToken() != "(" {
-		panic("引数の(がありませんでした")
+		c.SyntaxError("引数の(がありませんでした")
 	}
 
 	var parameterList []*Parameter
@@ -295,7 +304,7 @@ func (c *CompilationEngine) compileVarDec() []*VarDec {
 
 		// check
 		if c.getToken() != ";" {
-			panic(";が足りないです")
+			c.SyntaxError(";が足りないです")
 		}
 
 		// next チェック
@@ -331,7 +340,8 @@ func (c *CompilationEngine) compileStatements() []Statement {
 			ifStatement := c.compileIf()
 			statementList = append(statementList, ifStatement)
 		case WhileStatementPrefix:
-
+			whileStatement := c.compileWhile()
+			statementList = append(statementList, whileStatement)
 		case DoStatementPrefix:
 			doStatement := c.compileDo()
 			statementList = append(statementList, doStatement)
@@ -342,9 +352,7 @@ func (c *CompilationEngine) compileStatements() []Statement {
 			return statementList
 		}
 
-		// 次に進める
 		// この段階で、次のprefixがstatementでない場合は、終了
-		c.nextToken()
 		log.Println("compile statementsの最後", c.getToken())
 		if !IsStatementPrefixToken(c.getToken()) {
 			break
@@ -353,14 +361,13 @@ func (c *CompilationEngine) compileStatements() []Statement {
 	}
 
 	return statementList
-
 }
 
 // compileDo do文をコンパイルする
 func (c *CompilationEngine) compileDo() *DoStatement {
 
 	if c.getToken() != string(DoStatementPrefix) {
-		panic("doのstatementではありません")
+		c.SyntaxError("doのstatementではありません")
 	}
 
 	c.nextToken()
@@ -384,7 +391,7 @@ func (c *CompilationEngine) compileDo() *DoStatement {
 
 	// ( check
 	if c.getToken() != "(" {
-		panic("SubRoutineCallで「(」がありません")
+		c.SyntaxError("SubRoutineCallで「(」がありません")
 	}
 
 	// expresstionList
@@ -393,14 +400,17 @@ func (c *CompilationEngine) compileDo() *DoStatement {
 
 	// ) check
 	if c.getToken() != ")" {
-		panic(fmt.Sprintf("SubRoutineCallで「)」がありません:%s", c.getToken()))
+		c.SyntaxError(fmt.Sprintf("SubRoutineCallで「)」がありません:%s", c.getToken()))
 	}
 
 	// ; check
 	c.nextToken()
 	if c.getToken() != ";" {
-		panic("SubRoutineCallで「;」がありません")
+		c.SyntaxError("SubRoutineCallで「;」がありません")
 	}
+
+	// ;をスキップ
+	c.nextToken()
 
 	return &DoStatement{
 		SubroutineCall: &SubRoutineCall{
@@ -415,7 +425,7 @@ func (c *CompilationEngine) compileDo() *DoStatement {
 func (c *CompilationEngine) compileLet() *LetStatement {
 
 	if c.getToken() != string(LetStatementPrefix) {
-		panic("letのstatementではありません")
+		c.SyntaxError("letのstatementではありません")
 	}
 
 	// name
@@ -430,26 +440,26 @@ func (c *CompilationEngine) compileLet() *LetStatement {
 		arrayExpression = c.compileExpression()
 
 		if c.getToken() != "]" {
-			panic("let式のarrayに「]」がありませんでした")
+			c.SyntaxError("let式のarrayに「]」がありませんでした")
 		}
 	}
 
 	// = check
 	if c.getToken() != string(EqlOp) {
-		panic("let式に=がありません")
+		c.SyntaxError("let式に=がありません")
 	}
 
 	// 代入する式を取得する
 	c.nextToken()
-	log.Println("let token is ", c.getToken())
 	expression := c.compileExpression()
-
-	log.Println("hogehogehgoe is ", c.getToken())
 
 	// 「;」check
 	if c.getToken() != ";" {
-		panic("Let式の最後に「;」がありません")
+		c.SyntaxError("Let式の最後に「;」がありません")
 	}
+
+	// ;をスキップ
+	c.nextToken()
 
 	return &LetStatement{
 		DestVarName:     destVarName,
@@ -459,22 +469,61 @@ func (c *CompilationEngine) compileLet() *LetStatement {
 }
 
 // compileWhile while文をコンパイルする
-func compileWhile() {
+func (c *CompilationEngine) compileWhile() *WhileStatement {
 
+	if c.getToken() != string(WhileStatementPrefix) {
+		c.SyntaxError("shileのstatementではありません")
+	}
+
+	c.nextToken()
+	if c.getToken() != "(" {
+		c.SyntaxError("while statementで「(」がありません")
+	}
+
+	c.nextToken()
+	// coordinationExpressionを取得
+	coordinationExpression := c.compileExpression()
+
+	// check )
+	if c.getToken() != ")" {
+		c.SyntaxError("while statmentで「)」がありません")
+	}
+
+	// check {
+	c.nextToken()
+	if c.getToken() != "{" {
+		c.SyntaxError("while statmentで「{」がありません")
+	}
+
+	// statementListを習得する
+	c.nextToken()
+	statementList := c.compileStatements()
+
+	// check }
+	if c.getToken() != "}" {
+		c.SyntaxError("while statementで「}」がありません")
+	}
+
+	c.nextToken()
+
+	return &WhileStatement{
+		ConditionalExpression: coordinationExpression,
+		StatementList:         statementList,
+	}
 }
 
 // compileReturn return文をコンパイルする
 func (c *CompilationEngine) compileReturn() *ReturnStatement {
 
 	if c.getToken() != string(ReturnStatementPrefix) {
-		panic("returnのstatementではありません")
+		c.SyntaxError("returnのstatementではありません")
 	}
 
 	c.nextToken()
 	returnExpression := c.compileExpression()
 
 	if c.getToken() != ";" {
-		panic("returnに「;」が含まれていませんでした")
+		c.SyntaxError("returnに「;」が含まれていませんでした")
 	}
 
 	return &ReturnStatement{
@@ -486,13 +535,13 @@ func (c *CompilationEngine) compileReturn() *ReturnStatement {
 func (c *CompilationEngine) compileIf() *IfStatement {
 
 	if c.getToken() != string(IfStatementPrefix) {
-		panic("ifのsatementではありません")
+		c.SyntaxError("ifのsatementではありません")
 	}
 
 	// ( check
 	c.nextToken()
 	if c.getToken() != "(" {
-		panic("ifのstatementに「(」がありません")
+		c.SyntaxError("ifのstatementに「(」がありません")
 	}
 
 	// expression
@@ -501,13 +550,13 @@ func (c *CompilationEngine) compileIf() *IfStatement {
 
 	// ) check
 	if c.getToken() != ")" {
-		panic("ifのstatementに「)」がありません")
+		c.SyntaxError("ifのstatementに「)」がありません")
 	}
 
 	// { check
 	c.nextToken()
 	if c.getToken() != "{" {
-		panic("ifのstatementに「{」がありません")
+		c.SyntaxError("ifのstatementに「{」がありません")
 	}
 
 	// statement
@@ -516,7 +565,7 @@ func (c *CompilationEngine) compileIf() *IfStatement {
 
 	// } check
 	if c.getToken() != "}" {
-		panic("ifのstatmenetに「}」がありません")
+		c.SyntaxError("ifのstatmenetに「}」がありません")
 	}
 
 	// elseがあるかどうか?
@@ -528,11 +577,18 @@ func (c *CompilationEngine) compileIf() *IfStatement {
 
 		// { チェック
 		if c.getToken() != "{" {
-			panic("elseの次の「{」がありません")
+			c.SyntaxError("elseの次の「{」がありません")
 		}
 
 		c.nextToken()
 		elseStatementList = c.compileStatements()
+
+		// } check
+		if c.getToken() != "}" {
+			c.SyntaxError("elseの最後の「}」がありません")
+		}
+
+		c.nextToken()
 	}
 
 	return &IfStatement{
@@ -553,10 +609,6 @@ func (c *CompilationEngine) compileExpression() *Expression {
 
 	initTerm := c.compileTerm()
 
-	log.Println("init term is ", jsonutil.Marshal(initTerm))
-
-	log.Println("init term後のtoken", c.getToken())
-
 	var opTermList []*OpTerm
 	for {
 
@@ -569,7 +621,6 @@ func (c *CompilationEngine) compileExpression() *Expression {
 
 			op = Op(c.getToken()[0])
 		default:
-			log.Println("戻すときのtoken", c.getToken())
 			return &Expression{
 				InitTerm:   initTerm,
 				OpTermList: opTermList,
@@ -695,8 +746,6 @@ func (c *CompilationEngine) compileTerm() Term {
 			c.nextToken()
 			arrayExpression = c.compileExpression()
 		}
-
-		log.Println("変数termを調べ終わったあとのtoken is ", c.getToken())
 
 		return &ValNameConstantTerm{
 			ValName:         valName,
