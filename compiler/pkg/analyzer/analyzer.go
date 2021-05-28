@@ -25,6 +25,8 @@ func Analyzer(outputFileName string, pathList []string) {
 
 		c := compilationEngine.Class
 		log.Println("class is ", jsonutil.Marshal(c))
+
+		// TODO xmlに変換する
 	}
 
 }
