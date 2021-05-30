@@ -210,13 +210,13 @@ func (w *XmlWriter) writeStatement(statementList []compilation_engine.Statement)
 		case compilation_engine.LetStatementPrefix:
 			w.writeLetStatement(statement.(*compilation_engine.LetStatement))
 		case compilation_engine.IfStatementPrefix:
-
+			w.writeIfStatement(statement.(*compilation_engine.IfStatement))
 		case compilation_engine.WhileStatementPrefix:
-
+			w.writeWhileStatement(statement.(*compilation_engine.WhileStatement))
 		case compilation_engine.DoStatementPrefix:
-
+			w.writeDoStatement(statement.(*compilation_engine.DoStatement))
 		case compilation_engine.ReturnStatementPrefix:
-
+			w.writeReturnStatement(statement.(*compilation_engine.ReturnStatement))
 		default:
 			chk.SE(fmt.Errorf("writeStatement: 宣言していないstatementが渡されました:%s", statement.GetStatementType()))
 		}
@@ -253,6 +253,111 @@ func (w *XmlWriter) writeLetStatement(letStatement *compilation_engine.LetStatem
 	w.decNest()
 	w.write("</letStatement>")
 
+}
+
+// writeIfStatement .
+func (w *XmlWriter) writeIfStatement(ifStatement *compilation_engine.IfStatement) {
+
+	w.write("<ifStatement>")
+	w.incNest()
+
+	w.write(getKeywordXml("if"))
+
+	// (
+	w.write(getSymbolXml("("))
+
+	if ifStatement.ConditionalExpression != nil {
+		w.writeExpression(ifStatement.ConditionalExpression)
+	}
+
+	// )
+	w.write(getSymbolXml(")"))
+
+	// {
+	w.write(getSymbolXml("{"))
+
+	w.writeStatement(ifStatement.StatementList)
+
+	// }
+	w.write(getSymbolXml("}"))
+
+	// else
+	if len(ifStatement.ElseStatementList) > 0 {
+		w.write(getKeywordXml("else"))
+		w.write(getSymbolXml("{"))
+		w.writeStatement(ifStatement.ElseStatementList)
+		w.write(getSymbolXml("}"))
+	}
+
+	w.decNest()
+	w.write("</ifStatement>")
+}
+
+// writeWhileStatement .
+func (w *XmlWriter) writeWhileStatement(whileStatement *compilation_engine.WhileStatement) {
+
+	w.write("<whileStatement>")
+	w.incNest()
+
+	w.write(getKeywordXml("while"))
+
+	// (
+	w.write(getSymbolXml("("))
+
+	if whileStatement.ConditionalExpression != nil {
+		w.writeExpression(whileStatement.ConditionalExpression)
+	}
+
+	// )
+	w.write(getSymbolXml(")"))
+
+	// {
+	w.write(getSymbolXml("{"))
+
+	// statement
+	w.writeStatement(whileStatement.StatementList)
+
+	// }
+	w.write(getSymbolXml("}"))
+
+	w.decNest()
+	w.write("</whileStatement>")
+
+}
+
+// writeDoStatement .
+func (w *XmlWriter) writeDoStatement(doStatement *compilation_engine.DoStatement) {
+
+	w.write("<doStatement>")
+	w.incNest()
+
+	w.write(getKeywordXml("do"))
+
+	w.writeSubRoutineCall(doStatement.SubroutineCall)
+
+	w.write(getKeywordXml(";"))
+
+	w.decNest()
+	w.write("</doStatement>")
+
+}
+
+// writeReturnStatement .
+func (w *XmlWriter) writeReturnStatement(returnStatement *compilation_engine.ReturnStatement) {
+
+	w.write("<returnStatement>")
+	w.incNest()
+
+	w.write(getKeywordXml("return"))
+
+	if returnStatement.ReturnExpression != nil {
+		w.writeExpression(returnStatement.ReturnExpression)
+	}
+
+	w.write(getSymbolXml(";"))
+
+	w.decNest()
+	w.write("</returnStatement>")
 }
 
 // writeExpressionList .

@@ -36,6 +36,32 @@
 					</expression>
 					<symbol> ; </symbol>
 				</letStatement>
+				<doStatement>
+					<keyword> do </keyword>
+					<identifier> game </identifier>
+					<symbol> . </symbol>
+					<identifier> run </identifier>
+					<symbol> ( </symbol>
+					<expressionList>
+					</expressionList>
+					<symbol> ) </symbol>
+					<keyword> ; </keyword>
+				</doStatement>
+				<doStatement>
+					<keyword> do </keyword>
+					<identifier> game </identifier>
+					<symbol> . </symbol>
+					<identifier> dispose </identifier>
+					<symbol> ( </symbol>
+					<expressionList>
+					</expressionList>
+					<symbol> ) </symbol>
+					<keyword> ; </keyword>
+				</doStatement>
+				<returnStatement>
+					<keyword> return </keyword>
+					<symbol> ; </symbol>
+				</returnStatement>
 			</statements>
 			<symbol> } </symbol>
 		</subroutineBody>
@@ -57,6 +83,24 @@
 				<symbol> ; </symbol>
 			</varDec>
 			<statements>
+				<ifStatement>
+					<keyword> if </keyword>
+					<symbol> ( </symbol>
+					<expression>
+						<term>
+							<identifier> b </identifier>
+						</term>
+					</expression>
+					<symbol> ) </symbol>
+					<symbol> { </symbol>
+					<statements>
+					</statements>
+					<symbol> } </symbol>
+				</ifStatement>
+				<returnStatement>
+					<keyword> return </keyword>
+					<symbol> ; </symbol>
+				</returnStatement>
 			</statements>
 			<symbol> } </symbol>
 		</subroutineBody>
