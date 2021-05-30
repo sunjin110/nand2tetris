@@ -76,7 +76,8 @@ func (w *XmlWriter) writeClassVarDec(classVarDecList []*compilation_engine.Class
 		w.write(getKeywordXml(string(classVarDec.VarKind)))
 
 		// type
-		w.write(getKeywordXml(string(classVarDec.VarType)))
+		// w.write(getKeywordXml(string(classVarDec.VarType)))
+		w.writeVariableType(classVarDec.VarType)
 
 		// names
 		for i, varName := range classVarDec.VarNameList {
@@ -105,7 +106,8 @@ func (w *XmlWriter) writeSubroutineDec(subRoutineDecList []*compilation_engine.S
 		w.incNest()
 
 		w.write(getKeywordXml(string(subRoutineDec.RoutineKind)))
-		w.write(getKeywordXml(string(subRoutineDec.ReturnType)))
+
+		w.writeVariableType(subRoutineDec.ReturnType)
 
 		w.write(getIdentifierXml(subRoutineDec.SubRoutineName))
 
@@ -117,7 +119,7 @@ func (w *XmlWriter) writeSubroutineDec(subRoutineDecList []*compilation_engine.S
 		w.incNest()
 		for i, parameter := range subRoutineDec.ParameterList {
 
-			w.write(getKeywordXml(string(parameter.ParamType)))
+			w.writeVariableType(parameter.ParamType)
 			w.write(getIdentifierXml(parameter.ParamName))
 
 			if len(subRoutineDec.ParameterList) != i+1 {
@@ -180,7 +182,8 @@ func (w *XmlWriter) writeVarDec(varDecList []*compilation_engine.VarDec) {
 		w.incNest()
 
 		w.write(getKeywordXml("var"))
-		w.write(getKeywordXml(string(varDec.Type)))
+
+		w.writeVariableType(varDec.Type)
 
 		for i, varName := range varDec.NameList {
 			w.write(getIdentifierXml(varName))
@@ -335,11 +338,10 @@ func (w *XmlWriter) writeDoStatement(doStatement *compilation_engine.DoStatement
 
 	w.writeSubRoutineCall(doStatement.SubroutineCall)
 
-	w.write(getKeywordXml(";"))
+	w.write(getSymbolXml(";"))
 
 	w.decNest()
 	w.write("</doStatement>")
-
 }
 
 // writeReturnStatement .
@@ -489,6 +491,17 @@ func (w *XmlWriter) writeUnaryOpTerm(unaryOpTerm *compilation_engine.UnaryOpTerm
 
 	// term
 	w.writeTerm(unaryOpTerm.Term)
+}
+
+// writeVariableType primitiveかどうかでkeywordかidentifierかが変わる
+func (w *XmlWriter) writeVariableType(variableType compilation_engine.VariableType) {
+
+	if variableType.IsPrimitive() {
+		w.write(getKeywordXml(string(variableType)))
+	} else {
+		w.write(getIdentifierXml(string(variableType)))
+	}
+
 }
 
 // write

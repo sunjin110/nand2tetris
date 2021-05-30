@@ -18,7 +18,7 @@
 	</classVarDec>
 	<subroutineDec>
 		<keyword> constructor </keyword>
-		<keyword> Square </keyword>
+		<identifier> Square </identifier>
 		<identifier> new </identifier>
 		<symbol> ( </symbol>
 		<parameterList>
@@ -75,7 +75,7 @@
 					<expressionList>
 					</expressionList>
 					<symbol> ) </symbol>
-					<keyword> ; </keyword>
+					<symbol> ; </symbol>
 				</doStatement>
 				<returnStatement>
 					<keyword> return </keyword>
@@ -115,7 +115,7 @@
 						</expression>
 					</expressionList>
 					<symbol> ) </symbol>
-					<keyword> ; </keyword>
+					<symbol> ; </symbol>
 				</doStatement>
 				<returnStatement>
 					<keyword> return </keyword>
@@ -150,7 +150,7 @@
 						</expression>
 					</expressionList>
 					<symbol> ) </symbol>
-					<keyword> ; </keyword>
+					<symbol> ; </symbol>
 				</doStatement>
 				<doStatement>
 					<keyword> do </keyword>
@@ -181,7 +181,7 @@
 						</expression>
 					</expressionList>
 					<symbol> ) </symbol>
-					<keyword> ; </keyword>
+					<symbol> ; </symbol>
 				</doStatement>
 				<returnStatement>
 					<keyword> return </keyword>
@@ -216,7 +216,7 @@
 						</expression>
 					</expressionList>
 					<symbol> ) </symbol>
-					<keyword> ; </keyword>
+					<symbol> ; </symbol>
 				</doStatement>
 				<doStatement>
 					<keyword> do </keyword>
@@ -247,7 +247,7 @@
 						</expression>
 					</expressionList>
 					<symbol> ) </symbol>
-					<keyword> ; </keyword>
+					<symbol> ; </symbol>
 				</doStatement>
 				<returnStatement>
 					<keyword> return </keyword>
@@ -286,7 +286,7 @@
 							<expressionList>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 						<letStatement>
 							<keyword> let </keyword>
@@ -306,7 +306,7 @@
 							<expressionList>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 					</statements>
 					<symbol> } </symbol>
@@ -348,7 +348,7 @@
 							<expressionList>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 						<letStatement>
 							<keyword> let </keyword>
@@ -368,7 +368,7 @@
 							<expressionList>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 					</statements>
 					<symbol> } </symbol>
@@ -417,7 +417,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 						<doStatement>
 							<keyword> do </keyword>
@@ -448,7 +448,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 						<letStatement>
 							<keyword> let </keyword>
@@ -475,7 +475,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 						<doStatement>
 							<keyword> do </keyword>
@@ -506,7 +506,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 					</statements>
 					<symbol> } </symbol>
@@ -555,7 +555,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 						<doStatement>
 							<keyword> do </keyword>
@@ -586,7 +586,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 						<letStatement>
 							<keyword> let </keyword>
@@ -613,7 +613,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 						<doStatement>
 							<keyword> do </keyword>
@@ -644,7 +644,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 					</statements>
 					<symbol> } </symbol>
@@ -693,7 +693,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 						<doStatement>
 							<keyword> do </keyword>
@@ -724,7 +724,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 						<letStatement>
 							<keyword> let </keyword>
@@ -751,7 +751,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 						<doStatement>
 							<keyword> do </keyword>
@@ -782,7 +782,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 					</statements>
 					<symbol> } </symbol>
@@ -831,7 +831,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 						<doStatement>
 							<keyword> do </keyword>
@@ -862,7 +862,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 						<letStatement>
 							<keyword> let </keyword>
@@ -889,7 +889,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 						<doStatement>
 							<keyword> do </keyword>
@@ -920,7 +920,7 @@
 								</expression>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 					</statements>
 					<symbol> } </symbol>

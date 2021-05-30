@@ -1,5 +1,11 @@
 package compilation_engine
 
+const (
+	identifier = "identifier"
+
+	symbol = "symbol"
+)
+
 // VariableKind 変数種類
 type VariableKind string
 
@@ -20,6 +26,16 @@ const (
 // VariableType 型
 type VariableType string
 
+// IsPrimitive この型がprimitiveかどうか？
+func (vt VariableType) IsPrimitive() bool {
+
+	switch vt {
+	case IntType, CharType, BooleanType, VoidType:
+		return true
+	}
+	return false
+}
+
 const (
 	// IntType .
 	IntType VariableType = "int"
@@ -29,6 +45,9 @@ const (
 
 	// BooleanType .
 	BooleanType VariableType = "boolean"
+
+	// VoidType .
+	VoidType VariableType = "void"
 
 	// ClassNameType 独自で宣言したクラス型
 	ClassNameType VariableType = "className"

@@ -4,7 +4,7 @@
 	<symbol> { </symbol>
 	<classVarDec>
 		<keyword> field </keyword>
-		<keyword> Square </keyword>
+		<identifier> Square </identifier>
 		<identifier> square </identifier>
 		<symbol> ; </symbol>
 	</classVarDec>
@@ -16,7 +16,7 @@
 	</classVarDec>
 	<subroutineDec>
 		<keyword> constructor </keyword>
-		<keyword> SquareGame </keyword>
+		<identifier> SquareGame </identifier>
 		<identifier> new </identifier>
 		<symbol> ( </symbol>
 		<parameterList>
@@ -80,7 +80,7 @@
 					<expressionList>
 					</expressionList>
 					<symbol> ) </symbol>
-					<keyword> ; </keyword>
+					<symbol> ; </symbol>
 				</doStatement>
 				<doStatement>
 					<keyword> do </keyword>
@@ -96,7 +96,7 @@
 						</expression>
 					</expressionList>
 					<symbol> ) </symbol>
-					<keyword> ; </keyword>
+					<symbol> ; </symbol>
 				</doStatement>
 				<returnStatement>
 					<keyword> return </keyword>
@@ -137,7 +137,7 @@
 							<expressionList>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 					</statements>
 					<symbol> } </symbol>
@@ -162,7 +162,7 @@
 							<expressionList>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 					</statements>
 					<symbol> } </symbol>
@@ -187,7 +187,7 @@
 							<expressionList>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 					</statements>
 					<symbol> } </symbol>
@@ -212,7 +212,7 @@
 							<expressionList>
 							</expressionList>
 							<symbol> ) </symbol>
-							<keyword> ; </keyword>
+							<symbol> ; </symbol>
 						</doStatement>
 					</statements>
 					<symbol> } </symbol>
@@ -231,7 +231,7 @@
 						</expression>
 					</expressionList>
 					<symbol> ) </symbol>
-					<keyword> ; </keyword>
+					<symbol> ; </symbol>
 				</doStatement>
 				<returnStatement>
 					<keyword> return </keyword>
@@ -315,7 +315,7 @@
 									<expressionList>
 									</expressionList>
 									<symbol> ) </symbol>
-									<keyword> ; </keyword>
+									<symbol> ; </symbol>
 								</doStatement>
 							</statements>
 							<symbol> } </symbol>
@@ -365,7 +365,7 @@
 									<expressionList>
 									</expressionList>
 									<symbol> ) </symbol>
-									<keyword> ; </keyword>
+									<symbol> ; </symbol>
 								</doStatement>
 							</statements>
 							<symbol> } </symbol>
@@ -390,7 +390,7 @@
 									<expressionList>
 									</expressionList>
 									<symbol> ) </symbol>
-									<keyword> ; </keyword>
+									<symbol> ; </symbol>
 								</doStatement>
 							</statements>
 							<symbol> } </symbol>
@@ -524,7 +524,7 @@
 									<expressionList>
 									</expressionList>
 									<symbol> ) </symbol>
-									<keyword> ; </keyword>
+									<symbol> ; </symbol>
 								</doStatement>
 							</statements>
 							<symbol> } </symbol>
