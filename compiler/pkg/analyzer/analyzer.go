@@ -6,7 +6,6 @@ import (
 	"compiler/pkg/compilation_engine"
 	"compiler/pkg/tokenizer"
 	"compiler/pkg/xmlwriter"
-	"log"
 	"strings"
 )
 
@@ -37,8 +36,6 @@ func writeXml(path string, c *compilation_engine.Class) {
 
 	// xmlに変換する
 	outputFileName := strings.Split(path, ".")[0] + ".xml"
-	log.Println("output file name is ", outputFileName)
-	// xmlwriter.WriteFromClass(outputFileName+"sunjin.xml", c)
 
 	xw := xmlwriter.New(outputFileName, c)
 	xw.WriteParser()
