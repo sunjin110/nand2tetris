@@ -7,6 +7,12 @@ import (
 	"os"
 )
 
+const (
+	keyword    = "keyword"
+	identifier = "identifier"
+	symbol     = "symbol"
+)
+
 // XmlWriter .
 type XmlWriter struct {
 	file      *os.File
@@ -31,18 +37,85 @@ func (writer *XmlWriter) WriteParser() {
 }
 
 // writeClass Classからxmlのファイルを作成する
-func (writer *XmlWriter) writeClass() error {
+func (w *XmlWriter) writeClass() error {
 
-	writer.writeFile("<class>")
+	w.write("<class>")
 
-	writer.writeFile("</class>")
+	// class name
+	w.incNest()
+
+	// class init
+	w.write(getKeywordXml("class"))
+	w.write(getIdentifierXml(w.class.ClassName))
+	w.write(getSymbolXml("{"))
+
+	// class var dec
+	w.writeClassVarDec(w.class.ClassVarDecList)
+
+	// subroutine dec
+	w.writeSubroutineDec(w.class.SubRoutineDecList)
+
+	// class defer
+	w.write(getSymbolXml("}"))
+
+	w.decNest()
+
+	w.write("</class>")
 
 	return nil
 }
 
-// writeFile
-// <key> value </key>
-func (writer *XmlWriter) writeFile(value string) {
+// writeClassVarDec .
+func (w *XmlWriter) writeClassVarDec(classVarDecList []*compilation_engine.ClassVarDec) {
+	for _, classVarDec := range classVarDecList {
+
+		w.write("<classVarDec>")
+		w.incNest()
+
+		// var kind
+		w.write(getKeywordXml(string(classVarDec.VarKind)))
+
+		// type
+		w.write(getKeywordXml(string(classVarDec.VarType)))
+
+		// names
+		for i, varName := range classVarDec.VarNameList {
+			w.write(getIdentifierXml(varName))
+
+			// 最後でない場合は「,」を追加
+			if len(classVarDec.VarNameList) != i+1 {
+				w.write(getSymbolXml(","))
+			}
+		}
+
+		// ;
+		w.write(getSymbolXml(";"))
+
+		w.decNest()
+		w.write("</classVarDec>")
+	}
+}
+
+// writeSubroutineDec .
+func (w *XmlWriter) writeSubroutineDec(subRoutineDecList []*compilation_engine.SubRoutineDec) {
+
+	for _, subRoutineDec := range subRoutineDecList {
+
+		w.write("<subroutineDec>")
+		w.incNest()
+
+		w.write(getKeywordXml(string(subRoutineDec.RoutineKind)))
+		w.write(getKeywordXml(string(subRoutineDec.ReturnType)))
+
+		w.decNest()
+		w.write("</subroutineDec>")
+
+	}
+
+}
+
+// write
+func (writer *XmlWriter) write(value string) {
 
 	// nest
 	var nest string
@@ -54,25 +127,33 @@ func (writer *XmlWriter) writeFile(value string) {
 	chk.SE(err)
 }
 
-// func writeClass(f *os.File, class *compilation_engine.Class) {
-
-// 	// class
-// 	writeLine(f, "<class>")
-
-// 	writeLine(f, "</class>")
-// }
-
-// // 実際にfileに書き込む
-// func writeLine(file *os.File, outLine string) {
-// 	_, err := file.WriteString(outLine + "\n")
-// 	chk.SE(err)
-// }
-
 // createFile fileを作成する
 func createFile(filePath string) *os.File {
 	fp, err := os.Create(filePath)
 	chk.SE(err)
 	return fp
+}
+
+// nestを+1する
+func (w *XmlWriter) incNest() {
+	w.nestDepth++
+}
+
+// nestを-1する
+func (w *XmlWriter) decNest() {
+	w.nestDepth--
+}
+
+func getKeywordXml(v string) string {
+	return fmt.Sprintf("<%s> %s </%s>", keyword, v, keyword)
+}
+
+func getIdentifierXml(v string) string {
+	return fmt.Sprintf("<%s> %s </%s>", identifier, v, identifier)
+}
+
+func getSymbolXml(v string) string {
+	return fmt.Sprintf("<%s> %s </%s>", symbol, v, symbol)
 }
 
 // import (
