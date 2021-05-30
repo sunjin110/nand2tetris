@@ -34,6 +34,41 @@
 		<symbol> ) </symbol>
 		<subroutineBody>
 			<symbol> { </symbol>
+			<statements>
+				<letStatement>
+					<keyword> let </keyword>
+					<identifier> x </identifier>
+					<symbol> = </symbol>
+					<expression>
+						<term>
+							<identifier> Ax </identifier>
+						</term>
+					</expression>
+					<symbol> ; </symbol>
+				</letStatement>
+				<letStatement>
+					<keyword> let </keyword>
+					<identifier> y </identifier>
+					<symbol> = </symbol>
+					<expression>
+						<term>
+							<identifier> Ay </identifier>
+						</term>
+					</expression>
+					<symbol> ; </symbol>
+				</letStatement>
+				<letStatement>
+					<keyword> let </keyword>
+					<identifier> size </identifier>
+					<symbol> = </symbol>
+					<expression>
+						<term>
+							<identifier> Asize </identifier>
+						</term>
+					</expression>
+					<symbol> ; </symbol>
+				</letStatement>
+			</statements>
 			<symbol> } </symbol>
 		</subroutineBody>
 	</subroutineDec>
@@ -47,6 +82,8 @@
 		<symbol> ) </symbol>
 		<subroutineBody>
 			<symbol> { </symbol>
+			<statements>
+			</statements>
 			<symbol> } </symbol>
 		</subroutineBody>
 	</subroutineDec>
@@ -60,6 +97,8 @@
 		<symbol> ) </symbol>
 		<subroutineBody>
 			<symbol> { </symbol>
+			<statements>
+			</statements>
 			<symbol> } </symbol>
 		</subroutineBody>
 	</subroutineDec>
@@ -73,6 +112,8 @@
 		<symbol> ) </symbol>
 		<subroutineBody>
 			<symbol> { </symbol>
+			<statements>
+			</statements>
 			<symbol> } </symbol>
 		</subroutineBody>
 	</subroutineDec>
@@ -86,6 +127,8 @@
 		<symbol> ) </symbol>
 		<subroutineBody>
 			<symbol> { </symbol>
+			<statements>
+			</statements>
 			<symbol> } </symbol>
 		</subroutineBody>
 	</subroutineDec>
@@ -99,6 +142,8 @@
 		<symbol> ) </symbol>
 		<subroutineBody>
 			<symbol> { </symbol>
+			<statements>
+			</statements>
 			<symbol> } </symbol>
 		</subroutineBody>
 	</subroutineDec>
@@ -112,6 +157,8 @@
 		<symbol> ) </symbol>
 		<subroutineBody>
 			<symbol> { </symbol>
+			<statements>
+			</statements>
 			<symbol> } </symbol>
 		</subroutineBody>
 	</subroutineDec>
@@ -125,6 +172,8 @@
 		<symbol> ) </symbol>
 		<subroutineBody>
 			<symbol> { </symbol>
+			<statements>
+			</statements>
 			<symbol> } </symbol>
 		</subroutineBody>
 	</subroutineDec>
@@ -138,6 +187,8 @@
 		<symbol> ) </symbol>
 		<subroutineBody>
 			<symbol> { </symbol>
+			<statements>
+			</statements>
 			<symbol> } </symbol>
 		</subroutineBody>
 	</subroutineDec>
@@ -151,6 +202,8 @@
 		<symbol> ) </symbol>
 		<subroutineBody>
 			<symbol> { </symbol>
+			<statements>
+			</statements>
 			<symbol> } </symbol>
 		</subroutineBody>
 	</subroutineDec>

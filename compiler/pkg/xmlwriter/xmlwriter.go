@@ -166,6 +166,9 @@ func (w *XmlWriter) writeSubroutineBody(subRoutineBody *compilation_engine.SubRo
 	// var dec
 	w.writeVarDec(subRoutineBody.VarDecList)
 
+	// statement
+	w.writeStatement(subRoutineBody.StatementList)
+
 }
 
 // writeVarDec .
@@ -193,7 +196,194 @@ func (w *XmlWriter) writeVarDec(varDecList []*compilation_engine.VarDec) {
 		w.write("</varDec>")
 
 	}
+}
 
+// writeStatement .
+func (w *XmlWriter) writeStatement(statementList []compilation_engine.Statement) {
+
+	w.write("<statements>")
+	w.incNest()
+
+	for _, statement := range statementList {
+
+		switch statement.GetStatementType() {
+		case compilation_engine.LetStatementPrefix:
+			w.writeLetStatement(statement.(*compilation_engine.LetStatement))
+		case compilation_engine.IfStatementPrefix:
+
+		case compilation_engine.WhileStatementPrefix:
+
+		case compilation_engine.DoStatementPrefix:
+
+		case compilation_engine.ReturnStatementPrefix:
+
+		default:
+			chk.SE(fmt.Errorf("writeStatement: 宣言していないstatementが渡されました:%s", statement.GetStatementType()))
+		}
+	}
+
+	w.decNest()
+	w.write("</statements>")
+}
+
+// writeLetStatement .
+func (w *XmlWriter) writeLetStatement(letStatement *compilation_engine.LetStatement) {
+
+	w.write("<letStatement>")
+	w.incNest()
+
+	w.write(getKeywordXml("let"))
+	w.write(getIdentifierXml(letStatement.DestVarName))
+
+	// array
+	if letStatement.ArrayExpression != nil {
+		w.write(getSymbolXml("["))
+		w.writeExpression(letStatement.ArrayExpression)
+		w.write(getSymbolXml("]"))
+	}
+
+	// =
+	w.write(getSymbolXml("="))
+
+	// expression
+	w.writeExpression(letStatement.Expression)
+
+	w.write(getSymbolXml(";"))
+
+	w.decNest()
+	w.write("</letStatement>")
+
+}
+
+// writeExpressionList .
+func (w *XmlWriter) writeExpressionList(expressionList []*compilation_engine.Expression) {
+	w.write("<expressionList>")
+	w.incNest()
+
+	for _, expression := range expressionList {
+		w.writeExpression(expression)
+	}
+
+	w.decNest()
+	w.write("</expressionList>")
+}
+
+// writeExpression .
+func (w *XmlWriter) writeExpression(expression *compilation_engine.Expression) {
+
+	w.write("<expression>")
+	w.incNest()
+
+	// term
+	w.writeTerm(expression.InitTerm)
+
+	// op term
+	for _, opTerm := range expression.OpTermList {
+
+		// operation
+		w.write(getSymbolXml(string(opTerm.Operation)))
+
+		// term
+		w.writeTerm(opTerm.OpTerm)
+	}
+
+	w.decNest()
+	w.write("</expression>")
+}
+
+// writeTerm TODO
+func (w *XmlWriter) writeTerm(term compilation_engine.Term) {
+
+	w.write("<term>")
+	w.incNest()
+
+	switch term.GetTermType() {
+
+	case compilation_engine.IntegerConstType:
+		w.writeIntegerConstTerm(term.(*compilation_engine.IntegerConstTerm))
+	case compilation_engine.StringConstType:
+		w.writeStringConstTerm(term.(*compilation_engine.StringConstTerm))
+	case compilation_engine.KeyWordConstType:
+		w.writeKeyWordConstTerm(term.(*compilation_engine.KeyWordConstTerm))
+	case compilation_engine.ValNameConstType:
+		w.writeValNameConstType(term.(*compilation_engine.ValNameConstantTerm))
+	case compilation_engine.SubRoutineCallType:
+		w.writeSubRoutineCall(term.(*compilation_engine.SubRoutineCall))
+	case compilation_engine.ExpressionType:
+		w.writeExpressionTerm(term.(*compilation_engine.ExpressionTerm))
+	case compilation_engine.UnaryOpTermType:
+		w.writeUnaryOpTerm(term.(*compilation_engine.UnaryOpTerm))
+	default:
+		chk.SE(fmt.Errorf("writeTerm:想定していないterm typeが来ました:%s", term.GetTermType()))
+	}
+
+	w.decNest()
+	w.write("</term>")
+}
+
+// writeIntegerConstTerm .
+func (w *XmlWriter) writeIntegerConstTerm(integerConstTerm *compilation_engine.IntegerConstTerm) {
+	w.write(fmt.Sprintf("<integerConstant> %d </integerConstant>", integerConstTerm.Val))
+}
+
+// writeStringConstTerm .
+func (w *XmlWriter) writeStringConstTerm(stringConstTerm *compilation_engine.StringConstTerm) {
+	w.write(fmt.Sprintf("<stringConstant> %s </stringConstant>", stringConstTerm.Val))
+}
+
+// writeKeyWordConstTerm .
+func (w *XmlWriter) writeKeyWordConstTerm(keyWordConstTerm *compilation_engine.KeyWordConstTerm) {
+	w.write(fmt.Sprintf("<%s> %s </%s>", keyword, keyWordConstTerm.KeyWord, keyword))
+}
+
+// writeValNameConstType .
+func (w *XmlWriter) writeValNameConstType(valNameConstantTerm *compilation_engine.ValNameConstantTerm) {
+	w.write(fmt.Sprintf("<%s> %s </%s>", identifier, valNameConstantTerm.ValName, identifier))
+}
+
+// writeSubRoutineCall .
+func (w *XmlWriter) writeSubRoutineCall(subRoutineCall *compilation_engine.SubRoutineCall) {
+
+	// Class or ValName
+	if subRoutineCall.ClassOrVarName != "" {
+		w.write(getIdentifierXml(subRoutineCall.ClassOrVarName))
+		w.write(getSymbolXml("."))
+	}
+
+	// subRoutineName
+	w.write(getIdentifierXml(subRoutineCall.SubRoutineName))
+
+	// (
+	w.write(getSymbolXml("("))
+
+	// expressionList
+	w.writeExpressionList(subRoutineCall.ExpressionList)
+
+	// )
+	w.write(getSymbolXml(")"))
+}
+
+// writeExpressionTerm ()に包まれてるterm
+func (w *XmlWriter) writeExpressionTerm(expressionTerm *compilation_engine.ExpressionTerm) {
+
+	// (
+	w.write(getSymbolXml("("))
+
+	// expression
+	w.writeExpression(expressionTerm.Expression)
+
+	// )
+	w.write(getSymbolXml(")"))
+}
+
+// writeUnaryOpTerm .
+func (w *XmlWriter) writeUnaryOpTerm(unaryOpTerm *compilation_engine.UnaryOpTerm) {
+
+	// unary
+	w.write(getSymbolXml(string(unaryOpTerm.UnaryOp)))
+
+	// term
+	w.writeTerm(unaryOpTerm.Term)
 }
 
 // write

@@ -24,6 +24,19 @@
 				<identifier> game </identifier>
 				<symbol> ; </symbol>
 			</varDec>
+			<statements>
+				<letStatement>
+					<keyword> let </keyword>
+					<identifier> game </identifier>
+					<symbol> = </symbol>
+					<expression>
+						<term>
+							<identifier> game </identifier>
+						</term>
+					</expression>
+					<symbol> ; </symbol>
+				</letStatement>
+			</statements>
 			<symbol> } </symbol>
 		</subroutineBody>
 	</subroutineDec>
@@ -43,6 +56,8 @@
 				<identifier> b </identifier>
 				<symbol> ; </symbol>
 			</varDec>
+			<statements>
+			</statements>
 			<symbol> } </symbol>
 		</subroutineBody>
 	</subroutineDec>

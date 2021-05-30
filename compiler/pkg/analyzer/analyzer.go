@@ -25,10 +25,10 @@ func Analyzer(outputFileName string, pathList []string) {
 
 		c := compilationEngine.Class
 
-		log.Println("")
-		log.Println("")
-		log.Println("read file is ", path)
-		log.Println("class is ", jsonutil.Marshal(c))
+		// log.Println("")
+		// log.Println("")
+		// log.Println("read file is ", path)
+		// log.Println("class is ", jsonutil.Marshal(c))
 
 		// writeXml
 		writeXml(path, c)
