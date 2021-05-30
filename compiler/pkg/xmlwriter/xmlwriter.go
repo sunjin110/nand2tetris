@@ -514,7 +514,8 @@ func (writer *XmlWriter) write(value string) {
 	// nest
 	var nest string
 	for i := 0; i < writer.nestDepth; i++ {
-		nest += "\t"
+		// nest += "\t"
+		nest += "  "
 	}
 
 	_, err := writer.file.WriteString(fmt.Sprintf("%s%s\n", nest, value))
