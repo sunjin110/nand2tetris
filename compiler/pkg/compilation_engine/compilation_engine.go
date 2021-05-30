@@ -4,7 +4,6 @@ import (
 	"compiler/pkg/common/chk"
 	"compiler/pkg/tokenizer"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -326,7 +325,7 @@ func (c *CompilationEngine) compileStatements() []Statement {
 	for {
 
 		statementType := c.getToken()
-		log.Println("statement type is ", statementType)
+		// log.Println("statement type is ", statementType)
 		switch statementType {
 		case LetStatementPrefix:
 			letStatement := c.compileLet()
@@ -348,7 +347,7 @@ func (c *CompilationEngine) compileStatements() []Statement {
 		}
 
 		// この段階で、次のprefixがstatementでない場合は、終了
-		log.Println("compile statementsの最後", c.getToken())
+		// log.Println("compile statementsの最後", c.getToken())
 		if !IsStatementPrefixToken(c.getToken()) {
 			break
 		}

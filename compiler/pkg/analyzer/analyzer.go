@@ -5,7 +5,9 @@ import (
 	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/compilation_engine"
 	"compiler/pkg/tokenizer"
+	"compiler/pkg/xmlwriter"
 	"log"
+	"strings"
 )
 
 // Analyzer Xmlに変換する
@@ -13,8 +15,6 @@ func Analyzer(outputFileName string, pathList []string) {
 	jsonutil.Print(pathList)
 
 	for _, path := range pathList {
-
-		log.Println("read file is ", path)
 
 		t, err := tokenizer.New(path)
 		chk.SE(err)
@@ -24,11 +24,29 @@ func Analyzer(outputFileName string, pathList []string) {
 		compilationEngine.Start()
 
 		c := compilationEngine.Class
+
+		log.Println("")
+		log.Println("")
+		log.Println("read file is ", path)
 		log.Println("class is ", jsonutil.Marshal(c))
 
-		// TODO xmlに変換する
+		// writeXml
+		writeXml(path, c)
+
 	}
 
+}
+
+// writeXml xmlとして出力する
+func writeXml(path string, c *compilation_engine.Class) {
+
+	// xmlに変換する
+	outputFileName := strings.Split(path, ".")[0] + "_parser.xml"
+	log.Println("output file name is ", outputFileName)
+	// xmlwriter.WriteFromClass(outputFileName+"sunjin.xml", c)
+
+	xw := xmlwriter.New(outputFileName, c)
+	xw.WriteParser()
 }
 
 // // Analyzer Xmlに変換する
