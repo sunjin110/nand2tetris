@@ -19,42 +19,140 @@
 	<subroutineDec>
 		<keyword> constructor </keyword>
 		<keyword> Square </keyword>
+		<identifier> new </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+			<keyword> int </keyword>
+			<identifier> Ax </identifier>
+			<symbol> , </symbol>
+			<keyword> int </keyword>
+			<identifier> Ay </identifier>
+			<symbol> , </symbol>
+			<keyword> int </keyword>
+			<identifier> Asize </identifier>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<subroutineDec>
 		<keyword> method </keyword>
 		<keyword> void </keyword>
+		<identifier> dispose </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<subroutineDec>
 		<keyword> method </keyword>
 		<keyword> void </keyword>
+		<identifier> draw </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<subroutineDec>
 		<keyword> method </keyword>
 		<keyword> void </keyword>
+		<identifier> erase </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<subroutineDec>
 		<keyword> method </keyword>
 		<keyword> void </keyword>
+		<identifier> incSize </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<subroutineDec>
 		<keyword> method </keyword>
 		<keyword> void </keyword>
+		<identifier> decSize </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<subroutineDec>
 		<keyword> method </keyword>
 		<keyword> void </keyword>
+		<identifier> moveUp </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<subroutineDec>
 		<keyword> method </keyword>
 		<keyword> void </keyword>
+		<identifier> moveDown </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<subroutineDec>
 		<keyword> method </keyword>
 		<keyword> void </keyword>
+		<identifier> moveLeft </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<subroutineDec>
 		<keyword> method </keyword>
 		<keyword> void </keyword>
+		<identifier> moveRight </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<symbol> } </symbol>
 </class>

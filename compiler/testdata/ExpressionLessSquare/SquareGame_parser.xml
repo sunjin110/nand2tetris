@@ -17,18 +17,66 @@
 	<subroutineDec>
 		<keyword> constructor </keyword>
 		<keyword> SquareGame </keyword>
+		<identifier> new </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<subroutineDec>
 		<keyword> method </keyword>
 		<keyword> void </keyword>
+		<identifier> dispose </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<subroutineDec>
 		<keyword> method </keyword>
 		<keyword> void </keyword>
+		<identifier> moveSquare </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<subroutineDec>
 		<keyword> method </keyword>
 		<keyword> void </keyword>
+		<identifier> run </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<varDec>
+				<keyword> var </keyword>
+				<keyword> char </keyword>
+				<identifier> key </identifier>
+				<symbol> ; </symbol>
+			</varDec>
+			<varDec>
+				<keyword> var </keyword>
+				<keyword> boolean </keyword>
+				<identifier> exit </identifier>
+				<symbol> ; </symbol>
+			</varDec>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<symbol> } </symbol>
 </class>

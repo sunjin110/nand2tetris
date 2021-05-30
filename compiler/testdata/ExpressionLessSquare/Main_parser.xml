@@ -11,10 +11,40 @@
 	<subroutineDec>
 		<keyword> function </keyword>
 		<keyword> void </keyword>
+		<identifier> main </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<varDec>
+				<keyword> var </keyword>
+				<keyword> SquareGame </keyword>
+				<identifier> game </identifier>
+				<symbol> ; </symbol>
+			</varDec>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<subroutineDec>
 		<keyword> function </keyword>
 		<keyword> void </keyword>
+		<identifier> more </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<varDec>
+				<keyword> var </keyword>
+				<keyword> boolean </keyword>
+				<identifier> b </identifier>
+				<symbol> ; </symbol>
+			</varDec>
+			<symbol> } </symbol>
+		</subroutineBody>
 	</subroutineDec>
 	<symbol> } </symbol>
 </class>

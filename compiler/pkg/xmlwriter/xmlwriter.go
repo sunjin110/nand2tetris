@@ -107,8 +107,90 @@ func (w *XmlWriter) writeSubroutineDec(subRoutineDecList []*compilation_engine.S
 		w.write(getKeywordXml(string(subRoutineDec.RoutineKind)))
 		w.write(getKeywordXml(string(subRoutineDec.ReturnType)))
 
+		w.write(getIdentifierXml(subRoutineDec.SubRoutineName))
+
+		// (
+		w.write(getSymbolXml("("))
+
+		// parameterList
+		w.write("<parameterList>")
+		w.incNest()
+		for i, parameter := range subRoutineDec.ParameterList {
+
+			w.write(getKeywordXml(string(parameter.ParamType)))
+			w.write(getIdentifierXml(parameter.ParamName))
+
+			if len(subRoutineDec.ParameterList) != i+1 {
+				w.write(getSymbolXml(","))
+			}
+
+		}
+		w.decNest()
+		w.write("</parameterList>")
+
+		// )
+		w.write(getSymbolXml(")"))
+
+		// subroutineBody
+		w.writeSubroutineBody(subRoutineDec.SubRoutineBody)
+
 		w.decNest()
 		w.write("</subroutineDec>")
+
+	}
+
+}
+
+// writeSubroutineBody .
+func (w *XmlWriter) writeSubroutineBody(subRoutineBody *compilation_engine.SubRoutineBody) {
+
+	defer func() {
+		// }
+		w.write(getSymbolXml("}"))
+
+		w.decNest()
+		w.write("</subroutineBody>")
+	}()
+
+	w.write("<subroutineBody>")
+	w.incNest()
+
+	// {
+	w.write(getSymbolXml("{"))
+
+	// check
+	if subRoutineBody == nil {
+		return
+	}
+
+	// var dec
+	w.writeVarDec(subRoutineBody.VarDecList)
+
+}
+
+// writeVarDec .
+func (w *XmlWriter) writeVarDec(varDecList []*compilation_engine.VarDec) {
+
+	for _, varDec := range varDecList {
+
+		w.write("<varDec>")
+		w.incNest()
+
+		w.write(getKeywordXml("var"))
+		w.write(getKeywordXml(string(varDec.Type)))
+
+		for i, varName := range varDec.NameList {
+			w.write(getIdentifierXml(varName))
+			if len(varDec.NameList) != i+1 {
+				w.write(getSymbolXml(","))
+			}
+		}
+
+		// ;
+		w.write(getSymbolXml(";"))
+
+		w.decNest()
+		w.write("</varDec>")
 
 	}
 
