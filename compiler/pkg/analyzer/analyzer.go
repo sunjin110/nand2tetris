@@ -25,11 +25,6 @@ func Analyzer(outputFileName string, pathList []string) {
 
 		c := compilationEngine.Class
 
-		// log.Println("")
-		// log.Println("")
-		// log.Println("read file is ", path)
-		// log.Println("class is ", jsonutil.Marshal(c))
-
 		// writeXml
 		writeXml(path, c)
 
@@ -41,7 +36,7 @@ func Analyzer(outputFileName string, pathList []string) {
 func writeXml(path string, c *compilation_engine.Class) {
 
 	// xmlに変換する
-	outputFileName := strings.Split(path, ".")[0] + "_parser.xml"
+	outputFileName := strings.Split(path, ".")[0] + ".xml"
 	log.Println("output file name is ", outputFileName)
 	// xmlwriter.WriteFromClass(outputFileName+"sunjin.xml", c)
 
