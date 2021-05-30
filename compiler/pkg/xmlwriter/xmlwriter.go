@@ -367,8 +367,12 @@ func (w *XmlWriter) writeExpressionList(expressionList []*compilation_engine.Exp
 	w.write("<expressionList>")
 	w.incNest()
 
-	for _, expression := range expressionList {
+	for i, expression := range expressionList {
 		w.writeExpression(expression)
+
+		if len(expressionList) != i+1 {
+			w.write(getSymbolXml(","))
+		}
 	}
 
 	w.decNest()
