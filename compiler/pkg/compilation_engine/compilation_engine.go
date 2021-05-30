@@ -4,6 +4,7 @@ import (
 	"compiler/pkg/common/chk"
 	"compiler/pkg/tokenizer"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -593,6 +594,7 @@ func (c *CompilationEngine) compileIf() *IfStatement {
 }
 
 // compileExpression 式をコンパイルする
+// TODO まだSubroutineCallを考慮できていないかも
 func (c *CompilationEngine) compileExpression() *Expression {
 
 	// Termかどうかを判定する
@@ -670,6 +672,8 @@ func (c *CompilationEngine) compileTerm() Term {
 
 	token := c.getToken()
 
+	log.Println("compileTerm's token is ", token)
+
 	// 数字に変換できる場合は、数字const
 	if i, err := strconv.Atoi(token); err == nil {
 		c.nextToken()
@@ -727,6 +731,8 @@ func (c *CompilationEngine) compileTerm() Term {
 		}
 	}
 
+	// TODO 先に変数か? SubroutineCallか？をjudgeする
+
 	// 変数
 	if isVariableToken(token) {
 
@@ -746,6 +752,8 @@ func (c *CompilationEngine) compileTerm() Term {
 			ArrayExpression: arrayExpression,
 		}
 	}
+
+	// subroutinecallかどうかを判定する
 
 	// それ以外はsubroutine
 	// subRoutineCall :=

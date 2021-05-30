@@ -95,5 +95,7 @@ func isVariableToken(token string) bool {
 			return false
 		}
 	}
-	return true
+
+	// 一番後ろが「)」の場合は、subroutineCall確定
+	return token[len(token)-1] != ')'
 }
