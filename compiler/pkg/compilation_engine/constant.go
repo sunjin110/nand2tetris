@@ -1,11 +1,5 @@
 package compilation_engine
 
-const (
-	identifier = "identifier"
-
-	symbol = "symbol"
-)
-
 // VariableKind 変数種類
 type VariableKind string
 
