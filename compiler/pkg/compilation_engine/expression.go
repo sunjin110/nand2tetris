@@ -3,7 +3,7 @@ package compilation_engine
 // 式の宣言
 
 const (
-	// IntegerConstType
+	// IntegerConstType .
 	IntegerConstType = "integerConstType"
 
 	// StringConstType .
@@ -15,7 +15,7 @@ const (
 	// ValNameConstType .
 	ValNameConstType = "valNameConstType"
 
-	// SubRoutineCollType .
+	// SubRoutineCallType .
 	SubRoutineCallType = "subRoutineCollType"
 
 	// ExpressionType .
@@ -62,7 +62,7 @@ func (*StringConstTerm) GetTermType() string {
 	return StringConstType
 }
 
-// KeyWordConstTerm
+// KeyWordConstTerm .
 type KeyWordConstTerm struct {
 	KeyWord KeywordConstant
 }

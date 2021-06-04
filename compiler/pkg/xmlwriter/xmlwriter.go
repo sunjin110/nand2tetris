@@ -13,16 +13,16 @@ const (
 	symbol     = "symbol"
 )
 
-// XmlWriter .
-type XmlWriter struct {
+// XMLWriter .
+type XMLWriter struct {
 	file      *os.File
 	class     *compilation_engine.Class
 	nestDepth int // ネストの深さ(tab)
 }
 
-// New XmlWriterを作成する
-func New(filePath string, class *compilation_engine.Class) *XmlWriter {
-	return &XmlWriter{
+// New XMLWriterを作成する
+func New(filePath string, class *compilation_engine.Class) *XMLWriter {
+	return &XMLWriter{
 		file:      createFile(filePath),
 		class:     class,
 		nestDepth: 0,
@@ -30,135 +30,135 @@ func New(filePath string, class *compilation_engine.Class) *XmlWriter {
 }
 
 // WriteParser パーサで解析した内容を書き出す
-func (writer *XmlWriter) WriteParser() {
+func (writer *XMLWriter) WriteParser() {
 
 	writer.writeClass()
 
 }
 
 // writeClass Classからxmlのファイルを作成する
-func (w *XmlWriter) writeClass() error {
+func (writer *XMLWriter) writeClass() error {
 
-	w.write("<class>")
+	writer.write("<class>")
 
 	// class name
-	w.incNest()
+	writer.incNest()
 
 	// class init
-	w.write(getKeywordXml("class"))
-	w.write(getIdentifierXml(w.class.ClassName))
-	w.write(getSymbolXml("{"))
+	writer.write(getKeywordXML("class"))
+	writer.write(getIdentifierXML(writer.class.ClassName))
+	writer.write(getSymbolXML("{"))
 
 	// class var dec
-	w.writeClassVarDec(w.class.ClassVarDecList)
+	writer.writeClassVarDec(writer.class.ClassVarDecList)
 
 	// subroutine dec
-	w.writeSubroutineDec(w.class.SubRoutineDecList)
+	writer.writeSubroutineDec(writer.class.SubRoutineDecList)
 
 	// class defer
-	w.write(getSymbolXml("}"))
+	writer.write(getSymbolXML("}"))
 
-	w.decNest()
+	writer.decNest()
 
-	w.write("</class>")
+	writer.write("</class>")
 
 	return nil
 }
 
 // writeClassVarDec .
-func (w *XmlWriter) writeClassVarDec(classVarDecList []*compilation_engine.ClassVarDec) {
+func (writer *XMLWriter) writeClassVarDec(classVarDecList []*compilation_engine.ClassVarDec) {
 	for _, classVarDec := range classVarDecList {
 
-		w.write("<classVarDec>")
-		w.incNest()
+		writer.write("<classVarDec>")
+		writer.incNest()
 
 		// var kind
-		w.write(getKeywordXml(string(classVarDec.VarKind)))
+		writer.write(getKeywordXML(string(classVarDec.VarKind)))
 
 		// type
-		// w.write(getKeywordXml(string(classVarDec.VarType)))
-		w.writeVariableType(classVarDec.VarType)
+		// writer.write(getKeywordXML(string(classVarDec.VarType)))
+		writer.writeVariableType(classVarDec.VarType)
 
 		// names
 		for i, varName := range classVarDec.VarNameList {
-			w.write(getIdentifierXml(varName))
+			writer.write(getIdentifierXML(varName))
 
 			// 最後でない場合は「,」を追加
 			if len(classVarDec.VarNameList) != i+1 {
-				w.write(getSymbolXml(","))
+				writer.write(getSymbolXML(","))
 			}
 		}
 
 		// ;
-		w.write(getSymbolXml(";"))
+		writer.write(getSymbolXML(";"))
 
-		w.decNest()
-		w.write("</classVarDec>")
+		writer.decNest()
+		writer.write("</classVarDec>")
 	}
 }
 
 // writeSubroutineDec .
-func (w *XmlWriter) writeSubroutineDec(subRoutineDecList []*compilation_engine.SubRoutineDec) {
+func (writer *XMLWriter) writeSubroutineDec(subRoutineDecList []*compilation_engine.SubRoutineDec) {
 
 	for _, subRoutineDec := range subRoutineDecList {
 
-		w.write("<subroutineDec>")
-		w.incNest()
+		writer.write("<subroutineDec>")
+		writer.incNest()
 
-		w.write(getKeywordXml(string(subRoutineDec.RoutineKind)))
+		writer.write(getKeywordXML(string(subRoutineDec.RoutineKind)))
 
-		w.writeVariableType(subRoutineDec.ReturnType)
+		writer.writeVariableType(subRoutineDec.ReturnType)
 
-		w.write(getIdentifierXml(subRoutineDec.SubRoutineName))
+		writer.write(getIdentifierXML(subRoutineDec.SubRoutineName))
 
 		// (
-		w.write(getSymbolXml("("))
+		writer.write(getSymbolXML("("))
 
 		// parameterList
-		w.write("<parameterList>")
-		w.incNest()
+		writer.write("<parameterList>")
+		writer.incNest()
 		for i, parameter := range subRoutineDec.ParameterList {
 
-			w.writeVariableType(parameter.ParamType)
-			w.write(getIdentifierXml(parameter.ParamName))
+			writer.writeVariableType(parameter.ParamType)
+			writer.write(getIdentifierXML(parameter.ParamName))
 
 			if len(subRoutineDec.ParameterList) != i+1 {
-				w.write(getSymbolXml(","))
+				writer.write(getSymbolXML(","))
 			}
 
 		}
-		w.decNest()
-		w.write("</parameterList>")
+		writer.decNest()
+		writer.write("</parameterList>")
 
 		// )
-		w.write(getSymbolXml(")"))
+		writer.write(getSymbolXML(")"))
 
 		// subroutineBody
-		w.writeSubroutineBody(subRoutineDec.SubRoutineBody)
+		writer.writeSubroutineBody(subRoutineDec.SubRoutineBody)
 
-		w.decNest()
-		w.write("</subroutineDec>")
+		writer.decNest()
+		writer.write("</subroutineDec>")
 
 	}
 
 }
 
 // writeSubroutineBody .
-func (w *XmlWriter) writeSubroutineBody(subRoutineBody *compilation_engine.SubRoutineBody) {
+func (writer *XMLWriter) writeSubroutineBody(subRoutineBody *compilation_engine.SubRoutineBody) {
 
 	defer func() {
 		// }
-		w.write(getSymbolXml("}"))
+		writer.write(getSymbolXML("}"))
 
-		w.decNest()
-		w.write("</subroutineBody>")
+		writer.decNest()
+		writer.write("</subroutineBody>")
 	}()
 
-	w.write("<subroutineBody>")
-	w.incNest()
+	writer.write("<subroutineBody>")
+	writer.incNest()
 
 	// {
-	w.write(getSymbolXml("{"))
+	writer.write(getSymbolXML("{"))
 
 	// check
 	if subRoutineBody == nil {
@@ -166,359 +166,359 @@ func (w *XmlWriter) writeSubroutineBody(subRoutineBody *compilation_engine.SubRo
 	}
 
 	// var dec
-	w.writeVarDec(subRoutineBody.VarDecList)
+	writer.writeVarDec(subRoutineBody.VarDecList)
 
 	// statement
-	w.writeStatement(subRoutineBody.StatementList)
+	writer.writeStatement(subRoutineBody.StatementList)
 
 }
 
 // writeVarDec .
-func (w *XmlWriter) writeVarDec(varDecList []*compilation_engine.VarDec) {
+func (writer *XMLWriter) writeVarDec(varDecList []*compilation_engine.VarDec) {
 
 	for _, varDec := range varDecList {
 
-		w.write("<varDec>")
-		w.incNest()
+		writer.write("<varDec>")
+		writer.incNest()
 
-		w.write(getKeywordXml("var"))
+		writer.write(getKeywordXML("var"))
 
-		w.writeVariableType(varDec.Type)
+		writer.writeVariableType(varDec.Type)
 
 		for i, varName := range varDec.NameList {
-			w.write(getIdentifierXml(varName))
+			writer.write(getIdentifierXML(varName))
 			if len(varDec.NameList) != i+1 {
-				w.write(getSymbolXml(","))
+				writer.write(getSymbolXML(","))
 			}
 		}
 
 		// ;
-		w.write(getSymbolXml(";"))
+		writer.write(getSymbolXML(";"))
 
-		w.decNest()
-		w.write("</varDec>")
+		writer.decNest()
+		writer.write("</varDec>")
 
 	}
 }
 
 // writeStatement .
-func (w *XmlWriter) writeStatement(statementList []compilation_engine.Statement) {
+func (writer *XMLWriter) writeStatement(statementList []compilation_engine.Statement) {
 
-	w.write("<statements>")
-	w.incNest()
+	writer.write("<statements>")
+	writer.incNest()
 
 	for _, statement := range statementList {
 
 		switch statement.GetStatementType() {
 		case compilation_engine.LetStatementPrefix:
-			w.writeLetStatement(statement.(*compilation_engine.LetStatement))
+			writer.writeLetStatement(statement.(*compilation_engine.LetStatement))
 		case compilation_engine.IfStatementPrefix:
-			w.writeIfStatement(statement.(*compilation_engine.IfStatement))
+			writer.writeIfStatement(statement.(*compilation_engine.IfStatement))
 		case compilation_engine.WhileStatementPrefix:
-			w.writeWhileStatement(statement.(*compilation_engine.WhileStatement))
+			writer.writeWhileStatement(statement.(*compilation_engine.WhileStatement))
 		case compilation_engine.DoStatementPrefix:
-			w.writeDoStatement(statement.(*compilation_engine.DoStatement))
+			writer.writeDoStatement(statement.(*compilation_engine.DoStatement))
 		case compilation_engine.ReturnStatementPrefix:
-			w.writeReturnStatement(statement.(*compilation_engine.ReturnStatement))
+			writer.writeReturnStatement(statement.(*compilation_engine.ReturnStatement))
 		default:
 			chk.SE(fmt.Errorf("writeStatement: 宣言していないstatementが渡されました:%s", statement.GetStatementType()))
 		}
 	}
 
-	w.decNest()
-	w.write("</statements>")
+	writer.decNest()
+	writer.write("</statements>")
 }
 
 // writeLetStatement .
-func (w *XmlWriter) writeLetStatement(letStatement *compilation_engine.LetStatement) {
+func (writer *XMLWriter) writeLetStatement(letStatement *compilation_engine.LetStatement) {
 
-	w.write("<letStatement>")
-	w.incNest()
+	writer.write("<letStatement>")
+	writer.incNest()
 
-	w.write(getKeywordXml("let"))
-	w.write(getIdentifierXml(letStatement.DestVarName))
+	writer.write(getKeywordXML("let"))
+	writer.write(getIdentifierXML(letStatement.DestVarName))
 
 	// array
 	if letStatement.ArrayExpression != nil {
-		w.write(getSymbolXml("["))
-		w.writeExpression(letStatement.ArrayExpression)
-		w.write(getSymbolXml("]"))
+		writer.write(getSymbolXML("["))
+		writer.writeExpression(letStatement.ArrayExpression)
+		writer.write(getSymbolXML("]"))
 	}
 
 	// =
-	w.write(getSymbolXml("="))
+	writer.write(getSymbolXML("="))
 
 	// expression
-	w.writeExpression(letStatement.Expression)
+	writer.writeExpression(letStatement.Expression)
 
-	w.write(getSymbolXml(";"))
+	writer.write(getSymbolXML(";"))
 
-	w.decNest()
-	w.write("</letStatement>")
+	writer.decNest()
+	writer.write("</letStatement>")
 
 }
 
 // writeIfStatement .
-func (w *XmlWriter) writeIfStatement(ifStatement *compilation_engine.IfStatement) {
+func (writer *XMLWriter) writeIfStatement(ifStatement *compilation_engine.IfStatement) {
 
-	w.write("<ifStatement>")
-	w.incNest()
+	writer.write("<ifStatement>")
+	writer.incNest()
 
-	w.write(getKeywordXml("if"))
+	writer.write(getKeywordXML("if"))
 
 	// (
-	w.write(getSymbolXml("("))
+	writer.write(getSymbolXML("("))
 
 	if ifStatement.ConditionalExpression != nil {
-		w.writeExpression(ifStatement.ConditionalExpression)
+		writer.writeExpression(ifStatement.ConditionalExpression)
 	}
 
 	// )
-	w.write(getSymbolXml(")"))
+	writer.write(getSymbolXML(")"))
 
 	// {
-	w.write(getSymbolXml("{"))
+	writer.write(getSymbolXML("{"))
 
-	w.writeStatement(ifStatement.StatementList)
+	writer.writeStatement(ifStatement.StatementList)
 
 	// }
-	w.write(getSymbolXml("}"))
+	writer.write(getSymbolXML("}"))
 
 	// else
 	if len(ifStatement.ElseStatementList) > 0 {
-		w.write(getKeywordXml("else"))
-		w.write(getSymbolXml("{"))
-		w.writeStatement(ifStatement.ElseStatementList)
-		w.write(getSymbolXml("}"))
+		writer.write(getKeywordXML("else"))
+		writer.write(getSymbolXML("{"))
+		writer.writeStatement(ifStatement.ElseStatementList)
+		writer.write(getSymbolXML("}"))
 	}
 
-	w.decNest()
-	w.write("</ifStatement>")
+	writer.decNest()
+	writer.write("</ifStatement>")
 }
 
 // writeWhileStatement .
-func (w *XmlWriter) writeWhileStatement(whileStatement *compilation_engine.WhileStatement) {
+func (writer *XMLWriter) writeWhileStatement(whileStatement *compilation_engine.WhileStatement) {
 
-	w.write("<whileStatement>")
-	w.incNest()
+	writer.write("<whileStatement>")
+	writer.incNest()
 
-	w.write(getKeywordXml("while"))
+	writer.write(getKeywordXML("while"))
 
 	// (
-	w.write(getSymbolXml("("))
+	writer.write(getSymbolXML("("))
 
 	if whileStatement.ConditionalExpression != nil {
-		w.writeExpression(whileStatement.ConditionalExpression)
+		writer.writeExpression(whileStatement.ConditionalExpression)
 	}
 
 	// )
-	w.write(getSymbolXml(")"))
+	writer.write(getSymbolXML(")"))
 
 	// {
-	w.write(getSymbolXml("{"))
+	writer.write(getSymbolXML("{"))
 
 	// statement
-	w.writeStatement(whileStatement.StatementList)
+	writer.writeStatement(whileStatement.StatementList)
 
 	// }
-	w.write(getSymbolXml("}"))
+	writer.write(getSymbolXML("}"))
 
-	w.decNest()
-	w.write("</whileStatement>")
+	writer.decNest()
+	writer.write("</whileStatement>")
 
 }
 
 // writeDoStatement .
-func (w *XmlWriter) writeDoStatement(doStatement *compilation_engine.DoStatement) {
+func (writer *XMLWriter) writeDoStatement(doStatement *compilation_engine.DoStatement) {
 
-	w.write("<doStatement>")
-	w.incNest()
+	writer.write("<doStatement>")
+	writer.incNest()
 
-	w.write(getKeywordXml("do"))
+	writer.write(getKeywordXML("do"))
 
-	w.writeSubRoutineCall(doStatement.SubroutineCall)
+	writer.writeSubRoutineCall(doStatement.SubroutineCall)
 
-	w.write(getSymbolXml(";"))
+	writer.write(getSymbolXML(";"))
 
-	w.decNest()
-	w.write("</doStatement>")
+	writer.decNest()
+	writer.write("</doStatement>")
 }
 
 // writeReturnStatement .
-func (w *XmlWriter) writeReturnStatement(returnStatement *compilation_engine.ReturnStatement) {
+func (writer *XMLWriter) writeReturnStatement(returnStatement *compilation_engine.ReturnStatement) {
 
-	w.write("<returnStatement>")
-	w.incNest()
+	writer.write("<returnStatement>")
+	writer.incNest()
 
-	w.write(getKeywordXml("return"))
+	writer.write(getKeywordXML("return"))
 
 	if returnStatement.ReturnExpression != nil {
-		w.writeExpression(returnStatement.ReturnExpression)
+		writer.writeExpression(returnStatement.ReturnExpression)
 	}
 
-	w.write(getSymbolXml(";"))
+	writer.write(getSymbolXML(";"))
 
-	w.decNest()
-	w.write("</returnStatement>")
+	writer.decNest()
+	writer.write("</returnStatement>")
 }
 
 // writeExpressionList .
-func (w *XmlWriter) writeExpressionList(expressionList []*compilation_engine.Expression) {
-	w.write("<expressionList>")
-	w.incNest()
+func (writer *XMLWriter) writeExpressionList(expressionList []*compilation_engine.Expression) {
+	writer.write("<expressionList>")
+	writer.incNest()
 
 	for i, expression := range expressionList {
-		w.writeExpression(expression)
+		writer.writeExpression(expression)
 
 		if len(expressionList) != i+1 {
-			w.write(getSymbolXml(","))
+			writer.write(getSymbolXML(","))
 		}
 	}
 
-	w.decNest()
-	w.write("</expressionList>")
+	writer.decNest()
+	writer.write("</expressionList>")
 }
 
 // writeExpression .
-func (w *XmlWriter) writeExpression(expression *compilation_engine.Expression) {
+func (writer *XMLWriter) writeExpression(expression *compilation_engine.Expression) {
 
-	w.write("<expression>")
-	w.incNest()
+	writer.write("<expression>")
+	writer.incNest()
 
 	// term
-	w.writeTerm(expression.InitTerm)
+	writer.writeTerm(expression.InitTerm)
 
 	// op term
 	for _, opTerm := range expression.OpTermList {
 
 		// operation
-		w.write(getSymbolXml(string(opTerm.Operation)))
+		writer.write(getSymbolXML(string(opTerm.Operation)))
 
 		// term
-		w.writeTerm(opTerm.OpTerm)
+		writer.writeTerm(opTerm.OpTerm)
 	}
 
-	w.decNest()
-	w.write("</expression>")
+	writer.decNest()
+	writer.write("</expression>")
 }
 
 // writeTerm
-func (w *XmlWriter) writeTerm(term compilation_engine.Term) {
+func (writer *XMLWriter) writeTerm(term compilation_engine.Term) {
 
-	w.write("<term>")
-	w.incNest()
+	writer.write("<term>")
+	writer.incNest()
 
 	switch term.GetTermType() {
 
 	case compilation_engine.IntegerConstType:
-		w.writeIntegerConstTerm(term.(*compilation_engine.IntegerConstTerm))
+		writer.writeIntegerConstTerm(term.(*compilation_engine.IntegerConstTerm))
 	case compilation_engine.StringConstType:
-		w.writeStringConstTerm(term.(*compilation_engine.StringConstTerm))
+		writer.writeStringConstTerm(term.(*compilation_engine.StringConstTerm))
 	case compilation_engine.KeyWordConstType:
-		w.writeKeyWordConstTerm(term.(*compilation_engine.KeyWordConstTerm))
+		writer.writeKeyWordConstTerm(term.(*compilation_engine.KeyWordConstTerm))
 	case compilation_engine.ValNameConstType:
-		w.writeValNameConstType(term.(*compilation_engine.ValNameConstantTerm))
+		writer.writeValNameConstType(term.(*compilation_engine.ValNameConstantTerm))
 	case compilation_engine.SubRoutineCallType:
-		w.writeSubRoutineCall(term.(*compilation_engine.SubRoutineCall))
+		writer.writeSubRoutineCall(term.(*compilation_engine.SubRoutineCall))
 	case compilation_engine.ExpressionType:
-		w.writeExpressionTerm(term.(*compilation_engine.ExpressionTerm))
+		writer.writeExpressionTerm(term.(*compilation_engine.ExpressionTerm))
 	case compilation_engine.UnaryOpTermType:
-		w.writeUnaryOpTerm(term.(*compilation_engine.UnaryOpTerm))
+		writer.writeUnaryOpTerm(term.(*compilation_engine.UnaryOpTerm))
 	default:
 		chk.SE(fmt.Errorf("writeTerm:想定していないterm typeが来ました:%s", term.GetTermType()))
 	}
 
-	w.decNest()
-	w.write("</term>")
+	writer.decNest()
+	writer.write("</term>")
 }
 
 // writeIntegerConstTerm .
-func (w *XmlWriter) writeIntegerConstTerm(integerConstTerm *compilation_engine.IntegerConstTerm) {
-	w.write(fmt.Sprintf("<integerConstant> %d </integerConstant>", integerConstTerm.Val))
+func (writer *XMLWriter) writeIntegerConstTerm(integerConstTerm *compilation_engine.IntegerConstTerm) {
+	writer.write(fmt.Sprintf("<integerConstant> %d </integerConstant>", integerConstTerm.Val))
 }
 
 // writeStringConstTerm .
-func (w *XmlWriter) writeStringConstTerm(stringConstTerm *compilation_engine.StringConstTerm) {
-	w.write(fmt.Sprintf("<stringConstant> %s </stringConstant>", stringConstTerm.Val))
+func (writer *XMLWriter) writeStringConstTerm(stringConstTerm *compilation_engine.StringConstTerm) {
+	writer.write(fmt.Sprintf("<stringConstant> %s </stringConstant>", stringConstTerm.Val))
 }
 
 // writeKeyWordConstTerm .
-func (w *XmlWriter) writeKeyWordConstTerm(keyWordConstTerm *compilation_engine.KeyWordConstTerm) {
-	w.write(fmt.Sprintf("<%s> %s </%s>", keyword, keyWordConstTerm.KeyWord, keyword))
+func (writer *XMLWriter) writeKeyWordConstTerm(keyWordConstTerm *compilation_engine.KeyWordConstTerm) {
+	writer.write(fmt.Sprintf("<%s> %s </%s>", keyword, keyWordConstTerm.KeyWord, keyword))
 }
 
 // writeValNameConstType .
-func (w *XmlWriter) writeValNameConstType(valNameConstantTerm *compilation_engine.ValNameConstantTerm) {
+func (writer *XMLWriter) writeValNameConstType(valNameConstantTerm *compilation_engine.ValNameConstantTerm) {
 
 	// identifier
-	w.write(fmt.Sprintf("<%s> %s </%s>", identifier, valNameConstantTerm.ValName, identifier))
+	writer.write(fmt.Sprintf("<%s> %s </%s>", identifier, valNameConstantTerm.ValName, identifier))
 
 	// ある場合はなんか上手いことする
 	if valNameConstantTerm.ArrayExpression != nil {
-		w.write(getSymbolXml("["))
-		w.writeExpression(valNameConstantTerm.ArrayExpression)
-		w.write(getSymbolXml("]"))
+		writer.write(getSymbolXML("["))
+		writer.writeExpression(valNameConstantTerm.ArrayExpression)
+		writer.write(getSymbolXML("]"))
 	}
 }
 
 // writeSubRoutineCall .
-func (w *XmlWriter) writeSubRoutineCall(subRoutineCall *compilation_engine.SubRoutineCall) {
+func (writer *XMLWriter) writeSubRoutineCall(subRoutineCall *compilation_engine.SubRoutineCall) {
 
 	// Class or ValName
 	if subRoutineCall.ClassOrVarName != "" {
-		w.write(getIdentifierXml(subRoutineCall.ClassOrVarName))
-		w.write(getSymbolXml("."))
+		writer.write(getIdentifierXML(subRoutineCall.ClassOrVarName))
+		writer.write(getSymbolXML("."))
 	}
 
 	// subRoutineName
-	w.write(getIdentifierXml(subRoutineCall.SubRoutineName))
+	writer.write(getIdentifierXML(subRoutineCall.SubRoutineName))
 
 	// (
-	w.write(getSymbolXml("("))
+	writer.write(getSymbolXML("("))
 
 	// expressionList
-	w.writeExpressionList(subRoutineCall.ExpressionList)
+	writer.writeExpressionList(subRoutineCall.ExpressionList)
 
 	// )
-	w.write(getSymbolXml(")"))
+	writer.write(getSymbolXML(")"))
 }
 
 // writeExpressionTerm ()に包まれてるterm
-func (w *XmlWriter) writeExpressionTerm(expressionTerm *compilation_engine.ExpressionTerm) {
+func (writer *XMLWriter) writeExpressionTerm(expressionTerm *compilation_engine.ExpressionTerm) {
 
 	// (
-	w.write(getSymbolXml("("))
+	writer.write(getSymbolXML("("))
 
 	// expression
-	w.writeExpression(expressionTerm.Expression)
+	writer.writeExpression(expressionTerm.Expression)
 
 	// )
-	w.write(getSymbolXml(")"))
+	writer.write(getSymbolXML(")"))
 }
 
 // writeUnaryOpTerm .
-func (w *XmlWriter) writeUnaryOpTerm(unaryOpTerm *compilation_engine.UnaryOpTerm) {
+func (writer *XMLWriter) writeUnaryOpTerm(unaryOpTerm *compilation_engine.UnaryOpTerm) {
 
 	// unary
-	w.write(getSymbolXml(string(unaryOpTerm.UnaryOp)))
+	writer.write(getSymbolXML(string(unaryOpTerm.UnaryOp)))
 
 	// term
-	w.writeTerm(unaryOpTerm.Term)
+	writer.writeTerm(unaryOpTerm.Term)
 }
 
 // writeVariableType primitiveかどうかでkeywordかidentifierかが変わる
-func (w *XmlWriter) writeVariableType(variableType compilation_engine.VariableType) {
+func (writer *XMLWriter) writeVariableType(variableType compilation_engine.VariableType) {
 
 	if variableType.IsPrimitive() {
-		w.write(getKeywordXml(string(variableType)))
+		writer.write(getKeywordXML(string(variableType)))
 	} else {
-		w.write(getIdentifierXml(string(variableType)))
+		writer.write(getIdentifierXML(string(variableType)))
 	}
 
 }
 
 // write
-func (writer *XmlWriter) write(value string) {
+func (writer *XMLWriter) write(value string) {
 
 	// nest
 	var nest string
@@ -539,24 +539,24 @@ func createFile(filePath string) *os.File {
 }
 
 // nestを+1する
-func (w *XmlWriter) incNest() {
-	w.nestDepth++
+func (writer *XMLWriter) incNest() {
+	writer.nestDepth++
 }
 
 // nestを-1する
-func (w *XmlWriter) decNest() {
-	w.nestDepth--
+func (writer *XMLWriter) decNest() {
+	writer.nestDepth--
 }
 
-func getKeywordXml(v string) string {
+func getKeywordXML(v string) string {
 	return fmt.Sprintf("<%s> %s </%s>", keyword, v, keyword)
 }
 
-func getIdentifierXml(v string) string {
+func getIdentifierXML(v string) string {
 	return fmt.Sprintf("<%s> %s </%s>", identifier, v, identifier)
 }
 
-func getSymbolXml(v string) string {
+func getSymbolXML(v string) string {
 	return fmt.Sprintf("<%s> %s </%s>", symbol, v, symbol)
 }
 
