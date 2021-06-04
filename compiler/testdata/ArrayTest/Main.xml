@@ -198,6 +198,13 @@
                 <symbol> + </symbol>
                 <term>
                   <identifier> a </identifier>
+                  <symbol> [ </symbol>
+                  <expression>
+                    <term>
+                      <identifier> i </identifier>
+                    </term>
+                  </expression>
+                  <symbol> ] </symbol>
                 </term>
               </expression>
               <symbol> ; </symbol>
