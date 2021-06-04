@@ -402,7 +402,7 @@ func (w *XmlWriter) writeExpression(expression *compilation_engine.Expression) {
 	w.write("</expression>")
 }
 
-// writeTerm TODO
+// writeTerm
 func (w *XmlWriter) writeTerm(term compilation_engine.Term) {
 
 	w.write("<term>")
@@ -449,7 +449,16 @@ func (w *XmlWriter) writeKeyWordConstTerm(keyWordConstTerm *compilation_engine.K
 
 // writeValNameConstType .
 func (w *XmlWriter) writeValNameConstType(valNameConstantTerm *compilation_engine.ValNameConstantTerm) {
+
+	// identifier
 	w.write(fmt.Sprintf("<%s> %s </%s>", identifier, valNameConstantTerm.ValName, identifier))
+
+	// ある場合はなんか上手いことする
+	if valNameConstantTerm.ArrayExpression != nil {
+		w.write(getSymbolXml("["))
+		w.writeExpression(valNameConstantTerm.ArrayExpression)
+		w.write(getSymbolXml("]"))
+	}
 }
 
 // writeSubRoutineCall .

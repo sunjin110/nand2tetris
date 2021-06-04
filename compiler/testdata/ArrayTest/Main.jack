@@ -26,6 +26,7 @@ class Main {
 	
 	while (i < length) {
 	    let sum = sum + a[i];
+		// let sum = sum + sunjin[yun];
 	    let i = i + 1;
 	}
 	

@@ -24,6 +24,8 @@ func Analyzer(outputFileName string, pathList []string) {
 
 		c := compilationEngine.Class
 
+		// fmt.Println("class is ", jsonutil.Marshal(c))
+
 		// writeXml
 		writeXml(path, c)
 
