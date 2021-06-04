@@ -5,12 +5,13 @@ import (
 	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/compilation_engine"
 	"compiler/pkg/tokenizer"
+	"compiler/pkg/vmwriter"
 	"compiler/pkg/xmlwriter"
 	"strings"
 )
 
-// Analyzer Xmlに変換する
-func Analyzer(pathList []string) {
+// AnalyzerToXML Xmlに変換する
+func AnalyzerToXML(pathList []string) {
 	jsonutil.Print(pathList)
 
 	for _, path := range pathList {
@@ -27,7 +28,26 @@ func Analyzer(pathList []string) {
 		// writeXml
 		writeXML(path, c)
 	}
+}
 
+// AnalyzerToVM Vmに変換する
+func AnalyzerToVM(pathList []string) {
+	jsonutil.Print(pathList)
+
+	for _, path := range pathList {
+
+		t, err := tokenizer.New(path)
+		chk.SE(err)
+
+		compilationEngine := compilation_engine.New(t)
+
+		compilationEngine.Start()
+
+		c := compilationEngine.Class
+
+		// writeVM
+		writeVM(path, c)
+	}
 }
 
 // writeXML xmlとして出力する
@@ -40,60 +60,12 @@ func writeXML(path string, c *compilation_engine.Class) {
 	xw.WriteParser()
 }
 
-// // Analyzer Xmlに変換する
-// func Analyzer(outputFileName string, pathList []string) {
-// 	jsonutil.Print(pathList)
+// writeVM vmとして出力する
+func writeVM(path string, c *compilation_engine.Class) {
 
-// 	// Tokenizerテスト用のxxxT.xmlのファイルを作成するxmlWriterを作成
-// 	// outputFileNameSplit := strings.Split(outputFileName, ".")
-// 	// outputFileTName := fmt.Sprintf("%sT.%s", outputFileNameSplit[0], outputFileNameSplit[1])
-// 	// xmlWriterT, err := xmlwriter.New(outputFileTName)
-// 	// chk.SE(err)
-// 	// defer func() {
-// 	// 	xmlWriterT.Close()
-// 	// }()
+	// vmに変換する
+	outputFileName := strings.Split(path, ".")[0] + ".vm"
 
-// 	// コードをparseする
-// 	for _, path := range pathList {
-
-// 		fmt.Println("path is ", path)
-
-// 		// Tokenizerテスト用のxxxT.xmlのファイルを作成する
-// 		xmlWriterT, err := xmlwriter.New(strings.Split(path, ".")[0] + "T.xml")
-// 		chk.SE(err)
-
-// 		t, err := tokenizer.New(path)
-// 		chk.SE(err)
-
-// 		// tokenを一つずつ取得する
-// 		for t.NextToken() {
-
-// 			token := t.Token
-
-// 			tokenType := tokenizer.GetTokenType(token)
-// 			switch tokenType {
-// 			case tokenizer.TokenTypeKeyWord:
-// 				xmlWriterT.WriteToken(tokenType, token)
-// 			case tokenizer.TokenTypeSymbol:
-// 				symbol := t.GetSymbol()
-// 				xmlWriterT.WriteToken(tokenType, string(symbol))
-// 			case tokenizer.TokenTypeIdentifier:
-// 				identifier := t.GetIdentifier()
-// 				xmlWriterT.WriteToken(tokenType, identifier)
-// 			case tokenizer.TokenTypeIntConst:
-// 				intVal := t.GetIntVal()
-// 				xmlWriterT.WriteToken(tokenType, fmt.Sprintf("%d", intVal))
-// 			case tokenizer.TokenTypeStringConst:
-// 				strVal := t.GetStringVal()
-// 				xmlWriterT.WriteToken(tokenType, strVal)
-// 			default:
-// 				panic("定義されていないtokenType")
-// 			}
-// 		}
-
-// 		// Tokenizerテスト用のxxxT.xmlのファイルを閉じる
-// 		xmlWriterT.Close()
-
-// 	}
-
-// }
+	vmw := vmwriter.New(outputFileName, c)
+	vmw.Write()
+}

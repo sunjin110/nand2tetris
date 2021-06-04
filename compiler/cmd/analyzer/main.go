@@ -19,8 +19,11 @@ const (
 	// JackExt Jack言語の拡張子
 	JackExt = ".jack"
 
-	// XMLExt Xml拡張子
-	XMLExt = ".xml"
+	// XMLMode xmlを出力するmode
+	XMLMode = "xml"
+
+	// VMMode vmを出力するmode
+	VMMode = "vm"
 )
 
 func main() {
@@ -47,8 +50,16 @@ func main() {
 	// filter
 	pathList = filterExtPathList(pathList, JackExt)
 
-	// analyzer
-	analyzer.Analyzer(pathList)
+	mode := args[1]
+	switch mode {
+	case XMLMode:
+		analyzer.AnalyzerToXML(pathList)
+	case VMMode:
+		analyzer.AnalyzerToVM(pathList)
+	default:
+		fmt.Println("第2引数にmode[vm|xml]を指定してください")
+		os.Exit(1)
+	}
 }
 
 // dirwark ディレクトリ内のファイルを取得する
