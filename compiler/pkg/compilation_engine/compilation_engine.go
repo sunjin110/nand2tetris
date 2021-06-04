@@ -72,7 +72,10 @@ func (c *CompilationEngine) compileClass() {
 	// SubRoutineList
 	subRoutineDecList := c.compileSubroutine()
 
-	// TODO } のチェック
+	// } check
+	if c.getToken() != "}" {
+		c.SyntaxError("構文Error: classで「}」がありません")
+	}
 
 	class := &Class{
 		ClassName:         className,
@@ -347,7 +350,6 @@ func (c *CompilationEngine) compileStatements() []Statement {
 		}
 
 		// この段階で、次のprefixがstatementでない場合は、終了
-		// log.Println("compile statementsの最後", c.getToken())
 		if !IsStatementPrefixToken(c.getToken()) {
 			break
 		}
@@ -665,9 +667,6 @@ func (c *CompilationEngine) compileSubroutineCall(token string, nextToken string
 	if c.getToken() != ";" {
 		c.SyntaxError("SubRoutineCallで「;」がありません")
 	}
-
-	// ;をスキップ
-	// c.nextToken()
 
 	return &SubRoutineCall{
 		ClassOrVarName: classOrVarName,
