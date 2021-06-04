@@ -677,13 +677,9 @@ func (c *CompilationEngine) compileSubroutineCall(token string, nextToken string
 }
 
 // compileTerm termをコンパイルする
-// TODO nextのことをまだ、unaryとか()のやつは考えられていない
-// そもそもまだ未完成
 func (c *CompilationEngine) compileTerm() Term {
 
 	token := c.getToken()
-
-	// log.Println("compileTerm is ", token)
 
 	// 数字に変換できる場合は、数字const
 	if i, err := strconv.Atoi(token); err == nil {
@@ -735,7 +731,12 @@ func (c *CompilationEngine) compileTerm() Term {
 		c.nextToken()
 		expression := c.compileExpression()
 
-		// TODO )を調べる
+		if c.getToken() != ")" {
+			c.SyntaxError(")が閉じられていませんでした")
+		}
+
+		// ;
+		c.nextToken()
 
 		return &ExpressionTerm{
 			Expression: expression,
@@ -753,21 +754,12 @@ func (c *CompilationEngine) compileTerm() Term {
 	// それ以外は変数
 	valName := token
 
-	// if valName == "sunjin" {
-	// 	log.Println("変数だったよ")
-	// }
-
 	// もし「[」がある場合は式を取得する
 	var arrayExpression *Expression
 	if nextToken == "[" {
 
 		c.nextToken()
 		arrayExpression = c.compileExpression()
-
-		// if valName == "sunjin" {
-		// 	log.Println("arrayを発見", jsonutil.Marshal(arrayExpression))
-
-		// }
 
 		// ]を確認
 		if c.getToken() != "]" {
