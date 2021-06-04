@@ -4,7 +4,6 @@ import (
 	"compiler/pkg/common/chk"
 	"compiler/pkg/tokenizer"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -366,53 +365,18 @@ func (c *CompilationEngine) compileDo() *DoStatement {
 	}
 
 	c.nextToken()
-	tmp := c.getToken()
+	token := c.getToken()
 
-	// ClassName or varNameがあるかどうか
-	var classOrVarName string
-	var subRoutineName string
 	c.nextToken()
-	if c.getToken() == "." {
-		classOrVarName = tmp
+	nextToken := c.getToken()
 
-		// soubRoutineName
-		c.nextToken()
-		subRoutineName = c.getToken()
-
-		c.nextToken()
-	} else {
-		subRoutineName = tmp
-	}
-
-	// ( check
-	if c.getToken() != "(" {
-		c.SyntaxError("SubRoutineCallで「(」がありません")
-	}
-
-	// expresstionList
-	c.nextToken()
-	expressionList := c.compileExpressionList()
-
-	// ) check
-	if c.getToken() != ")" {
-		c.SyntaxError(fmt.Sprintf("SubRoutineCallで「)」がありません:%s", c.getToken()))
-	}
-
-	// ; check
-	c.nextToken()
-	if c.getToken() != ";" {
-		c.SyntaxError("SubRoutineCallで「;」がありません")
-	}
+	subroutineCall := c.compileSubroutineCall(token, nextToken)
 
 	// ;をスキップ
 	c.nextToken()
 
 	return &DoStatement{
-		SubroutineCall: &SubRoutineCall{
-			ClassOrVarName: classOrVarName,
-			SubRoutineName: subRoutineName,
-			ExpressionList: expressionList,
-		},
+		SubroutineCall: subroutineCall,
 	}
 }
 
@@ -437,6 +401,8 @@ func (c *CompilationEngine) compileLet() *LetStatement {
 		if c.getToken() != "]" {
 			c.SyntaxError("let式のarrayに「]」がありませんでした")
 		}
+
+		c.nextToken()
 	}
 
 	// = check
@@ -594,7 +560,6 @@ func (c *CompilationEngine) compileIf() *IfStatement {
 }
 
 // compileExpression 式をコンパイルする
-// TODO まだSubroutineCallを考慮できていないかも
 func (c *CompilationEngine) compileExpression() *Expression {
 
 	// Termかどうかを判定する
@@ -647,7 +612,6 @@ func (c *CompilationEngine) compileExpressionList() []*Expression {
 	}
 
 	var expressionList []*Expression
-
 	for {
 
 		expression := c.compileExpression()
@@ -665,14 +629,61 @@ func (c *CompilationEngine) compileExpressionList() []*Expression {
 	return expressionList
 }
 
+// compileSubroutineCall
+func (c *CompilationEngine) compileSubroutineCall(token string, nextToken string) *SubRoutineCall {
+
+	// CalssName or varNameがあるかどうか
+	var classOrVarName string
+	var subRoutineName string
+
+	if nextToken == "." {
+		classOrVarName = token
+
+		// subRoutineName
+		c.nextToken()
+		subRoutineName = c.getToken()
+
+		c.nextToken()
+	} else {
+		subRoutineName = token
+	}
+
+	// ( check
+	if c.getToken() != "(" {
+		c.SyntaxError("SubRoutineCallで「(」がありません")
+	}
+
+	// expressionList
+	c.nextToken()
+	expressionList := c.compileExpressionList()
+
+	// ) check
+	if c.getToken() != ")" {
+		c.SyntaxError("SubRoutineCallで「)」がありません")
+	}
+
+	// ; check
+	c.nextToken()
+	if c.getToken() != ";" {
+		c.SyntaxError("SubRoutineCallで「;」がありません")
+	}
+
+	// ;をスキップ
+	// c.nextToken()
+
+	return &SubRoutineCall{
+		ClassOrVarName: classOrVarName,
+		SubRoutineName: subRoutineName,
+		ExpressionList: expressionList,
+	}
+}
+
 // compileTerm termをコンパイルする
 // TODO nextのことをまだ、unaryとか()のやつは考えられていない
 // そもそもまだ未完成
 func (c *CompilationEngine) compileTerm() Term {
 
 	token := c.getToken()
-
-	log.Println("compileTerm's token is ", token)
 
 	// 数字に変換できる場合は、数字const
 	if i, err := strconv.Atoi(token); err == nil {
@@ -731,36 +742,33 @@ func (c *CompilationEngine) compileTerm() Term {
 		}
 	}
 
-	// TODO 先に変数か? SubroutineCallか？をjudgeする
+	c.nextToken()
+	nextToken := c.getToken()
 
-	// 変数
-	if isVariableToken(token) {
-
-		valName := token
-
-		// もし「[」がある場合は式を取得する
-		var arrayExpression *Expression
-		c.nextToken()
-		if c.getToken() == "[" {
-
-			c.nextToken()
-			arrayExpression = c.compileExpression()
-		}
-
-		return &ValNameConstantTerm{
-			ValName:         valName,
-			ArrayExpression: arrayExpression,
-		}
+	// subroutineかどうか?
+	if nextToken == "." || nextToken == "(" {
+		return c.compileSubroutineCall(token, nextToken)
 	}
 
-	// subroutinecallかどうかを判定する
+	// それ以外は変数
+	valName := token
 
-	// それ以外はsubroutine
-	// subRoutineCall :=
-	// if subRoutineCall != nil {
-	// return subRoutineCall
-	// }
+	// もし「[」がある場合は式を取得する
+	var arrayExpression *Expression
+	if nextToken == "[" {
+		c.nextToken()
+		arrayExpression = c.compileExpression()
 
-	// TODO SubRoutineCallとそれ以外
-	return nil
+		// ]を確認
+		if c.getToken() != "]" {
+			c.SyntaxError("]が入っていませんでした")
+		}
+
+		c.nextToken()
+	}
+
+	return &ValNameConstantTerm{
+		ValName:         valName,
+		ArrayExpression: arrayExpression,
+	}
 }
