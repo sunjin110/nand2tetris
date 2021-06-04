@@ -9,24 +9,22 @@ import (
 	"strings"
 )
 
-// セットアップや他moduleの呼び出しを行う
+// セットアップや他のmoduleの呼び出しをする
 
-// 1. 入力ファイルのXxx.jackから、JackTokenizerを生成する
-// 2. Xxx.xmlという名前の出力ファイルを作り、それに書き込みを行う準備をする
-// 3. 入力である JackTokenizerを出力ファイルへコンパイするすために、CompilationEngineを使用する
+// 1. 入力ファイルのXxx.jackから、Xxx.vmを生成する
 
 const (
 	// JackExt Jack言語の拡張子
 	JackExt = ".jack"
 
-	// XMLExt Xml拡張子
-	XMLExt = ".xml"
+	// VMExt VM言語の拡張子
+	VMExt = ".vm"
 )
 
 func main() {
-	fmt.Println("==== Jack Analyzer ====")
+	fmt.Println("==== Jack Analyzer V2 ====")
 
-	// 引数を取得する
+	// 引数を習得する
 	flag.Parse()
 	args := flag.Args()
 	if len(args) == 0 {
@@ -37,7 +35,7 @@ func main() {
 	// source
 	dir := args[0]
 
-	// file一覧を取得する
+	// file一覧を習得する
 	pathList, err := dirwark(dir)
 	if err != nil {
 		fmt.Println("ディレクトリの解析でerror")
@@ -47,8 +45,8 @@ func main() {
 	// filter
 	pathList = filterExtPathList(pathList, JackExt)
 
-	// analyzer
 	analyzer.Analyzer(pathList)
+
 }
 
 // dirwark ディレクトリ内のファイルを取得する
@@ -63,7 +61,7 @@ func dirwark(dir string) ([]string, error) {
 	for _, file := range files {
 
 		if file.IsDir() {
-			// 再帰処理
+			// 再起処理
 			childPathList, err := dirwark(filepath.Join(dir, file.Name()))
 			if err != nil {
 				return nil, err
