@@ -24,17 +24,14 @@ func Analyzer(outputFileName string, pathList []string) {
 
 		c := compilationEngine.Class
 
-		// fmt.Println("class is ", jsonutil.Marshal(c))
-
 		// writeXml
-		writeXml(path, c)
-
+		writeXML(path, c)
 	}
 
 }
 
-// writeXml xmlとして出力する
-func writeXml(path string, c *compilation_engine.Class) {
+// writeXML xmlとして出力する
+func writeXML(path string, c *compilation_engine.Class) {
 
 	// xmlに変換する
 	outputFileName := strings.Split(path, ".")[0] + ".xml"

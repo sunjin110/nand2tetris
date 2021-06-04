@@ -19,8 +19,8 @@ const (
 	// JackExt Jack言語の拡張子
 	JackExt = ".jack"
 
-	// XmlExt Xml拡張子
-	XmlExt = ".xml"
+	// XMLExt Xml拡張子
+	XMLExt = ".xml"
 )
 
 func main() {
@@ -48,7 +48,7 @@ func main() {
 	pathList = filterExtPathList(pathList, JackExt)
 
 	// output name
-	outputFileName := fmt.Sprintf("%s%s", dir, XmlExt)
+	outputFileName := fmt.Sprintf("%s%s", dir, XMLExt)
 
 	fmt.Println("output file name is ", outputFileName)
 

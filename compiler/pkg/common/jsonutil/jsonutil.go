@@ -14,7 +14,7 @@ func Marshal(obj interface{}) string {
 	return string(v)
 }
 
-// MarshalPrint .
+// Print .
 func Print(obj interface{}) {
 	str := Marshal(obj)
 	log.Println("obj is ", str)

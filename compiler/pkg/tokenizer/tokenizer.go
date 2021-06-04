@@ -151,7 +151,7 @@ func (t *Tokenizer) GetStringVal() string {
 // nextLine 次の行に進む
 func (t *Tokenizer) nextLine() bool {
 
-	t.LineNum += 1
+	t.LineNum++
 
 	// スキャンする、もし何もなければfalseを返す
 	if !t.scanner.Scan() {
