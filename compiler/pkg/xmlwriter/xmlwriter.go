@@ -31,9 +31,7 @@ func New(filePath string, class *compilation_engine.Class) *XMLWriter {
 
 // WriteParser パーサで解析した内容を書き出す
 func (writer *XMLWriter) WriteParser() {
-
 	writer.writeClass()
-
 }
 
 // writeClass Classからxmlのファイルを作成する
