@@ -1,29 +1,42 @@
 package symboltable
 
-// SymbolTable .
-type SymbolTable struct {
-	ClassName string
-	RowList   []*Row // シンボルテーブルのあれ
-	// TODO その中のscopeのものを設定できる必要がある
+import "compiler/pkg/compilation_engine"
 
+// SymbolTableEngine .
+type SymbolTableEngine struct {
+	class       *compilation_engine.Class
+	SymbolTable *SymbolTable
 }
 
-// Row 一つのデータのまとまり
-type Row struct {
+// SymbolTable class1つにつきのsymbol table
+type SymbolTable struct {
+	ClassSymbolList          []*Symbol
+	SubroutineSymbolTableMap map[string]*SubroutineSymbolTable
+}
+
+// SubroutineSymbolTable subroutineのSymbolTable
+type SubroutineSymbolTable struct {
+	SubroutineName string
+	SymbolList     []*Symbol
+}
+
+// Symbol 一つの要素
+type Symbol struct {
 	VarName   string // 変数名
 	Type      string // int | String | boolean | ClassName
-	Attribute string // static | field | argument | local . TODO 変数名変えてもいいかも
+	Attribute string // static | field | argument | local
 	Num       int32  // 番号
-	// ???
-	SymbolTable *SymbolTable // これが
 }
 
-// // SymbolTable .
-// type SymbolTable struct {
-// 	VarName string // 変数名
-// 	Type    string // int | String | boolean | char
+// New .
+func New(class *compilation_engine.Class) *SymbolTableEngine {
+	return &SymbolTableEngine{
+		class:       class,
+		SymbolTable: nil, // StartでここのsymbolTableを構築する
+	}
+}
 
-// 	Num     int32  // 番号
-// }
-
-// // Scope .
+// Start SymbolTable作成かいし
+func (engine *SymbolTableEngine) Start() {
+	// TODO
+}
