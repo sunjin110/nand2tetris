@@ -1,6 +1,10 @@
 package symboltable
 
-import "compiler/pkg/compilation_engine"
+import (
+	"compiler/pkg/common/jsonutil"
+	"compiler/pkg/compilation_engine"
+	"log"
+)
 
 // Engine .
 type Engine struct {
@@ -39,4 +43,46 @@ func New(class *compilation_engine.Class) *Engine {
 // Start SymbolTable作成かいし
 func (engine *Engine) Start() {
 	// TODO
+	log.Println("=== Make SymbolTable !!! ===")
+
+	engine.SymbolTable = getSymbolTable(engine.class)
+
+	// logger
+	log.Println("symbol table is ", jsonutil.Marshal(engine.SymbolTable))
+
+}
+
+// getSymbolTable .
+func getSymbolTable(class *compilation_engine.Class) *SymbolTable {
+	return &SymbolTable{
+		ClassSymbolList: getClassSymbolList(class.ClassVarDecList),
+	}
+}
+
+// getClassSymbolList クラスのスコープにおけるシンボルテーブルを作成する
+func getClassSymbolList(classVarDecList []*compilation_engine.ClassVarDec) []*Symbol {
+
+	if len(classVarDecList) == 0 {
+		return nil
+	}
+
+	// numberを定義する必要があるので
+	// key: 属性(attribute), value: num
+	numMap := map[string]int32{}
+
+	var classSymbolList []*Symbol
+	for _, classVarDec := range classVarDecList {
+		for _, varName := range classVarDec.VarNameList {
+
+			// 番号を取得
+			num := numMap[string(classVarDec.VarKind)]
+			symbol := createSymbol(varName, string(classVarDec.VarType), string(classVarDec.VarKind), num)
+			classSymbolList = append(classSymbolList, symbol)
+
+			// 番号を1incrementする
+			numMap[string(classVarDec.VarKind)]++
+		}
+	}
+
+	return classSymbolList
 }
