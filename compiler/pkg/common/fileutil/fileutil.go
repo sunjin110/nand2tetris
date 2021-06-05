@@ -1,10 +1,18 @@
 package fileutil
 
 import (
+	"compiler/pkg/common/chk"
 	"os"
 	"path/filepath"
 	"strings"
 )
+
+// CreateFile fileを作成する
+func CreateFile(filePath string) *os.File {
+	fp, err := os.Create(filePath)
+	chk.SE(err)
+	return fp
+}
 
 // Dirwark ディレクトリ内のファイルを取得する
 func Dirwark(dir string) ([]string, error) {
