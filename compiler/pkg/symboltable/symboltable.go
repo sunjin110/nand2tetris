@@ -11,7 +11,7 @@ type Engine struct {
 // SymbolTable class1つにつきのsymbol table
 type SymbolTable struct {
 	ClassSymbolList          []*Symbol
-	SubroutineSymbolTableMap map[string]*SubroutineSymbolTable
+	SubroutineSymbolTableMap map[string]*SubroutineSymbolTable // key:SubroutineName
 }
 
 // SubroutineSymbolTable subroutineのSymbolTable
