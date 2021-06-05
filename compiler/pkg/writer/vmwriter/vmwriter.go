@@ -6,7 +6,6 @@ import (
 	"compiler/pkg/compilation_engine"
 	"compiler/pkg/symboltable"
 	"fmt"
-	"log"
 	"os"
 )
 
@@ -34,9 +33,9 @@ func (writer *VMWriter) FileClose() {
 // WriteVM VMファイルを書く
 func (writer *VMWriter) WriteVM() {
 
-	log.Println("=== start write vm ===")
-
 	// TODO
+	//
+
 }
 
 // writePush pushコマンドを書く
