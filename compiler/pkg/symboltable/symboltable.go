@@ -1,9 +1,7 @@
 package symboltable
 
 import (
-	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/compilation_engine"
-	"log"
 )
 
 const (
@@ -48,13 +46,7 @@ func New(class *compilation_engine.Class) *Engine {
 
 // Start SymbolTable作成かいし
 func (engine *Engine) Start() {
-	// TODO
-	log.Println("=== Make SymbolTable !!! ===")
-
 	engine.SymbolTable = getSymbolTable(engine.class)
-
-	// logger
-	log.Println("symbol table is ", jsonutil.Marshal(engine.SymbolTable))
 }
 
 // getSymbolTable .
@@ -104,7 +96,6 @@ func getSubroutineSymbolTableMap(subRoutineDecList []*compilation_engine.SubRout
 	// key: method name
 	subroutineSymbolTableMap := map[string]*SubroutineSymbolTable{}
 	for _, subRoutineDec := range subRoutineDecList {
-		// subroutineSymbolTableMap[subRoutineDec.SubRoutineName] = getSubroutineSymbolTable(subRoutineDec)
 		subroutineSymbolTable := getSubroutineSymbolTable(subRoutineDec)
 		if subroutineSymbolTable != nil {
 			subroutineSymbolTableMap[subRoutineDec.SubRoutineName] = subroutineSymbolTable
