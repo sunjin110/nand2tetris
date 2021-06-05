@@ -44,7 +44,7 @@ func New(class *compilation_engine.Class) *Engine {
 	}
 }
 
-// Start SymbolTable作成かいし
+// Start SymbolTable作成開始
 func (engine *Engine) Start() {
 	engine.SymbolTable = getSymbolTable(engine.class)
 }
