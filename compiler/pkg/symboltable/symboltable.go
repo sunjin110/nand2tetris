@@ -1,7 +1,9 @@
 package symboltable
 
 import (
+	"compiler/pkg/common/chk"
 	"compiler/pkg/compilation_engine"
+	"fmt"
 )
 
 const (
@@ -25,7 +27,8 @@ type SymbolTable struct {
 // SubroutineSymbolTable subroutineのSymbolTable
 type SubroutineSymbolTable struct {
 	SubroutineName string
-	SymbolList     []*Symbol
+	// SymbolList     []*Symbol
+	SymbolMap map[string]*Symbol // key: VarName, value: Symbol, varNameはuniqueである必要がある
 }
 
 // Symbol 一つの要素
@@ -54,7 +57,7 @@ func getSymbolTable(class *compilation_engine.Class) *SymbolTable {
 	return &SymbolTable{
 		ClassName:                class.ClassName,
 		ClassSymbolList:          getClassSymbolList(class.ClassVarDecList),
-		SubroutineSymbolTableMap: getSubroutineSymbolTableMap(class.SubRoutineDecList),
+		SubroutineSymbolTableMap: getSubroutineSymbolTableMap(class.ClassName, class.SubRoutineDecList),
 	}
 }
 
@@ -87,7 +90,7 @@ func getClassSymbolList(classVarDecList []*compilation_engine.ClassVarDec) []*Sy
 }
 
 // getSubroutineSymbolTableMap サブルーチンリストのシンボルテーブルのMapを取得する
-func getSubroutineSymbolTableMap(subRoutineDecList []*compilation_engine.SubRoutineDec) map[string]*SubroutineSymbolTable {
+func getSubroutineSymbolTableMap(className string, subRoutineDecList []*compilation_engine.SubRoutineDec) map[string]*SubroutineSymbolTable {
 
 	if len(subRoutineDecList) == 0 {
 		return nil
@@ -96,7 +99,7 @@ func getSubroutineSymbolTableMap(subRoutineDecList []*compilation_engine.SubRout
 	// key: method name
 	subroutineSymbolTableMap := map[string]*SubroutineSymbolTable{}
 	for _, subRoutineDec := range subRoutineDecList {
-		subroutineSymbolTable := getSubroutineSymbolTable(subRoutineDec)
+		subroutineSymbolTable := getSubroutineSymbolTable(className, subRoutineDec)
 		if subroutineSymbolTable != nil {
 			subroutineSymbolTableMap[subRoutineDec.SubRoutineName] = subroutineSymbolTable
 		}
@@ -106,20 +109,26 @@ func getSubroutineSymbolTableMap(subRoutineDecList []*compilation_engine.SubRout
 }
 
 // getSubroutineSymbolTable サブルーチンのシンボルテーブルを取得する
-func getSubroutineSymbolTable(subRoutineDec *compilation_engine.SubRoutineDec) *SubroutineSymbolTable {
-
-	var subroutineSymbolList []*Symbol
+func getSubroutineSymbolTable(className string, subRoutineDec *compilation_engine.SubRoutineDec) *SubroutineSymbolTable {
 
 	// numberを定義する必要があるので作成する
 	// key: 属性(attribute), value: num
 	numMap := map[string]int32{}
+
+	// varNameでuniqueである必要がある
+	subroutineSymbolMap := map[string]*Symbol{}
 
 	// 先に、引数
 	for _, parameter := range subRoutineDec.ParameterList {
 
 		num := numMap[argument]
 		symbol := createSymbol(parameter.ParamName, string(parameter.ParamType), argument, num)
-		subroutineSymbolList = append(subroutineSymbolList, symbol)
+
+		if _, ok := subroutineSymbolMap[symbol.VarName]; ok {
+			chk.SE(fmt.Errorf("Class:%s SubRoutine:%s 内で変数%sが複数宣言されています", className, subRoutineDec.SubRoutineName, symbol.VarName))
+		}
+
+		subroutineSymbolMap[symbol.VarName] = symbol
 		numMap[argument]++
 	}
 
@@ -128,18 +137,23 @@ func getSubroutineSymbolTable(subRoutineDec *compilation_engine.SubRoutineDec) *
 		for _, varName := range varDec.NameList {
 			num := numMap[variable]
 			symbol := createSymbol(varName, string(varDec.Type), variable, num)
-			subroutineSymbolList = append(subroutineSymbolList, symbol)
+
+			if _, ok := subroutineSymbolMap[symbol.VarName]; ok {
+				chk.SE(fmt.Errorf("Class:%s SubRoutine:%s 内で変数%sが複数宣言されています", className, subRoutineDec.SubRoutineName, symbol.VarName))
+			}
+
+			subroutineSymbolMap[symbol.VarName] = symbol
 			numMap[variable]++
 		}
 	}
 
 	// なければnil
-	if len(subroutineSymbolList) == 0 {
+	if len(subroutineSymbolMap) == 0 {
 		return nil
 	}
 
 	return &SubroutineSymbolTable{
 		SubroutineName: subRoutineDec.SubRoutineName,
-		SymbolList:     subroutineSymbolList,
+		SymbolMap:      subroutineSymbolMap,
 	}
 }
