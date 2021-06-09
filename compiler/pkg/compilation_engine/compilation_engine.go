@@ -202,7 +202,7 @@ func (c *CompilationEngine) compileSubroutine() []*SubRoutineDec {
 		subRoutineDecList = append(subRoutineDecList, subRoutineDec)
 
 		// } check
-		c.nextToken()
+		// c.nextToken()
 		if c.getToken() != "}" {
 			c.SyntaxError("SubRoutineの「}」がありません")
 		}
@@ -488,6 +488,9 @@ func (c *CompilationEngine) compileReturn() *ReturnStatement {
 	if c.getToken() != ";" {
 		c.SyntaxError("returnに「;」が含まれていませんでした")
 	}
+
+	// ;をskip
+	c.nextToken()
 
 	return &ReturnStatement{
 		ReturnExpression: returnExpression,
