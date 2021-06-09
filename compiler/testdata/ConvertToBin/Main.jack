@@ -67,6 +67,10 @@ class Main {
     	        let loop = false;
     	    }
     	}
+
+        while (loop) {
+            
+        }
     	return;
     }
  
