@@ -132,6 +132,8 @@ func (writer *VMWriter) writeTerm(term compilation_engine.Term) {
 		writer.writeIntegerConstTerm(term.(*compilation_engine.IntegerConstTerm))
 	case compilation_engine.ExpressionType:
 		writer.writeExpressionTerm(term.(*compilation_engine.ExpressionTerm))
+	case compilation_engine.UnaryOpTermType:
+		writer.writeUnaryOpTerm(term.(*compilation_engine.UnaryOpTerm))
 		// TODO more case
 	default:
 		chk.SE(fmt.Errorf("writeTerm:想定していないterm typeが来ました:%s", term.GetTermType()))
@@ -148,6 +150,18 @@ func (writer *VMWriter) writeIntegerConstTerm(integerConstTerm *compilation_engi
 // writeExpressionTerm ex: (1 + 2)
 func (writer *VMWriter) writeExpressionTerm(expressionTerm *compilation_engine.ExpressionTerm) {
 	writer.writeExpression(expressionTerm.Expression)
+}
+
+// writeUnaryOpTerm .
+func (writer *VMWriter) writeUnaryOpTerm(unaryOpTerm *compilation_engine.UnaryOpTerm) {
+	switch unaryOpTerm.UnaryOp {
+	case compilation_engine.HypenUnaryOp: // -
+		writer.writeArithmetic(AirthmeticNeg)
+	case compilation_engine.TildeUnaryOp: // ~
+		writer.writeArithmetic(AirthmeticNot)
+	default:
+		chk.SE(fmt.Errorf("writeUnaryOpTerm:想定していないUnaryOpが来ました:%v", unaryOpTerm.UnaryOp))
+	}
 }
 
 // writeOperation .
