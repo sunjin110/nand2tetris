@@ -11,9 +11,10 @@ import (
 
 // VMWriter .
 type VMWriter struct {
-	file        *os.File
-	class       *compilation_engine.Class
-	symbolTable *symboltable.SymbolTable
+	file           *os.File
+	class          *compilation_engine.Class
+	symbolTable    *symboltable.SymbolTable
+	subRoutineName string // 現在のsubRoutineの名前
 }
 
 // New VMWriterを作成する
@@ -45,6 +46,9 @@ func (writer *VMWriter) writeSubRoutine(className string, subRoutineDec *compila
 	// function Main.main 2
 	writer.writeFunction(fmt.Sprintf("%s.%s", className, subRoutineDec.SubRoutineName), int32(len(subRoutineDec.ParameterList)))
 
+	// setSubRoutineName
+	writer.subRoutineName = subRoutineDec.SubRoutineName
+
 	for _, statement := range subRoutineDec.SubRoutineBody.StatementList {
 		writer.writeStatement(statement)
 	}
@@ -54,6 +58,8 @@ func (writer *VMWriter) writeSubRoutine(className string, subRoutineDec *compila
 func (writer *VMWriter) writeStatement(statement compilation_engine.Statement) {
 
 	switch statement.GetStatementType() {
+	case compilation_engine.LetStatementPrefix:
+		writer.writeLetStatement(statement.(*compilation_engine.LetStatement))
 	case compilation_engine.DoStatementPrefix:
 		writer.writeDoStatement(statement.(*compilation_engine.DoStatement))
 	case compilation_engine.ReturnStatementPrefix:
@@ -61,6 +67,15 @@ func (writer *VMWriter) writeStatement(statement compilation_engine.Statement) {
 	default:
 		chk.SE(fmt.Errorf("writeStatement: 宣言していないstatementが渡されました:%s", statement.GetStatementType()))
 	}
+
+}
+
+// writeLetStatement .
+func (writer *VMWriter) writeLetStatement(letStatement *compilation_engine.LetStatement) {
+	// 先にexpressionを処理
+	writer.writeExpression(letStatement.Expression)
+
+	// TODO arrayExpressionを考慮して実装する
 
 }
 
@@ -132,6 +147,10 @@ func (writer *VMWriter) writeTerm(term compilation_engine.Term) {
 		writer.writeIntegerConstTerm(term.(*compilation_engine.IntegerConstTerm))
 	case compilation_engine.ExpressionType:
 		writer.writeExpressionTerm(term.(*compilation_engine.ExpressionTerm))
+	case compilation_engine.ValNameConstType:
+		writer.writeValNameConstTerm(term.(*compilation_engine.ValNameConstantTerm))
+	case compilation_engine.SubRoutineCallType:
+		writer.writeSubroutineCall(term.(*compilation_engine.SubRoutineCall))
 	case compilation_engine.UnaryOpTermType:
 		writer.writeUnaryOpTerm(term.(*compilation_engine.UnaryOpTerm))
 		// TODO more case
@@ -150,6 +169,18 @@ func (writer *VMWriter) writeIntegerConstTerm(integerConstTerm *compilation_engi
 // writeExpressionTerm ex: (1 + 2)
 func (writer *VMWriter) writeExpressionTerm(expressionTerm *compilation_engine.ExpressionTerm) {
 	writer.writeExpression(expressionTerm.Expression)
+}
+
+// writeValNameConstTerm .
+func (writer *VMWriter) writeValNameConstTerm(valNameConstTerm *compilation_engine.ValNameConstantTerm) {
+
+	// 変数のsymbol情報を習得する
+	subroutineSymbolTable := writer.getCurrentSubroutineSymbolTable()
+	symbol := subroutineSymbolTable.SymbolMap[valNameConstTerm.ValName]
+
+	// LocalにPopする
+	// TODO 本当にLocalだけで大丈夫か？を確認する
+	writer.writePop(segmentLocal, symbol.Num)
 }
 
 // writeUnaryOpTerm .
@@ -196,10 +227,9 @@ func (writer *VMWriter) writeOperation(op compilation_engine.Op) {
 	}
 }
 
-// writeUnaryOp .
-func (writer *VMWriter) writeUnaryOperation(unaryOp compilation_engine.UnaryOp) {
-	// TODO writeOperationと同じ感じで実装するんかな？
-	panic("未実装")
+// getCurrentSubroutineSymbolTable 現在のSubroutineのSymbolTableを習得する
+func (writer *VMWriter) getCurrentSubroutineSymbolTable() *symboltable.SubroutineSymbolTable {
+	return writer.symbolTable.SubroutineSymbolTableMap[writer.subRoutineName]
 }
 
 // writePush pushコマンドを書く
