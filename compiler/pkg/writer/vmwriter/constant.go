@@ -1,6 +1,11 @@
 package vmwriter
 
 const (
+	whileStartLabelPattern = "WHILE_START_%d"
+	whileEndLabelPattern   = "WHILE_END_%d"
+)
+
+const (
 	segmentConst = "constant"
 	segmentTemp  = "temp"
 	segmentLocal = "local"

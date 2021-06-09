@@ -3,18 +3,21 @@ package vmwriter
 import (
 	"compiler/pkg/common/chk"
 	"compiler/pkg/common/fileutil"
+	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/compilation_engine"
 	"compiler/pkg/symboltable"
 	"fmt"
+	"log"
 	"os"
 )
 
 // VMWriter .
 type VMWriter struct {
-	file           *os.File
-	class          *compilation_engine.Class
-	symbolTable    *symboltable.SymbolTable
-	subRoutineName string // 現在のsubRoutineの名前
+	file                 *os.File
+	class                *compilation_engine.Class
+	symbolTable          *symboltable.SymbolTable
+	subRoutineName       string // 現在のsubRoutineの名前
+	subRoutineWhileCount int32  // 対象のsubroutine内のwhileのカウント, whileが宣言されるごとにincrementする
 }
 
 // New VMWriterを作成する
@@ -48,8 +51,15 @@ func (writer *VMWriter) writeSubRoutine(className string, subRoutineDec *compila
 
 	// setSubRoutineName
 	writer.subRoutineName = subRoutineDec.SubRoutineName
+	writer.subRoutineWhileCount = 0 // while countの初期化
 
-	for _, statement := range subRoutineDec.SubRoutineBody.StatementList {
+	// statementList
+	writer.writeStatementList(subRoutineDec.SubRoutineBody.StatementList)
+}
+
+// writeStatementList .
+func (writer *VMWriter) writeStatementList(statementList []compilation_engine.Statement) {
+	for _, statement := range statementList {
 		writer.writeStatement(statement)
 	}
 }
@@ -60,6 +70,8 @@ func (writer *VMWriter) writeStatement(statement compilation_engine.Statement) {
 	switch statement.GetStatementType() {
 	case compilation_engine.LetStatementPrefix:
 		writer.writeLetStatement(statement.(*compilation_engine.LetStatement))
+	case compilation_engine.WhileStatementPrefix:
+		writer.writeWhileStatement(statement.(*compilation_engine.WhileStatement))
 	case compilation_engine.DoStatementPrefix:
 		writer.writeDoStatement(statement.(*compilation_engine.DoStatement))
 	case compilation_engine.ReturnStatementPrefix:
@@ -81,10 +93,40 @@ func (writer *VMWriter) writeLetStatement(letStatement *compilation_engine.LetSt
 	subroutineSymbolTable := writer.getCurrentSubroutineSymbolTable()
 	symbol := subroutineSymbolTable.SymbolMap[letStatement.DestVarName]
 
+	if symbol.Attribute == "static" || symbol.Attribute == "field" {
+		panic("まだ動作が確認できていないものです")
+	}
+
 	// LocalにPopする
 	// TODO 本当にLocalだけで大丈夫か？を確認する
-	writer.writePop(segmentLocal, symbol.Num)
+	writer.writePop(symbol.Attribute, symbol.Num)
+}
 
+// writeWhileStatement .
+func (writer *VMWriter) writeWhileStatement(whileStatement *compilation_engine.WhileStatement) {
+
+	whileCount := writer.subRoutineWhileCount
+
+	// label
+	writer.writeLabel(fmt.Sprintf(whileStartLabelPattern, whileCount))
+
+	// expression
+	writer.writeExpression(whileStatement.ConditionalExpression)
+
+	// それのnot
+	writer.writeArithmetic(AirthmeticNot)
+
+	// if-goto expressionのnotを満たす場合はwhileを抜けるようにするため
+	writer.writeIf(fmt.Sprintf(whileEndLabelPattern, whileCount))
+
+	// whileの中の処理をcompile
+	writer.writeStatementList(whileStatement.StatementList)
+
+	// while脱出のlabel
+	writer.writeLabel(fmt.Sprintf(whileEndLabelPattern, whileCount))
+
+	// whileCounterを+1
+	writer.subRoutineWhileCount++
 }
 
 // writeDoStatement .
@@ -121,11 +163,6 @@ func (writer *VMWriter) writeSubroutineCall(subroutineCall *compilation_engine.S
 		name = fmt.Sprintf("%s.%s", subroutineCall.ClassOrVarName, subroutineCall.SubRoutineName)
 	}
 
-	// if name == "Main.convert" {
-	// 	log.Println("subRoutineCall情報 : ", jsonutil.Marshal(subroutineCall))
-	// 	log.Println("hogehoge is ", subroutineCall.ExpressionList[0].InitTerm.GetTermType())
-	// }
-
 	writer.writeCall(name, int32(len(subroutineCall.ExpressionList)))
 }
 
@@ -158,6 +195,8 @@ func (writer *VMWriter) writeTerm(term compilation_engine.Term) {
 	switch term.GetTermType() {
 	case compilation_engine.IntegerConstType:
 		writer.writeIntegerConstTerm(term.(*compilation_engine.IntegerConstTerm))
+	case compilation_engine.KeyWordConstType:
+		writer.writeKeyWordConstTerm(term.(*compilation_engine.KeyWordConstTerm))
 	case compilation_engine.ExpressionType:
 		writer.writeExpressionTerm(term.(*compilation_engine.ExpressionTerm))
 	case compilation_engine.ValNameConstType:
@@ -179,6 +218,28 @@ func (writer *VMWriter) writeIntegerConstTerm(integerConstTerm *compilation_engi
 	writer.writePush(segmentConst, int32(integerConstTerm.Val))
 }
 
+// writeKeyWordConstTerm trueとかfalseとか
+func (writer *VMWriter) writeKeyWordConstTerm(keyWordConstTerm *compilation_engine.KeyWordConstTerm) {
+
+	switch keyWordConstTerm.KeyWord {
+	case compilation_engine.TrueKeyword:
+		// -1をpushする
+		// 1をpushしてnetでもいい
+		writer.writePush(segmentConst, 0)
+		writer.writeArithmetic(AirthmeticNot)
+	case compilation_engine.FalseKeyword:
+		// 0をpushする
+		writer.writePush(segmentConst, 0)
+	case compilation_engine.NullKeyword:
+		// 0をpushする
+		writer.writePush(segmentConst, 0)
+	default:
+		chk.SE(fmt.Errorf("未定義のKeyWordCOnstTermを検知%s", keyWordConstTerm.KeyWord))
+	}
+
+	log.Println("keyWordConstTerm is ", jsonutil.Marshal(keyWordConstTerm))
+}
+
 // writeExpressionTerm ex: (1 + 2)
 func (writer *VMWriter) writeExpressionTerm(expressionTerm *compilation_engine.ExpressionTerm) {
 	writer.writeExpression(expressionTerm.Expression)
@@ -194,7 +255,12 @@ func (writer *VMWriter) writeValNameConstTerm(valNameConstTerm *compilation_engi
 	// TODO ArrayExpressionを考慮する
 
 	// symbol.
-	writer.writePush(segmentLocal, symbol.Num)
+	// fieldとstaticもこれで大丈夫か?を一応確認する
+	if symbol.Attribute == "static" || symbol.Attribute == "field" {
+		panic("まだ動作が確認できていないものです")
+	}
+
+	writer.writePush(symbol.Attribute, symbol.Num)
 }
 
 // writeUnaryOpTerm .
