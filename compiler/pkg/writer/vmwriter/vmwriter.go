@@ -18,6 +18,7 @@ type VMWriter struct {
 	symbolTable          *symboltable.SymbolTable
 	subRoutineName       string // 現在のsubRoutineの名前
 	subRoutineWhileCount int32  // 対象のsubroutine内のwhileのカウント, whileが宣言されるごとにincrementする
+	subRoutineIfCount    int32  // 対象のsubroutine内のifのカウント, ifが宣言されるごとにincrementする
 }
 
 // New VMWriterを作成する
@@ -52,6 +53,7 @@ func (writer *VMWriter) writeSubRoutine(className string, subRoutineDec *compila
 	// setSubRoutineName
 	writer.subRoutineName = subRoutineDec.SubRoutineName
 	writer.subRoutineWhileCount = 0 // while countの初期化
+	writer.subRoutineIfCount = 0    // if countの初期化
 
 	// statementList
 	writer.writeStatementList(subRoutineDec.SubRoutineBody.StatementList)
@@ -70,6 +72,8 @@ func (writer *VMWriter) writeStatement(statement compilation_engine.Statement) {
 	switch statement.GetStatementType() {
 	case compilation_engine.LetStatementPrefix:
 		writer.writeLetStatement(statement.(*compilation_engine.LetStatement))
+	case compilation_engine.IfStatementPrefix:
+		writer.writeIfStatement(statement.(*compilation_engine.IfStatement))
 	case compilation_engine.WhileStatementPrefix:
 		writer.writeWhileStatement(statement.(*compilation_engine.WhileStatement))
 	case compilation_engine.DoStatementPrefix:
@@ -100,6 +104,17 @@ func (writer *VMWriter) writeLetStatement(letStatement *compilation_engine.LetSt
 	// LocalにPopする
 	// TODO 本当にLocalだけで大丈夫か？を確認する
 	writer.writePop(symbol.Attribute, symbol.Num)
+}
+
+// writeIfStatement .
+func (writer *VMWriter) writeIfStatement(ifStatement *compilation_engine.IfStatement) {
+
+	ifCount := writer.subRoutineIfCount
+
+	// 判断するexpression
+
+	// label
+
 }
 
 // writeWhileStatement .
