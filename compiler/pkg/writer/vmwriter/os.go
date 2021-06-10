@@ -16,3 +16,8 @@ func getMathMultiply() (string, int32) {
 func getMathDivide() (string, int32) {
 	return "Math.divide", 2
 }
+
+// getMemoryAlloc memory allocate
+func getMemoryAlloc() (string, int32) {
+	return "Memory.alloc", 1
+}
