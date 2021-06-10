@@ -114,6 +114,10 @@ func (writer *VMWriter) writeIfStatement(ifStatement *compilation_engine.IfState
 
 	ifCount := writer.subRoutineIfCount
 
+	// ifCount increment
+	// if内のStatementでwhileがあった場合、対応できなくなってしまうため
+	writer.subRoutineIfCount++
+
 	// 判断するexpression
 	writer.writeExpression(ifStatement.ConditionalExpression)
 
@@ -137,7 +141,7 @@ func (writer *VMWriter) writeIfStatement(ifStatement *compilation_engine.IfState
 	writer.writeStatementList(ifStatement.StatementList)
 
 	// goto end
-	writer.writeLabel(fmt.Sprintf(ifEndLabelPattern, ifCount))
+	writer.writeGoto(fmt.Sprintf(ifEndLabelPattern, ifCount))
 
 	// ==== trueの領域 end ====
 	// ==== falseの領域 (else) ====
@@ -152,15 +156,16 @@ func (writer *VMWriter) writeIfStatement(ifStatement *compilation_engine.IfState
 
 	// if end lanel
 	writer.writeLabel(fmt.Sprintf(ifEndLabelPattern, ifCount))
-
-	// ifCount increment
-	writer.subRoutineIfCount++
 }
 
 // writeWhileStatement .
 func (writer *VMWriter) writeWhileStatement(whileStatement *compilation_engine.WhileStatement) {
 
 	whileCount := writer.subRoutineWhileCount
+
+	// すぐにwhileCounterを+1
+	// while内のStatementでwhileがあった場合、対応できなくなってしまうため
+	writer.subRoutineWhileCount++
 
 	// label
 	writer.writeLabel(fmt.Sprintf(whileStartLabelPattern, whileCount))
@@ -177,11 +182,12 @@ func (writer *VMWriter) writeWhileStatement(whileStatement *compilation_engine.W
 	// whileの中の処理をcompile
 	writer.writeStatementList(whileStatement.StatementList)
 
+	// もう一度whileStartに戻るためのgoto
+	writer.writeGoto(fmt.Sprintf(whileStartLabelPattern, whileCount))
+
 	// while脱出のlabel
 	writer.writeLabel(fmt.Sprintf(whileEndLabelPattern, whileCount))
 
-	// whileCounterを+1
-	writer.subRoutineWhileCount++
 }
 
 // writeDoStatement .
