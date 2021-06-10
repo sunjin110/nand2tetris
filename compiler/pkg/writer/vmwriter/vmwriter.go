@@ -3,9 +3,11 @@ package vmwriter
 import (
 	"compiler/pkg/common/chk"
 	"compiler/pkg/common/fileutil"
+	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/compilation_engine"
 	"compiler/pkg/symboltable"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -50,8 +52,6 @@ func (writer *VMWriter) writeSubRoutine(className string, subRoutineDec *compila
 	writer.subRoutineWhileCount = 0 // while countの初期化
 	writer.subRoutineIfCount = 0    // if countの初期化
 
-	writer.getCurrentSubroutineSymbolTable()
-
 	// function Main.main 2
 	varCnt := writer.getCurrentSubroutineLocalVarCnt()
 	writer.writeFunction(fmt.Sprintf("%s.%s", className, subRoutineDec.SubRoutineName), varCnt)
@@ -89,14 +89,16 @@ func (writer *VMWriter) writeStatement(statement compilation_engine.Statement) {
 
 // writeLetStatement .
 func (writer *VMWriter) writeLetStatement(letStatement *compilation_engine.LetStatement) {
+
+	log.Println("let statement is ", jsonutil.Marshal(letStatement))
+
 	// 先にexpressionを処理
 	writer.writeExpression(letStatement.Expression)
 
 	// TODO arrayExpressionを考慮して実装する
 
 	// 変数のsymbol情報を習得する
-	subroutineSymbolTable := writer.getCurrentSubroutineSymbolTable()
-	symbol := subroutineSymbolTable.SymbolMap[letStatement.DestVarName]
+	symbol := writer.getSymbol(letStatement.DestVarName)
 
 	if symbol.Attribute == "static" || symbol.Attribute == "field" {
 		panic("まだ動作が確認できていないものです")
@@ -218,8 +220,7 @@ func (writer *VMWriter) writeSubroutineCall(subroutineCall *compilation_engine.S
 	writer.writeExpressionList(subroutineCall.ExpressionList)
 
 	nArgs := int32(len(subroutineCall.ExpressionList))
-	symbolTable := writer.getCurrentSubroutineSymbolTable()
-	symbol := symbolTable.SymbolMap[subroutineCall.ClassOrVarName]
+	symbol := writer.getSymbol(subroutineCall.ClassOrVarName)
 	if symbol != nil {
 
 		// symbolが存在する場合はmethod、引数を+1
@@ -318,8 +319,7 @@ func (writer *VMWriter) writeExpressionTerm(expressionTerm *compilation_engine.E
 func (writer *VMWriter) writeValNameConstTerm(valNameConstTerm *compilation_engine.ValNameConstantTerm) {
 
 	// 変数のsymbol情報を習得する
-	subroutineSymbolTable := writer.getCurrentSubroutineSymbolTable()
-	symbol := subroutineSymbolTable.SymbolMap[valNameConstTerm.ValName]
+	symbol := writer.getSymbol(valNameConstTerm.ValName)
 
 	// TODO ArrayExpressionを考慮する
 
@@ -379,6 +379,26 @@ func (writer *VMWriter) writeOperation(op compilation_engine.Op) {
 // getCurrentSubroutineSymbolTable 現在のSubroutineのSymbolTableを習得する
 func (writer *VMWriter) getCurrentSubroutineSymbolTable() *symboltable.SubroutineSymbolTable {
 	return writer.symbolTable.SubroutineSymbolTableMap[writer.subRoutineName]
+}
+
+// getSymbol 指定した変数のsymbolを習得する
+// 存在しない場合はnilを返す
+func (writer *VMWriter) getSymbol(varName string) *symboltable.Symbol {
+
+	// 先にsubroutine内で探す
+	subroutineSymbolTable := writer.getCurrentSubroutineSymbolTable()
+	subroutineSymbol := subroutineSymbolTable.SymbolMap[varName]
+	if subroutineSymbol != nil {
+		return subroutineSymbol
+	}
+
+	// subroutine symbol tableに対象がない場合はclass全体のsymbol tableから探す
+	classSymbol := writer.symbolTable.ClassSymbolMap[varName]
+	if classSymbol != nil {
+		return classSymbol
+	}
+
+	return nil
 }
 
 // getCurrentSubroutineLocalVarCnt 現在のSubroutineのLocal変数の数を取得する
