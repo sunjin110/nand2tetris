@@ -20,17 +20,6 @@
  */
 class Main {
 
-    // static int value2;
-
-    // function void main() {
-	//     var int value2;
-    //     do Main.fillMemory(8001, 16, -1); // sets RAM[8001]..RAM[8016] to -1
-    //     let value2 = Memory.peek(8000);    // reads a value from RAM[8000]
-    //     do Main.convert(value2);           // performs the conversion
-    //     return;
-    // }
-    
-    
     /**
      * Initializes RAM[8001]..RAM[8016] to -1,
      * and converts the value in RAM[8000] to binary.
@@ -67,10 +56,6 @@ class Main {
     	        let loop = false;
     	    }
     	}
-
-        while (loop) {
-            
-        }
     	return;
     }
  

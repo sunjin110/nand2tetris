@@ -3,6 +3,9 @@ package vmwriter
 const (
 	whileStartLabelPattern = "WHILE_START_%d"
 	whileEndLabelPattern   = "WHILE_END_%d"
+	ifTrueLabelPattern     = "IF_TRUE_%d"
+	ifFalseLabelPattern    = "IF_FALSE_%d"
+	ifEndLabelPattern      = "IF_END_%d"
 )
 
 const (
