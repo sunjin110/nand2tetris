@@ -47,13 +47,16 @@ func (writer *VMWriter) WriteVM() {
 // writeSubRoutine .
 func (writer *VMWriter) writeSubRoutine(className string, subRoutineDec *compilation_engine.SubRoutineDec) {
 
-	// function Main.main 2
-	writer.writeFunction(fmt.Sprintf("%s.%s", className, subRoutineDec.SubRoutineName), int32(len(subRoutineDec.ParameterList)))
-
 	// setSubRoutineName
 	writer.subRoutineName = subRoutineDec.SubRoutineName
 	writer.subRoutineWhileCount = 0 // while countの初期化
 	writer.subRoutineIfCount = 0    // if countの初期化
+
+	writer.getCurrentSubroutineSymbolTable()
+
+	// function Main.main 2
+	varCnt := writer.getCurrentSubroutineLocalVarCnt()
+	writer.writeFunction(fmt.Sprintf("%s.%s", className, subRoutineDec.SubRoutineName), varCnt)
 
 	// statementList
 	writer.writeStatementList(subRoutineDec.SubRoutineBody.StatementList)
@@ -110,8 +113,6 @@ func (writer *VMWriter) writeLetStatement(letStatement *compilation_engine.LetSt
 func (writer *VMWriter) writeIfStatement(ifStatement *compilation_engine.IfStatement) {
 
 	ifCount := writer.subRoutineIfCount
-
-	log.Println("ifStatement is ", jsonutil.Marshal(ifStatement))
 
 	// 判断するexpression
 	writer.writeExpression(ifStatement.ConditionalExpression)
@@ -364,6 +365,20 @@ func (writer *VMWriter) writeOperation(op compilation_engine.Op) {
 // getCurrentSubroutineSymbolTable 現在のSubroutineのSymbolTableを習得する
 func (writer *VMWriter) getCurrentSubroutineSymbolTable() *symboltable.SubroutineSymbolTable {
 	return writer.symbolTable.SubroutineSymbolTableMap[writer.subRoutineName]
+}
+
+// getCurrentSubroutineLocalVarCnt 現在のSubroutineのLocal変数の数を取得する
+func (writer *VMWriter) getCurrentSubroutineLocalVarCnt() int32 {
+
+	symbolTable := writer.getCurrentSubroutineSymbolTable()
+
+	var varCnt int32
+	for _, symbol := range symbolTable.SymbolMap {
+		if symbol.Attribute == symboltable.Variable {
+			varCnt++
+		}
+	}
+	return varCnt
 }
 
 // writePush pushコマンドを書く

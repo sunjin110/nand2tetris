@@ -8,7 +8,9 @@ import (
 
 const (
 	argument = "argument"
-	variable = "local"
+
+	// Variable ローカル変数
+	Variable = "local"
 )
 
 // Engine .
@@ -125,7 +127,7 @@ func getSubroutineSymbolTable(className string, subRoutineDec *compilation_engin
 		symbol := createSymbol(parameter.ParamName, string(parameter.ParamType), argument, num)
 
 		if _, ok := subroutineSymbolMap[symbol.VarName]; ok {
-			chk.SE(fmt.Errorf("Class:%s SubRoutine:%s 内で変数%sが複数宣言されています", className, subRoutineDec.SubRoutineName, symbol.VarName))
+			chk.SE(fmt.Errorf("class:%s subRoutine:%s 内で変数%sが複数宣言されています", className, subRoutineDec.SubRoutineName, symbol.VarName))
 		}
 
 		subroutineSymbolMap[symbol.VarName] = symbol
@@ -135,15 +137,15 @@ func getSubroutineSymbolTable(className string, subRoutineDec *compilation_engin
 	// var
 	for _, varDec := range subRoutineDec.SubRoutineBody.VarDecList {
 		for _, varName := range varDec.NameList {
-			num := numMap[variable]
-			symbol := createSymbol(varName, string(varDec.Type), variable, num)
+			num := numMap[Variable]
+			symbol := createSymbol(varName, string(varDec.Type), Variable, num)
 
 			if _, ok := subroutineSymbolMap[symbol.VarName]; ok {
-				chk.SE(fmt.Errorf("Class:%s SubRoutine:%s 内で変数%sが複数宣言されています", className, subRoutineDec.SubRoutineName, symbol.VarName))
+				chk.SE(fmt.Errorf("class:%s subRoutine:%s 内で変数%sが複数宣言されています", className, subRoutineDec.SubRoutineName, symbol.VarName))
 			}
 
 			subroutineSymbolMap[symbol.VarName] = symbol
-			numMap[variable]++
+			numMap[Variable]++
 		}
 	}
 
