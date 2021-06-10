@@ -9,9 +9,10 @@ const (
 )
 
 const (
-	segmentConst = "constant"
-	segmentTemp  = "temp"
-	segmentLocal = "local"
+	segmentConst   = "constant"
+	segmentTemp    = "temp"
+	segmentLocal   = "local"
+	segmentPointer = "pointer"
 	// TODO more segement type
 
 )
