@@ -136,6 +136,11 @@ func (writer *VMWriter) writeLetStatement(letStatement *compilation_engine.LetSt
 		panic("まだ動作が確認できていないものです")
 	}
 
+	// TODO !!!! symbolでPopやPushしているところ全てに対応する必要あり
+	switch symbol.Attribute {
+
+	}
+
 	// LocalにPopする
 	// TODO 本当にLocalだけで大丈夫か？を確認する
 	writer.writePop(symbol.Attribute, symbol.Num)
