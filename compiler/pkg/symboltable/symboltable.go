@@ -2,8 +2,8 @@ package symboltable
 
 import "compiler/pkg/compilation_engine"
 
-// Engine .
-type Engine struct {
+// SymbolTableEngine .
+type SymbolTableEngine struct {
 	class       *compilation_engine.Class
 	SymbolTable *SymbolTable
 }
@@ -29,14 +29,14 @@ type Symbol struct {
 }
 
 // New .
-func New(class *compilation_engine.Class) *Engine {
-	return &Engine{
+func New(class *compilation_engine.Class) *SymbolTableEngine {
+	return &SymbolTableEngine{
 		class:       class,
 		SymbolTable: nil, // StartでここのsymbolTableを構築する
 	}
 }
 
 // Start SymbolTable作成かいし
-func (engine *Engine) Start() {
+func (engine *SymbolTableEngine) Start() {
 	// TODO
 }
