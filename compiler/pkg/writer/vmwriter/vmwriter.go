@@ -1,12 +1,9 @@
 package vmwriter
 
 import (
-	"compiler/pkg/common/chk"
 	"compiler/pkg/common/fileutil"
 	"compiler/pkg/compilation_engine"
 	"compiler/pkg/symboltable"
-	"fmt"
-	"log"
 	"os"
 )
 
@@ -18,6 +15,7 @@ type VMWriter struct {
 }
 
 // New VMWriterを作成する
+// TODO
 func New(filePath string, class *compilation_engine.Class, symbolTable *symboltable.SymbolTable) *VMWriter {
 	return &VMWriter{
 		file:        fileutil.CreateFile(filePath),
@@ -33,9 +31,6 @@ func (writer *VMWriter) FileClose() {
 
 // WriteVM VMファイルを書く
 func (writer *VMWriter) WriteVM() {
-
-	log.Println("=== start write vm ===")
-
 	// TODO
 }
 
@@ -65,33 +60,26 @@ func (writer *VMWriter) writeLabel(label string) {
 }
 
 // writeGoto gotoコマンドを書く
-func (writer *VMWriter) writeGoto(label string) {
-	writer.write(fmt.Sprintf("goto %s", label))
+// TODO
+func (writer *VMWriter) writeGoto(lable string) {
 }
 
 // writeIf if-gotoコマンドをかく
+// TODO
 func (writer *VMWriter) writeIf(label string) {
-	writer.write(fmt.Sprintf("if-goto %s", label))
 }
 
 // writeCall callコマンドを書く
+// TODO
 func (writer *VMWriter) writeCall(name string, nArgs int32) {
-	writer.write(fmt.Sprintf("call %s %d", name, nArgs))
-
 }
 
 // writeFunction functionコマンドを書く
+// TODO
 func (writer *VMWriter) writeFunction(name string, nLocals int32) {
-	writer.write(fmt.Sprintf("function %s %d", name, nLocals))
 }
 
 // writeReturn returnコマンドを書く
+// TODO
 func (writer *VMWriter) writeReturn() {
-	writer.write("return")
-}
-
-// write
-func (writer *VMWriter) write(value string) {
-	_, err := writer.file.WriteString(fmt.Sprintf("%s\n", value))
-	chk.SE(err)
 }
