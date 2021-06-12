@@ -26,21 +26,6 @@ func Multiply(x int16, y int16) int16 {
 	return sum
 }
 
-// // Devide 割り算
-// func Devide(x int16, y int16) int16 {
-
-// 	if y > x {
-// 		return 0
-// 	}
-
-// 	// if x < 0 || y <= 0 {
-// 	// 	panic("対象外")
-// 	// }
-
-// 	// q := Devide(x int16, y int16)
-
-// }
-
 // Devide 割り算
 func Devide(x int16, y int16) int16 {
 
@@ -58,7 +43,21 @@ func Devide(x int16, y int16) int16 {
 	}
 	// 2*q + 1
 	return (q << 1) + 1
+}
 
+// Sqrt y = √xの整数部分を計算する
+func Sqrt(x int16) int16 {
+
+	var y int16
+
+	for i := (16/2-1); i > 0; i-- {
+
+		if (y + )
+
+	}
+
+
+	return 0
 }
 
 // MultiplyVerbose 掛け算
