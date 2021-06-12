@@ -11,7 +11,7 @@ func getSegmentFromSymbolAttribute(attribute string) string {
 
 	switch attribute {
 	case string(compilation_engine.StaticVariableKind):
-		panic("未実装")
+		return segmentStatic
 	case string(compilation_engine.FieldVariableKind):
 		return segmentThis
 	case string(compilation_engine.LocalVariableKind):
