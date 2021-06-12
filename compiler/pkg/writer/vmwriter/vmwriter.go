@@ -111,49 +111,10 @@ func (writer *VMWriter) writeIfStatement(ifStatement *compilation_engine.IfState
 
 	ifCount := writer.subRoutineIfCount
 
-	log.Println("ifStatement is ", jsonutil.Marshal(ifStatement))
-
 	// 判断するexpression
-	writer.writeExpression(ifStatement.ConditionalExpression)
 
-	// これが満たすなら、trueの方の実装にjumpする
-	writer.writeIf(fmt.Sprintf(ifTrueLabelPattern, ifCount))
+	// label
 
-	if len(ifStatement.ElseStatementList) == 0 {
-		// elseがない場合は、goto IF_END_%dを書く
-		writer.writeGoto(fmt.Sprintf(ifEndLabelPattern, ifCount))
-	} else {
-		// elseがある場合は、goto IF_FALSE_%dを書く
-		writer.writeGoto(fmt.Sprintf(ifFalseLabelPattern, ifCount))
-	}
-
-	// ==== trueの領域 ====
-
-	// true label
-	writer.writeLabel(fmt.Sprintf(ifTrueLabelPattern, ifCount))
-
-	// true statement
-	writer.writeStatementList(ifStatement.StatementList)
-
-	// goto end
-	writer.writeLabel(fmt.Sprintf(ifEndLabelPattern, ifCount))
-
-	// ==== trueの領域 end ====
-	// ==== falseの領域 (else) ====
-	if len(ifStatement.ElseStatementList) > 0 {
-		// false label
-		writer.writeLabel(fmt.Sprintf(ifFalseLabelPattern, ifCount))
-
-		// false statement
-		writer.writeStatementList(ifStatement.ElseStatementList)
-	}
-	// ==== falseの領域 (else) end ====
-
-	// if end lanel
-	writer.writeLabel(fmt.Sprintf(ifEndLabelPattern, ifCount))
-
-	// ifCount increment
-	writer.subRoutineIfCount++
 }
 
 // writeWhileStatement .
