@@ -6,6 +6,7 @@ import (
 	"compiler/pkg/compilation_engine"
 	"compiler/pkg/symboltable"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -58,6 +59,7 @@ func (writer *VMWriter) writeSubRoutine(className string, subRoutineDec *compila
 	case compilation_engine.Constructor:
 		writer.writeSubRoutineConstructor(className, subRoutineDec)
 	case compilation_engine.Method:
+		writer.writeSubRoutineMethod(className, subRoutineDec)
 	case compilation_engine.Function:
 		writer.writeSubRoutineFunction(className, subRoutineDec)
 	default:
@@ -77,6 +79,18 @@ func (writer *VMWriter) writeSubRoutineConstructor(className string, subRoutineD
 	writer.writeCall(name, nArgs)
 
 	// 確保したAddressをpointer領域に追加 (this領域)
+	writer.writePop(segmentPointer, 0)
+
+	// statementList
+	writer.writeStatementList(subRoutineDec.SubRoutineBody.StatementList)
+}
+
+// writeSubRoutineMethod method subroutineを書く
+func (writer *VMWriter) writeSubRoutineMethod(className string, subRoutineDec *compilation_engine.SubRoutineDec) {
+
+	// methodなので、そのinstanceのthisをargument 0から取得して、自身(pointerに習得する)
+
+	writer.writePush(segmentArgument, 0)
 	writer.writePop(segmentPointer, 0)
 
 	// statementList
@@ -391,6 +405,10 @@ func (writer *VMWriter) writeValNameConstTerm(valNameConstTerm *compilation_engi
 
 	// TODO ArrayExpressionを考慮する
 
+	if symbol == nil {
+		log.Println("valNameConstTerm valName is ", valNameConstTerm.ValName)
+	}
+
 	segment := getSegmentFromSymbolAttribute(symbol.Attribute)
 	writer.writePush(segment, symbol.Num)
 }
@@ -450,9 +468,11 @@ func (writer *VMWriter) getSymbol(varName string) *symboltable.Symbol {
 
 	// 先にsubroutine内で探す
 	subroutineSymbolTable := writer.getCurrentSubroutineSymbolTable()
-	subroutineSymbol := subroutineSymbolTable.SymbolMap[varName]
-	if subroutineSymbol != nil {
-		return subroutineSymbol
+	if subroutineSymbolTable != nil {
+		subroutineSymbol := subroutineSymbolTable.SymbolMap[varName]
+		if subroutineSymbol != nil {
+			return subroutineSymbol
+		}
 	}
 
 	// subroutine symbol tableに対象がない場合はclass全体のsymbol tableから探す
