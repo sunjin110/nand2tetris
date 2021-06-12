@@ -21,13 +21,3 @@ func getMathDivide() (string, int32) {
 func getMemoryAlloc() (string, int32) {
 	return "Memory.alloc", 1
 }
-
-// getStringNew StringNew
-func getStringNew() (string, int32) {
-	return "String.new", 1
-}
-
-// getStringAppendChar StringAppendChar
-func getStringAppendChar() (string, int32) {
-	return "String.appendChar", 2
-}
