@@ -3,11 +3,9 @@ package vmwriter
 import (
 	"compiler/pkg/common/chk"
 	"compiler/pkg/common/fileutil"
-	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/compilation_engine"
 	"compiler/pkg/symboltable"
 	"fmt"
-	"log"
 	"os"
 )
 
@@ -122,8 +120,6 @@ func (writer *VMWriter) writeStatement(statement compilation_engine.Statement) {
 // writeLetStatement .
 func (writer *VMWriter) writeLetStatement(letStatement *compilation_engine.LetStatement) {
 
-	log.Println("let statement is ", jsonutil.Marshal(letStatement))
-
 	// 先にexpressionを処理
 	writer.writeExpression(letStatement.Expression)
 
@@ -132,18 +128,8 @@ func (writer *VMWriter) writeLetStatement(letStatement *compilation_engine.LetSt
 	// 変数のsymbol情報を習得する
 	symbol := writer.getSymbol(letStatement.DestVarName)
 
-	if symbol.Attribute == "static" || symbol.Attribute == "field" {
-		panic("まだ動作が確認できていないものです")
-	}
-
-	// TODO !!!! symbolでPopやPushしているところ全てに対応する必要あり
-	switch symbol.Attribute {
-
-	}
-
-	// LocalにPopする
-	// TODO 本当にLocalだけで大丈夫か？を確認する
-	writer.writePop(symbol.Attribute, symbol.Num)
+	segment := getSegmentFromSymbolAttribute(symbol.Attribute)
+	writer.writePop(segment, symbol.Num)
 }
 
 // writeIfStatement .
@@ -264,7 +250,8 @@ func (writer *VMWriter) writeSubroutineCall(subroutineCall *compilation_engine.S
 		nArgs++
 
 		// push local n
-		writer.writePush(symbol.Attribute, symbol.Num)
+		segment := getSegmentFromSymbolAttribute(symbol.Attribute)
+		writer.writePush(segment, symbol.Num)
 	}
 
 	name := subroutineCall.SubRoutineName
@@ -363,13 +350,8 @@ func (writer *VMWriter) writeValNameConstTerm(valNameConstTerm *compilation_engi
 
 	// TODO ArrayExpressionを考慮する
 
-	// symbol.
-	// fieldとstaticもこれで大丈夫か?を一応確認する
-	if symbol.Attribute == "static" || symbol.Attribute == "field" {
-		panic("まだ動作が確認できていないものです")
-	}
-
-	writer.writePush(symbol.Attribute, symbol.Num)
+	segment := getSegmentFromSymbolAttribute(symbol.Attribute)
+	writer.writePush(segment, symbol.Num)
 }
 
 // writeUnaryOpTerm .
@@ -452,7 +434,7 @@ func (writer *VMWriter) getCurrentSubroutineLocalVarCnt() int32 {
 
 	var varCnt int32
 	for _, symbol := range symbolTable.SymbolMap {
-		if symbol.Attribute == symboltable.Variable {
+		if symbol.Attribute == string(compilation_engine.LocalVariableKind) {
 			varCnt++
 		}
 	}

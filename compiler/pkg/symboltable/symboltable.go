@@ -6,13 +6,6 @@ import (
 	"fmt"
 )
 
-const (
-	argument = "argument"
-
-	// Variable ローカル変数
-	Variable = "local"
-)
-
 // Engine .
 type Engine struct {
 	class       *compilation_engine.Class
@@ -97,34 +90,6 @@ func getClassSymbolMap(className string, classVarDecList []*compilation_engine.C
 	return classSymbolMap
 }
 
-// // getClassSymbolList クラスのスコープにおけるシンボルテーブルを作成する
-// func getClassSymbolList(classVarDecList []*compilation_engine.ClassVarDec) []*Symbol {
-
-// 	if len(classVarDecList) == 0 {
-// 		return nil
-// 	}
-
-// 	// numberを定義する必要があるので
-// 	// key: 属性(attribute), value: num
-// 	numMap := map[string]int32{}
-
-// 	var classSymbolList []*Symbol
-// 	for _, classVarDec := range classVarDecList {
-// 		for _, varName := range classVarDec.VarNameList {
-
-// 			// 番号を取得
-// 			num := numMap[string(classVarDec.VarKind)]
-// 			symbol := createSymbol(varName, string(classVarDec.VarType), string(classVarDec.VarKind), num)
-// 			classSymbolList = append(classSymbolList, symbol)
-
-// 			// 番号を1incrementする
-// 			numMap[string(classVarDec.VarKind)]++
-// 		}
-// 	}
-
-// 	return classSymbolList
-// }
-
 // getSubroutineSymbolTableMap サブルーチンリストのシンボルテーブルのMapを取得する
 func getSubroutineSymbolTableMap(className string, subRoutineDecList []*compilation_engine.SubRoutineDec) map[string]*SubroutineSymbolTable {
 
@@ -155,31 +120,33 @@ func getSubroutineSymbolTable(className string, subRoutineDec *compilation_engin
 	subroutineSymbolMap := map[string]*Symbol{}
 
 	// 先に、引数
+	argAttri := string(compilation_engine.ArgumentVariableKind)
 	for _, parameter := range subRoutineDec.ParameterList {
 
-		num := numMap[argument]
-		symbol := createSymbol(parameter.ParamName, string(parameter.ParamType), argument, num)
+		num := numMap[argAttri]
+		symbol := createSymbol(parameter.ParamName, string(parameter.ParamType), argAttri, num)
 
 		if _, ok := subroutineSymbolMap[symbol.VarName]; ok {
 			chk.SE(fmt.Errorf("class:%s subRoutine:%s 内で変数%sが複数宣言されています", className, subRoutineDec.SubRoutineName, symbol.VarName))
 		}
 
 		subroutineSymbolMap[symbol.VarName] = symbol
-		numMap[argument]++
+		numMap[argAttri]++
 	}
 
 	// var
+	varAttri := string(compilation_engine.LocalVariableKind)
 	for _, varDec := range subRoutineDec.SubRoutineBody.VarDecList {
 		for _, varName := range varDec.NameList {
-			num := numMap[Variable]
-			symbol := createSymbol(varName, string(varDec.Type), Variable, num)
+			num := numMap[varAttri]
+			symbol := createSymbol(varName, string(varDec.Type), varAttri, num)
 
 			if _, ok := subroutineSymbolMap[symbol.VarName]; ok {
 				chk.SE(fmt.Errorf("class:%s subRoutine:%s 内で変数%sが複数宣言されています", className, subRoutineDec.SubRoutineName, symbol.VarName))
 			}
 
 			subroutineSymbolMap[symbol.VarName] = symbol
-			numMap[Variable]++
+			numMap[varAttri]++
 		}
 	}
 
