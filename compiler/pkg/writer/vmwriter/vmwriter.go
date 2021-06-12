@@ -186,6 +186,21 @@ func (writer *VMWriter) writeLetStatementArray(letStatement *compilation_engine.
 	writer.writePop(segmentThat, 0)
 }
 
+// // writeLetStatement .
+// func (writer *VMWriter) writeLetStatement(letStatement *compilation_engine.LetStatement) {
+
+// 	// 先にexpressionを処理
+// 	writer.writeExpression(letStatement.Expression)
+
+// 	// TODO arrayExpressionを考慮して実装する
+
+// 	// 変数のsymbol情報を習得する
+// 	symbol := writer.getSymbol(letStatement.DestVarName)
+
+// 	segment := getSegmentFromSymbolAttribute(symbol.Attribute)
+// 	writer.writePop(segment, symbol.Num)
+// }
+
 // writeIfStatement .
 func (writer *VMWriter) writeIfStatement(ifStatement *compilation_engine.IfStatement) {
 
@@ -291,6 +306,9 @@ func (writer *VMWriter) writeReturnStatement(returnStatement *compilation_engine
 // writeSubroutineCall subroutineCallのvmを記述する
 func (writer *VMWriter) writeSubroutineCall(subroutineCall *compilation_engine.SubRoutineCall) {
 
+	// ()内の計算式を習得する、そんで書く
+	writer.writeExpressionList(subroutineCall.ExpressionList)
+
 	nArgs := int32(len(subroutineCall.ExpressionList))
 	symbol := writer.getSymbol(subroutineCall.ClassOrVarName)
 	className := subroutineCall.ClassOrVarName
@@ -318,9 +336,6 @@ func (writer *VMWriter) writeSubroutineCall(subroutineCall *compilation_engine.S
 		// className
 		className = writer.class.ClassName
 	}
-
-	// ()内の計算式を習得する、そんで書く
-	writer.writeExpressionList(subroutineCall.ExpressionList)
 
 	name := fmt.Sprintf("%s.%s", className, subroutineCall.SubRoutineName)
 	writer.writeCall(name, nArgs)

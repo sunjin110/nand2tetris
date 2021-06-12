@@ -16,7 +16,6 @@ const (
 	segmentArgument = "argument"
 	segmentThis     = "this"
 	segmentThat     = "that"
-	segmentStatic   = "static"
 	// TODO more segement type
 
 )
