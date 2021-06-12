@@ -40,29 +40,28 @@ func (writer *VMWriter) WriteVM() {
 }
 
 // writePush pushコマンドを書く
+// TODO
 // segment -> CONST, ARG, LOCAL, STATIC, THIS, THAT, POINTER, TMEP
 // index is 整数
 func (writer *VMWriter) writePush(segment string, index int32) {
-	writer.write(fmt.Sprintf("push %s %d", segment, index))
 }
 
 // writePop popコマンド
+// TODO
 // segment -> CONST, ARG, LOCAL, STATIC, THIS, THAT, POINTER, TMEP
 // index is 整数
 func (writer *VMWriter) writePop(segment string, index int32) {
-	writer.write(fmt.Sprintf("pop %s %d", segment, index))
 }
 
 // writeArithmetic 算術コマンドを書く
+// TODO
 // command -> ADD, SUB, NEG, EQ, GT, LT, AND, OR, NOT
 func (writer *VMWriter) writeArithmetic(command string) {
-	writer.write(command)
 }
 
 // writeLable labelコマンドを書く
 // TODO
 func (writer *VMWriter) writeLabel(label string) {
-	writer.write(fmt.Sprintf("label %s", label))
 }
 
 // writeGoto gotoコマンドを書く
