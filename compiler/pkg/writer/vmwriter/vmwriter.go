@@ -285,6 +285,47 @@ func (writer *VMWriter) writeSubroutineCall(subroutineCall *compilation_engine.S
 	writer.writeCall(name, nArgs)
 }
 
+// // writeSubroutineCall subroutineCallのvmを記述する
+// func (writer *VMWriter) writeSubroutineCall(subroutineCall *compilation_engine.SubRoutineCall) {
+
+// 	// TODO 現在、funcitonとmethodしか対応していない、constructが来ても対応できるようにする
+
+// 	// ()内の計算式を習得する、そんで書く
+// 	writer.writeExpressionList(subroutineCall.ExpressionList)
+
+// 	nArgs := int32(len(subroutineCall.ExpressionList))
+// 	symbol := writer.getSymbol(subroutineCall.ClassOrVarName)
+// 	if symbol != nil {
+
+// 		// symbolが存在する場合はmethod、引数を+1
+// 		nArgs++
+
+// 		// push local n
+// 		segment := getSegmentFromSymbolAttribute(symbol.Attribute)
+// 		writer.writePush(segment, symbol.Num)
+// 	} else if subroutineCall.ClassOrVarName == "" {
+// 		// Classが見つからず、VarNameもない場合は
+// 		// 自分自身のmethod
+
+// 		// 引数を+1
+// 		nArgs++
+
+// 		// 自分自身を引数に渡すからpush pointer 0
+// 		writer.writePush(segmentPointer, 0)
+// 	}
+
+// 	// callするfunctionの名前を構築
+// 	var name string
+// 	if subroutineCall.ClassOrVarName != "" {
+// 		name = fmt.Sprintf("%s.%s", subroutineCall.ClassOrVarName, subroutineCall.SubRoutineName)
+// 	} else {
+// 		// 自分自身のmethodなので MyClassName.subroutineNameにする
+// 		name = fmt.Sprintf("%s.%s", writer.class.ClassName, subroutineCall.SubRoutineName)
+// 	}
+
+// 	writer.writeCall(name, nArgs)
+// }
+
 // writeExpressionList .
 func (writer *VMWriter) writeExpressionList(expressionList []*compilation_engine.Expression) {
 	for _, expression := range expressionList {
