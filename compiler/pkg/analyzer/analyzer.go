@@ -10,7 +10,7 @@ import (
 )
 
 // Analyzer Xmlに変換する
-func Analyzer(pathList []string) {
+func Analyzer(outputFileName string, pathList []string) {
 	jsonutil.Print(pathList)
 
 	for _, path := range pathList {

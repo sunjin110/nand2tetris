@@ -47,11 +47,15 @@ func main() {
 	// filter
 	pathList = filterExtPathList(pathList, JackExt)
 
-	// analyzer
-	analyzer.Analyzer(pathList)
+	// output name
+	outputFileName := fmt.Sprintf("%s%s", dir, XMLExt)
+
+	fmt.Println("output file name is ", outputFileName)
+
+	analyzer.Analyzer(outputFileName, pathList)
 }
 
-// dirwark ディレクトリ内のファイルを取得する
+// dirwark ディレクトリ内のファイルを取得すr
 func dirwark(dir string) ([]string, error) {
 
 	files, err := os.ReadDir(dir)
