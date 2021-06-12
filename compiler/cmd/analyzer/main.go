@@ -53,9 +53,9 @@ func main() {
 	mode := args[1]
 	switch mode {
 	case XMLMode:
-		analyzer.ToXML(pathList)
+		analyzer.AnalyzerToXML(pathList)
 	case VMMode:
-		analyzer.ToVM(pathList)
+		analyzer.AnalyzerToVM(pathList)
 	default:
 		fmt.Println("第2引数にmode[vm|xml]を指定してください")
 		os.Exit(1)

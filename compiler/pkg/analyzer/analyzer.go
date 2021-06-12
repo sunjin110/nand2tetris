@@ -10,8 +10,8 @@ import (
 	"strings"
 )
 
-// ToXML Xmlに変換する
-func ToXML(pathList []string) {
+// AnalyzerToXML Xmlに変換する
+func AnalyzerToXML(pathList []string) {
 	jsonutil.Print(pathList)
 
 	for _, path := range pathList {
@@ -30,8 +30,8 @@ func ToXML(pathList []string) {
 	}
 }
 
-// ToVM Vmに変換する
-func ToVM(pathList []string) {
+// AnalyzerToVM Vmに変換する
+func AnalyzerToVM(pathList []string) {
 	jsonutil.Print(pathList)
 
 	for _, path := range pathList {
