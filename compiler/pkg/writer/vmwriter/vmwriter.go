@@ -32,20 +32,9 @@ func (writer *VMWriter) FileClose() {
 
 // WriteVM VMファイルを書く
 func (writer *VMWriter) WriteVM() {
-	className := writer.class.ClassName
-	subRoutineDecList := writer.class.SubRoutineDecList
-	for _, subRoutineDec := range subRoutineDecList {
-		writer.writeSubRoutine(className, subRoutineDec)
-	}
-}
 
-// writeSubRoutine .
-func (writer *VMWriter) writeSubRoutine(className string, subRoutineDec *compilation_engine.SubRoutineDec) {
-
-	// function Main.main 2
-	writer.writeFunction(fmt.Sprintf("%s.%s", className, subRoutineDec.SubRoutineName), int32(len(subRoutineDec.ParameterList)))
-
-	// TODO Sevenのcompileが通るようにしている途中
+	// TODO
+	//
 
 }
 
