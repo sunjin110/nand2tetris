@@ -367,7 +367,6 @@ func (writer *VMWriter) writeTerm(term compilation_engine.Term) {
 		writer.writeSubroutineCall(term.(*compilation_engine.SubRoutineCall))
 	case compilation_engine.UnaryOpTermType:
 		writer.writeUnaryOpTerm(term.(*compilation_engine.UnaryOpTerm))
-		// TODO more case
 	default:
 		chk.SE(fmt.Errorf("writeTerm:想定していないterm typeが来ました:%s", term.GetTermType()))
 
@@ -611,7 +610,6 @@ func (writer *VMWriter) writeArithmetic(command string) {
 }
 
 // writeLable labelコマンドを書く
-// TODO
 func (writer *VMWriter) writeLabel(label string) {
 	writer.write(fmt.Sprintf("label %s", label))
 }

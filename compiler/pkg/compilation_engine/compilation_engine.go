@@ -202,7 +202,6 @@ func (c *CompilationEngine) compileSubroutine() []*SubRoutineDec {
 		subRoutineDecList = append(subRoutineDecList, subRoutineDec)
 
 		// } check
-		// c.nextToken()
 		if c.getToken() != "}" {
 			c.SyntaxError("SubRoutineの「}」がありません")
 		}
