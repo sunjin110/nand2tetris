@@ -2,7 +2,6 @@ package xmlwriter
 
 import (
 	"compiler/pkg/common/chk"
-	"compiler/pkg/common/fileutil"
 	"compiler/pkg/compilation_engine"
 	"fmt"
 	"os"
@@ -24,7 +23,7 @@ type XMLWriter struct {
 // New XMLWriterを作成する
 func New(filePath string, class *compilation_engine.Class) *XMLWriter {
 	return &XMLWriter{
-		file:      fileutil.CreateFile(filePath),
+		file:      createFile(filePath),
 		class:     class,
 		nestDepth: 0,
 	}
@@ -528,6 +527,13 @@ func (writer *XMLWriter) write(value string) {
 
 	_, err := writer.file.WriteString(fmt.Sprintf("%s%s\n", nest, value))
 	chk.SE(err)
+}
+
+// createFile fileを作成する
+func createFile(filePath string) *os.File {
+	fp, err := os.Create(filePath)
+	chk.SE(err)
+	return fp
 }
 
 // nestを+1する

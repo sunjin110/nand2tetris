@@ -4,10 +4,7 @@ import (
 	"compiler/pkg/common/chk"
 	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/compilation_engine"
-	"compiler/pkg/symboltable"
 	"compiler/pkg/tokenizer"
-	"compiler/pkg/writer/vmwriter"
-	"strings"
 )
 
 // .vmを生成する
@@ -26,23 +23,10 @@ func Compile(pathList []string) {
 		compilationEngine := compilation_engine.New(t)
 		compilationEngine.Start()
 
-		// SymbolTableEngine
-		symbolTableEngine := symboltable.New(compilationEngine.Class)
-		symbolTableEngine.Start()
+		// TODO SymbolTable module
 
-		outputFileName := getOutputFileName(path)
+		// VMWriter Module
 
-		// vm writerを作成
-		vmwriter := vmwriter.New(outputFileName, compilationEngine.Class, symbolTableEngine.SymbolTable)
-
-		// vmを出力
-		vmwriter.WriteVM()
-		vmwriter.FileClose()
 	}
 
-}
-
-// outputFileName 出力するファイル名を取得する
-func getOutputFileName(path string) string {
-	return strings.Split(path, ".")[0] + ".vm"
 }
