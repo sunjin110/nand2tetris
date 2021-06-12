@@ -8,7 +8,7 @@ import (
 
 const (
 	argument = "argument"
-	variable = "local"
+	variable = "var"
 )
 
 // Engine .
