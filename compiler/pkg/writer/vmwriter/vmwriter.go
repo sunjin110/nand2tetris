@@ -314,6 +314,8 @@ func (writer *VMWriter) writeTerm(term compilation_engine.Term) {
 	switch term.GetTermType() {
 	case compilation_engine.IntegerConstType:
 		writer.writeIntegerConstTerm(term.(*compilation_engine.IntegerConstTerm))
+	case compilation_engine.StringConstType:
+		writer.writeStringConstTerm(term.(*compilation_engine.StringConstTerm))
 	case compilation_engine.KeyWordConstType:
 		writer.writeKeyWordConstTerm(term.(*compilation_engine.KeyWordConstTerm))
 	case compilation_engine.ExpressionType:
@@ -335,6 +337,27 @@ func (writer *VMWriter) writeTerm(term compilation_engine.Term) {
 func (writer *VMWriter) writeIntegerConstTerm(integerConstTerm *compilation_engine.IntegerConstTerm) {
 	// constantの場合は実数を入れればいいので、indexは実数を入れる
 	writer.writePush(segmentConst, int32(integerConstTerm.Val))
+}
+
+// writeStringConstTerm .
+func (writer *VMWriter) writeStringConstTerm(stringConstTerm *compilation_engine.StringConstTerm) {
+
+	val := stringConstTerm.Val
+
+	// 文字列の長さをpush
+	writer.writePush(segmentConst, int32(len(val)))
+
+	// call String.new 1
+	writer.writeCall(getStringNew())
+
+	for _, r := range val {
+		// push constant 文字コード
+		writer.writePush(segmentConst, r)
+
+		// call String.appendChar 2
+		writer.writeCall(getStringAppendChar())
+	}
+
 }
 
 // writeKeyWordConstTerm trueとかfalseとか
