@@ -447,55 +447,13 @@ func (writer *VMWriter) writeExpressionTerm(expressionTerm *compilation_engine.E
 // writeValNameConstTerm .
 func (writer *VMWriter) writeValNameConstTerm(valNameConstTerm *compilation_engine.ValNameConstantTerm) {
 
-	// arrayの場合は別処理
-	if valNameConstTerm.ArrayExpression != nil {
-		writer.writeValNameArrayConstTerm(valNameConstTerm)
-		return
-	}
-
 	// 変数のsymbol情報を習得する
 	symbol := writer.getSymbol(valNameConstTerm.ValName)
 
+	// TODO ArrayExpressionを考慮する
+
 	segment := getSegmentFromSymbolAttribute(symbol.Attribute)
 	writer.writePush(segment, symbol.Num)
-}
-
-// writeValNameArrayConstTerm .
-func (writer *VMWriter) writeValNameArrayConstTerm(valNameConstTerm *compilation_engine.ValNameConstantTerm) {
-
-	/*
-		// list[33]
-		push constant 33
-		push local 0
-		add // アクセス
-		pop pointer 1
-		push that 0
-	*/
-
-	// check
-	if valNameConstTerm.ArrayExpression == nil {
-		chk.SE(fmt.Errorf("writeValNameArrayConstTerm not found array expression"))
-		return
-	}
-
-	// 先にarrayExpressionを処理
-	writer.writeExpression(valNameConstTerm.ArrayExpression)
-
-	// 変数のsymbol情報を習得する
-	symbol := writer.getSymbol(valNameConstTerm.ValName)
-
-	// 変数をpush
-	segment := getSegmentFromSymbolAttribute(symbol.Attribute)
-	writer.writePush(segment, symbol.Num)
-
-	// addして、pointerの場所を取得する
-	writer.writeArithmetic(ArithmeticAdd)
-
-	// 場所をpointer 1に保存して、thatがpointerの場所を指すようにする
-	writer.writePop(segmentPointer, 1)
-
-	// pointerに格納されている値をstackにpushする
-	writer.writePush(segmentThat, 0)
 }
 
 // writeUnaryOpTerm .

@@ -30,16 +30,3 @@ class Main {
      return;
    }
 }
-
-// class Main {
-//    function void main() {
-//       var Array list;
-//       var int result;
-
-//       let list = Array.new(100);
-
-//       let result = 200 - list[33];
-
-//       return;
-//    }
-// }
