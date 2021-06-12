@@ -13,8 +13,8 @@ const (
 	// LocalVariableKind ローカル変数、Method内でのみ使用される
 	LocalVariableKind VariableKind = "var"
 
-	// ParamVariableKind 引数の変数
-	ParamVariableKind VariableKind = "param"
+	// ArgumentVariableKind 引数の変数
+	ArgumentVariableKind VariableKind = "argument"
 )
 
 // VariableType 型
