@@ -3,7 +3,6 @@ package vmwriter
 const (
 	segmentConst = "constant"
 	segmentTemp  = "temp"
-	segmentLocal = "local"
 	// TODO more segement type
 
 )
