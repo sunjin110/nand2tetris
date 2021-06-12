@@ -22,7 +22,7 @@ type Engine struct {
 // SymbolTable class1つにつきのsymbol table
 type SymbolTable struct {
 	ClassName                string
-	ClassSymbolMap           map[string]*Symbol                // key:varName
+	ClassSymbolList          []*Symbol
 	SubroutineSymbolTableMap map[string]*SubroutineSymbolTable // key:SubroutineName
 }
 
@@ -58,13 +58,13 @@ func (engine *Engine) Start() {
 func getSymbolTable(class *compilation_engine.Class) *SymbolTable {
 	return &SymbolTable{
 		ClassName:                class.ClassName,
-		ClassSymbolMap:           getClassSymbolMap(class.ClassName, class.ClassVarDecList),
+		ClassSymbolList:          getClassSymbolList(class.ClassVarDecList),
 		SubroutineSymbolTableMap: getSubroutineSymbolTableMap(class.ClassName, class.SubRoutineDecList),
 	}
 }
 
-// getClassSymbolMap クラスのスコープにおけるシンボルテーブルを作成する
-func getClassSymbolMap(className string, classVarDecList []*compilation_engine.ClassVarDec) map[string]*Symbol {
+// getClassSymbolList クラスのスコープにおけるシンボルテーブルを作成する
+func getClassSymbolList(classVarDecList []*compilation_engine.ClassVarDec) []*Symbol {
 
 	if len(classVarDecList) == 0 {
 		return nil
@@ -74,56 +74,22 @@ func getClassSymbolMap(className string, classVarDecList []*compilation_engine.C
 	// key: 属性(attribute), value: num
 	numMap := map[string]int32{}
 
-	classSymbolMap := map[string]*Symbol{}
+	var classSymbolList []*Symbol
 	for _, classVarDec := range classVarDecList {
 		for _, varName := range classVarDec.VarNameList {
 
 			// 番号を取得
 			num := numMap[string(classVarDec.VarKind)]
 			symbol := createSymbol(varName, string(classVarDec.VarType), string(classVarDec.VarKind), num)
-
-			// すでにその変数が存在するかどうかを確認する
-			if _, ok := classSymbolMap[symbol.VarName]; ok {
-				chk.SE(fmt.Errorf("class:%sで変数%sが複数宣言されています", className, symbol.VarName))
-			}
-
-			classSymbolMap[symbol.VarName] = symbol
+			classSymbolList = append(classSymbolList, symbol)
 
 			// 番号を1incrementする
 			numMap[string(classVarDec.VarKind)]++
 		}
 	}
 
-	return classSymbolMap
+	return classSymbolList
 }
-
-// // getClassSymbolList クラスのスコープにおけるシンボルテーブルを作成する
-// func getClassSymbolList(classVarDecList []*compilation_engine.ClassVarDec) []*Symbol {
-
-// 	if len(classVarDecList) == 0 {
-// 		return nil
-// 	}
-
-// 	// numberを定義する必要があるので
-// 	// key: 属性(attribute), value: num
-// 	numMap := map[string]int32{}
-
-// 	var classSymbolList []*Symbol
-// 	for _, classVarDec := range classVarDecList {
-// 		for _, varName := range classVarDec.VarNameList {
-
-// 			// 番号を取得
-// 			num := numMap[string(classVarDec.VarKind)]
-// 			symbol := createSymbol(varName, string(classVarDec.VarType), string(classVarDec.VarKind), num)
-// 			classSymbolList = append(classSymbolList, symbol)
-
-// 			// 番号を1incrementする
-// 			numMap[string(classVarDec.VarKind)]++
-// 		}
-// 	}
-
-// 	return classSymbolList
-// }
 
 // getSubroutineSymbolTableMap サブルーチンリストのシンボルテーブルのMapを取得する
 func getSubroutineSymbolTableMap(className string, subRoutineDecList []*compilation_engine.SubRoutineDec) map[string]*SubroutineSymbolTable {
