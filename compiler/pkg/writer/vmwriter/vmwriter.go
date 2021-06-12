@@ -56,38 +56,6 @@ func (writer *VMWriter) writeSubRoutine(className string, subRoutineDec *compila
 	varCnt := writer.getCurrentSubroutineLocalVarCnt()
 	writer.writeFunction(fmt.Sprintf("%s.%s", className, subRoutineDec.SubRoutineName), varCnt)
 
-	switch subRoutineDec.RoutineKind {
-	case compilation_engine.Constructor:
-		writer.writeSubRoutineConstructor(className, subRoutineDec)
-	case compilation_engine.Method:
-	case compilation_engine.Function:
-		writer.writeSubRoutineFunction(className, subRoutineDec)
-	default:
-		chk.SE(fmt.Errorf("未定義のsubRoutineが渡されました:%s", subRoutineDec.RoutineKind))
-	}
-}
-
-// writeSubRoutineConstructor constructor subroutineを書く
-func (writer *VMWriter) writeSubRoutineConstructor(className string, subRoutineDec *compilation_engine.SubRoutineDec) {
-
-	// classのfieldの数を先にpushする
-	fieldCnt := writer.getCurrentClassFieldCnt()
-	writer.writePush(segmentConst, fieldCnt)
-
-	// memory allocしてmemory領域を確保
-	name, nArgs := getMemoryAlloc()
-	writer.writeCall(name, nArgs)
-
-	// 確保したAddressをpointer領域に追加 (this領域)
-	writer.writePop(segmentPointer, 0)
-
-	// statementList
-	writer.writeStatementList(subRoutineDec.SubRoutineBody.StatementList)
-}
-
-// writeSubRoutineFunction function subroutineを書く
-func (writer *VMWriter) writeSubRoutineFunction(className string, subRoutineDec *compilation_engine.SubRoutineDec) {
-
 	// statementList
 	writer.writeStatementList(subRoutineDec.SubRoutineBody.StatementList)
 }
@@ -337,9 +305,6 @@ func (writer *VMWriter) writeKeyWordConstTerm(keyWordConstTerm *compilation_engi
 	case compilation_engine.NullKeyword:
 		// 0をpushする
 		writer.writePush(segmentConst, 0)
-	case compilation_engine.ThisKeyword:
-		// pointerをpushする
-		writer.writePush(segmentPointer, 0) // thisをpush
 	default:
 		chk.SE(fmt.Errorf("未定義のKeyWordCOnstTermを検知%s", keyWordConstTerm.KeyWord))
 	}
@@ -441,10 +406,6 @@ func (writer *VMWriter) getCurrentSubroutineLocalVarCnt() int32 {
 
 	symbolTable := writer.getCurrentSubroutineSymbolTable()
 
-	if symbolTable == nil {
-		return 0
-	}
-
 	var varCnt int32
 	for _, symbol := range symbolTable.SymbolMap {
 		if symbol.Attribute == symboltable.Variable {
@@ -452,17 +413,6 @@ func (writer *VMWriter) getCurrentSubroutineLocalVarCnt() int32 {
 		}
 	}
 	return varCnt
-}
-
-// getCurrentClassFieldCnt 現在のclassのfieldの数を習得する
-func (writer *VMWriter) getCurrentClassFieldCnt() int32 {
-
-	symbolTable := writer.symbolTable
-	if symbolTable == nil {
-		return 0
-	}
-
-	return int32(len(symbolTable.ClassSymbolMap))
 }
 
 // writePush pushコマンドを書く
