@@ -12,7 +12,66 @@ func Multiply(x int16, y int16) int16 {
 	}
 
 	var sum int16
-	checkBit := int16(1)
+	checkBit := int16(1) // 1 -> 10 -> 100 -> 1000となっていく
+	shiftedX := x
+
+	for i := 0; i < 16; i++ {
+		if (y & checkBit) != 0 {
+			sum += shiftedX
+		}
+
+		shiftedX = shiftedX << 1
+		checkBit = checkBit << 1
+	}
+	return sum
+}
+
+// // Devide 割り算
+// func Devide(x int16, y int16) int16 {
+
+// 	if y > x {
+// 		return 0
+// 	}
+
+// 	// if x < 0 || y <= 0 {
+// 	// 	panic("対象外")
+// 	// }
+
+// 	// q := Devide(x int16, y int16)
+
+// }
+
+// Devide 割り算
+func Devide(x int16, y int16) int16 {
+
+	if y > x {
+		return 0
+	}
+
+	// q := Devide(x, 2*y)
+	q := Devide(x, y<<1)
+
+	//  (x - (2 * q * y)) < y
+	if (x - (Multiply(q, y) << 1)) < y {
+		// q * 2
+		return q << 1
+	}
+	// 2*q + 1
+	return (q << 1) + 1
+
+}
+
+// MultiplyVerbose 掛け算
+// +と-だけで実装する
+func MultiplyVerbose(x int16, y int16) int16 {
+
+	// check
+	if x == 0 || y == 0 {
+		return 0
+	}
+
+	var sum int16
+	checkBit := int16(1) // 1 -> 10 -> 100 -> 1000となっていく
 	shiftedX := x
 
 	for i := 0; i < 16; i++ {
@@ -37,32 +96,3 @@ func Multiply(x int16, y int16) int16 {
 
 	return sum
 }
-
-// // Multiply 掛け算
-// // +と-だけで実装する
-// func Multiply(x int16, y int16) int16 {
-
-// 	// check
-// 	if x == 0 || y == 0 {
-// 		return 0
-// 	}
-
-// 	var sum int16
-// 	shiftedX := x
-
-// 	for i := 0; i < 16; i++ {
-
-// 		fmt.Println(i, ":回目")
-
-// 		fmt.Println("y & shiftedX = ", y&shiftedX)
-
-// 		if (y & shiftedX) == 1 {
-// 			sum = sum + x
-// 		}
-
-// 		shiftedX = shiftedX << 1
-// 		fmt.Println("shiftedX is ", shiftedX)
-// 	}
-
-// 	return sum
-// }
