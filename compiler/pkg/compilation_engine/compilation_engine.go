@@ -665,10 +665,10 @@ func (c *CompilationEngine) compileSubroutineCall(token string, nextToken string
 		c.SyntaxError("SubRoutineCallで「)」がありません")
 	}
 
-	// ; check
+	// ; or ) check
 	c.nextToken()
-	if c.getToken() != ";" {
-		c.SyntaxError("SubRoutineCallで「;」がありません")
+	if c.getToken() != ";" && c.getToken() != ")" {
+		c.SyntaxError("SubRoutineCallで「;」または「)」がありません")
 	}
 
 	return &SubRoutineCall{
