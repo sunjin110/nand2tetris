@@ -77,14 +77,6 @@ func (writer *VMWriter) writeLetStatement(letStatement *compilation_engine.LetSt
 
 	// TODO arrayExpressionを考慮して実装する
 
-	// 変数のsymbol情報を習得する
-	subroutineSymbolTable := writer.getCurrentSubroutineSymbolTable()
-	symbol := subroutineSymbolTable.SymbolMap[letStatement.DestVarName]
-
-	// LocalにPopする
-	// TODO 本当にLocalだけで大丈夫か？を確認する
-	writer.writePop(segmentLocal, symbol.Num)
-
 }
 
 // writeDoStatement .
@@ -120,11 +112,6 @@ func (writer *VMWriter) writeSubroutineCall(subroutineCall *compilation_engine.S
 	if subroutineCall.ClassOrVarName != "" {
 		name = fmt.Sprintf("%s.%s", subroutineCall.ClassOrVarName, subroutineCall.SubRoutineName)
 	}
-
-	// if name == "Main.convert" {
-	// 	log.Println("subRoutineCall情報 : ", jsonutil.Marshal(subroutineCall))
-	// 	log.Println("hogehoge is ", subroutineCall.ExpressionList[0].InitTerm.GetTermType())
-	// }
 
 	writer.writeCall(name, int32(len(subroutineCall.ExpressionList)))
 }
@@ -191,10 +178,9 @@ func (writer *VMWriter) writeValNameConstTerm(valNameConstTerm *compilation_engi
 	subroutineSymbolTable := writer.getCurrentSubroutineSymbolTable()
 	symbol := subroutineSymbolTable.SymbolMap[valNameConstTerm.ValName]
 
-	// TODO ArrayExpressionを考慮する
-
-	// symbol.
-	writer.writePush(segmentLocal, symbol.Num)
+	// LocalにPopする
+	// TODO 本当にLocalだけで大丈夫か？を確認する
+	writer.writePop(segmentLocal, symbol.Num)
 }
 
 // writeUnaryOpTerm .
