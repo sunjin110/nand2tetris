@@ -154,7 +154,6 @@ func (writer *VMWriter) writeExpressionTerm(expressionTerm *compilation_engine.E
 
 // writeUnaryOpTerm .
 func (writer *VMWriter) writeUnaryOpTerm(unaryOpTerm *compilation_engine.UnaryOpTerm) {
-	writer.writeTerm(unaryOpTerm.Term)
 	switch unaryOpTerm.UnaryOp {
 	case compilation_engine.HypenUnaryOp: // -
 		writer.writeArithmetic(AirthmeticNeg)
