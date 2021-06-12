@@ -15,7 +15,6 @@ const (
 	segmentPointer  = "pointer"
 	segmentArgument = "argument"
 	segmentThis     = "this"
-	segmentThat     = "that"
 	// TODO more segement type
 
 )
