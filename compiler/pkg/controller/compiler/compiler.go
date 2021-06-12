@@ -7,6 +7,7 @@ import (
 	"compiler/pkg/symboltable"
 	"compiler/pkg/tokenizer"
 	"compiler/pkg/writer/vmwriter"
+	"log"
 	"strings"
 )
 
@@ -29,6 +30,8 @@ func Compile(pathList []string) {
 		// SymbolTableEngine
 		symbolTableEngine := symboltable.New(compilationEngine.Class)
 		symbolTableEngine.Start()
+
+		log.Println("symboltable is ", jsonutil.Marshal(symbolTableEngine.SymbolTable))
 
 		outputFileName := getOutputFileName(path)
 

@@ -3,9 +3,11 @@ package vmwriter
 import (
 	"compiler/pkg/common/chk"
 	"compiler/pkg/common/fileutil"
+	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/compilation_engine"
 	"compiler/pkg/symboltable"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -212,29 +214,17 @@ func (writer *VMWriter) writeReturnStatement(returnStatement *compilation_engine
 // writeSubroutineCall subroutineCallのvmを記述する
 func (writer *VMWriter) writeSubroutineCall(subroutineCall *compilation_engine.SubRoutineCall) {
 
-	// TODO 現在、funcitonとmethodしか対応していない、constructが来ても対応できるようにする
+	// TODO 現在、funcitonしか対応していない、methodやconstructが来ても対応できるようにする??
 
 	// ()内の計算式を習得する、そんで書く
 	writer.writeExpressionList(subroutineCall.ExpressionList)
-
-	nArgs := int32(len(subroutineCall.ExpressionList))
-	symbolTable := writer.getCurrentSubroutineSymbolTable()
-	symbol := symbolTable.SymbolMap[subroutineCall.ClassOrVarName]
-	if symbol != nil {
-
-		// symbolが存在する場合はmethod、引数を+1
-		nArgs++
-
-		// push local n
-		writer.writePush(symbol.Attribute, symbol.Num)
-	}
 
 	name := subroutineCall.SubRoutineName
 	if subroutineCall.ClassOrVarName != "" {
 		name = fmt.Sprintf("%s.%s", subroutineCall.ClassOrVarName, subroutineCall.SubRoutineName)
 	}
 
-	writer.writeCall(name, nArgs)
+	writer.writeCall(name, int32(len(subroutineCall.ExpressionList)))
 }
 
 // writeExpressionList .
@@ -307,6 +297,8 @@ func (writer *VMWriter) writeKeyWordConstTerm(keyWordConstTerm *compilation_engi
 	default:
 		chk.SE(fmt.Errorf("未定義のKeyWordCOnstTermを検知%s", keyWordConstTerm.KeyWord))
 	}
+
+	log.Println("keyWordConstTerm is ", jsonutil.Marshal(keyWordConstTerm))
 }
 
 // writeExpressionTerm ex: (1 + 2)
