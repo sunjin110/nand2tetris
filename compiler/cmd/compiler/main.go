@@ -14,7 +14,6 @@ import (
 const JackExt = ".jack"
 
 func main() {
-	fmt.Println("==== Jack Compiler ====")
 
 	// 引数を取得する
 	flag.Parse()

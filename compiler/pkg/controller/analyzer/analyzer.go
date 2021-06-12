@@ -2,7 +2,6 @@ package analyzer
 
 import (
 	"compiler/pkg/common/chk"
-	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/compilation_engine"
 	"compiler/pkg/tokenizer"
 	"compiler/pkg/writer/xmlwriter"
@@ -11,8 +10,6 @@ import (
 
 // Analyzer Xmlに変換する
 func Analyzer(pathList []string) {
-	jsonutil.Print(pathList)
-
 	for _, path := range pathList {
 
 		t, err := tokenizer.New(path)

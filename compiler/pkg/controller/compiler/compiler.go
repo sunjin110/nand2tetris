@@ -2,7 +2,6 @@ package compiler
 
 import (
 	"compiler/pkg/common/chk"
-	"compiler/pkg/common/jsonutil"
 	"compiler/pkg/compilation_engine"
 	"compiler/pkg/symboltable"
 	"compiler/pkg/tokenizer"
@@ -15,8 +14,6 @@ import (
 
 // Compile Vmに変換する
 func Compile(pathList []string) {
-	jsonutil.Print(pathList)
-
 	for _, path := range pathList {
 
 		t, err := tokenizer.New(path)
