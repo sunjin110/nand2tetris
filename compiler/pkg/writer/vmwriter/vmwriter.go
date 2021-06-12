@@ -595,14 +595,7 @@ func (writer *VMWriter) getCurrentClassFieldCnt() int32 {
 		return 0
 	}
 
-	var cnt int32
-	for _, classSymbol := range symbolTable.ClassSymbolMap {
-		if classSymbol.Attribute == string(compilation_engine.FieldVariableKind) {
-			cnt++
-		}
-	}
-
-	return cnt
+	return int32(len(symbolTable.ClassSymbolMap))
 }
 
 // writePush pushコマンドを書く
