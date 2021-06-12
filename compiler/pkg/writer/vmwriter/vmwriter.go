@@ -133,17 +133,73 @@ func (writer *VMWriter) writeStatement(statement compilation_engine.Statement) {
 // writeLetStatement .
 func (writer *VMWriter) writeLetStatement(letStatement *compilation_engine.LetStatement) {
 
-	// 先にexpressionを処理
-	writer.writeExpression(letStatement.Expression)
-
-	// TODO arrayExpressionを考慮して実装する
+	// arrayがある場合は別処理
+	if letStatement.ArrayExpression != nil {
+		writer.writeLetStatementArray(letStatement)
+		return
+	}
 
 	// 変数のsymbol情報を習得する
 	symbol := writer.getSymbol(letStatement.DestVarName)
 
+	// 先にexpressionを処理
+	writer.writeExpression(letStatement.Expression)
+
 	segment := getSegmentFromSymbolAttribute(symbol.Attribute)
 	writer.writePop(segment, symbol.Num)
 }
+
+// writeLetStatementArray arrayの指定したpositionにletする場合のvm codeを書く
+func (writer *VMWriter) writeLetStatementArray(letStatement *compilation_engine.LetStatement) {
+
+	// 変数のsymbol情報を習得する
+	symbol := writer.getSymbol(letStatement.DestVarName)
+
+	if letStatement.ArrayExpression == nil {
+		chk.SE(fmt.Errorf("arrayのletではないのにwriteLetStatementArrayが使用されました"))
+		return
+	}
+
+	// arrayのexpressionを書く
+	writer.writeExpression(letStatement.ArrayExpression)
+
+	// 追加する変数のsegment
+	segment := getSegmentFromSymbolAttribute(symbol.Attribute)
+	writer.writePush(segment, symbol.Num)
+
+	// add
+	writer.writeArithmetic(ArithmeticAdd)
+
+	// let expression
+	writer.writeExpression(letStatement.Expression)
+
+	// 引数をtmpに一時退避
+	writer.writePop(segmentTemp, 0)
+
+	// thatセグメントが所望の排列要素のアドレスを指すように設定
+	writer.writePop(segmentPointer, 1)
+
+	// 一時退避したlet expressionをstackにpush
+	writer.writePush(segmentTemp, 0)
+
+	// thatを使って対象のarrayのpositionに値を格納
+	writer.writePop(segmentThat, 0)
+}
+
+// // writeLetStatement .
+// func (writer *VMWriter) writeLetStatement(letStatement *compilation_engine.LetStatement) {
+
+// 	// 先にexpressionを処理
+// 	writer.writeExpression(letStatement.Expression)
+
+// 	// TODO arrayExpressionを考慮して実装する
+
+// 	// 変数のsymbol情報を習得する
+// 	symbol := writer.getSymbol(letStatement.DestVarName)
+
+// 	segment := getSegmentFromSymbolAttribute(symbol.Attribute)
+// 	writer.writePop(segment, symbol.Num)
+// }
 
 // writeIfStatement .
 func (writer *VMWriter) writeIfStatement(ifStatement *compilation_engine.IfStatement) {
