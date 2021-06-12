@@ -6,11 +6,6 @@ import (
 	"log"
 )
 
-const (
-	argument = "argument"
-	variable = "var"
-)
-
 // Engine .
 type Engine struct {
 	class       *compilation_engine.Class
@@ -19,7 +14,6 @@ type Engine struct {
 
 // SymbolTable class1つにつきのsymbol table
 type SymbolTable struct {
-	ClassName                string
 	ClassSymbolList          []*Symbol
 	SubroutineSymbolTableMap map[string]*SubroutineSymbolTable // key:SubroutineName
 }
@@ -55,14 +49,13 @@ func (engine *Engine) Start() {
 
 	// logger
 	log.Println("symbol table is ", jsonutil.Marshal(engine.SymbolTable))
+
 }
 
 // getSymbolTable .
 func getSymbolTable(class *compilation_engine.Class) *SymbolTable {
 	return &SymbolTable{
-		ClassName:                class.ClassName,
-		ClassSymbolList:          getClassSymbolList(class.ClassVarDecList),
-		SubroutineSymbolTableMap: getSubroutineSymbolTableMap(class.SubRoutineDecList),
+		ClassSymbolList: getClassSymbolList(class.ClassVarDecList),
 	}
 }
 
@@ -92,63 +85,4 @@ func getClassSymbolList(classVarDecList []*compilation_engine.ClassVarDec) []*Sy
 	}
 
 	return classSymbolList
-}
-
-// getSubroutineSymbolTableMap サブルーチンリストのシンボルテーブルのMapを取得する
-func getSubroutineSymbolTableMap(subRoutineDecList []*compilation_engine.SubRoutineDec) map[string]*SubroutineSymbolTable {
-
-	if len(subRoutineDecList) == 0 {
-		return nil
-	}
-
-	// key: method name
-	subroutineSymbolTableMap := map[string]*SubroutineSymbolTable{}
-	for _, subRoutineDec := range subRoutineDecList {
-		// subroutineSymbolTableMap[subRoutineDec.SubRoutineName] = getSubroutineSymbolTable(subRoutineDec)
-		subroutineSymbolTable := getSubroutineSymbolTable(subRoutineDec)
-		if subroutineSymbolTable != nil {
-			subroutineSymbolTableMap[subRoutineDec.SubRoutineName] = subroutineSymbolTable
-		}
-	}
-
-	return subroutineSymbolTableMap
-}
-
-// getSubroutineSymbolTable サブルーチンのシンボルテーブルを取得する
-func getSubroutineSymbolTable(subRoutineDec *compilation_engine.SubRoutineDec) *SubroutineSymbolTable {
-
-	var subroutineSymbolList []*Symbol
-
-	// numberを定義する必要があるので作成する
-	// key: 属性(attribute), value: num
-	numMap := map[string]int32{}
-
-	// 先に、引数
-	for _, parameter := range subRoutineDec.ParameterList {
-
-		num := numMap[argument]
-		symbol := createSymbol(parameter.ParamName, string(parameter.ParamType), argument, num)
-		subroutineSymbolList = append(subroutineSymbolList, symbol)
-		numMap[argument]++
-	}
-
-	// var
-	for _, varDec := range subRoutineDec.SubRoutineBody.VarDecList {
-		for _, varName := range varDec.NameList {
-			num := numMap[variable]
-			symbol := createSymbol(varName, string(varDec.Type), variable, num)
-			subroutineSymbolList = append(subroutineSymbolList, symbol)
-			numMap[variable]++
-		}
-	}
-
-	// なければnil
-	if len(subroutineSymbolList) == 0 {
-		return nil
-	}
-
-	return &SubroutineSymbolTable{
-		SubroutineName: subRoutineDec.SubRoutineName,
-		SymbolList:     subroutineSymbolList,
-	}
 }
