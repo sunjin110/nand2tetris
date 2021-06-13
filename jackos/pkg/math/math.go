@@ -1,6 +1,8 @@
 package math
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Multiply 掛け算
 // +と-だけで実装する
@@ -45,19 +47,32 @@ func Devide(x int16, y int16) int16 {
 	return (q << 1) + 1
 }
 
+// Pow べき乗
+func Pow(x int16, y int16) int16 {
+
+	// var result int16
+	result := int16(1)
+	for i := int16(0); i < y; i++ {
+
+		result = result * x
+
+	}
+
+	return result
+
+}
+
 // Sqrt y = √xの整数部分を計算する
 func Sqrt(x int16) int16 {
 
 	var y int16
-
-	for i := (16/2-1); i > 0; i-- {
-
-		if (y + )
-
+	for i := int16(16/2 - 1); i >= 0; i-- {
+		if Pow((y+Pow(2, i)), 2) <= x {
+			y = y + Pow(2, i)
+		}
 	}
 
-
-	return 0
+	return y
 }
 
 // MultiplyVerbose 掛け算

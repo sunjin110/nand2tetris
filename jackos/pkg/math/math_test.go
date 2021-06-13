@@ -37,6 +37,30 @@ func Test(t *testing.T) {
 			})
 		})
 
+		g.Describe("Pow", func() {
+
+			g.It("10の2乗", func() {
+				g.Assert(math.Pow(10, 2)).Eql(int16(100))
+			})
+
+		})
+
+		g.Describe("Sqrt", func() {
+
+			g.It("√4 == 2", func() {
+				g.Assert(math.Sqrt(4)).Eql(int16(2))
+			})
+
+			g.It("√9 == 3", func() {
+				g.Assert(math.Sqrt(9)).Eql(int16(3))
+			})
+
+			g.It("√10 == 3", func() {
+				g.Assert(math.Sqrt(10)).Eql(int16(3))
+			})
+
+		})
+
 	})
 
 }
