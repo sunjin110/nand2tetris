@@ -82,6 +82,7 @@ class Main {
     function void String() {
 
         var String result;
+        var String result2;
         var int num;
 
         do Output.printString("===== String =====");
@@ -103,10 +104,20 @@ class Main {
         do Output.printString(result); // HELLO WORLD
         do Output.println();
 
+        // get lenght
+        do Output.printString("length is ");
+        do Output.printInt(result.length());
+        do Output.println();
+
         // cut last 
         do result.eraseLastChar();
         do Output.printString(result); // HELLO WORL
         do Output.println();
+
+        // print 9
+        let result2 = String.new(2);
+        do result2.appendChar(57);
+        do Output.printInt(result2.intValue());
 
         return;
 

@@ -1,17 +1,19 @@
 class String {
 
     field Array chars;
+    field int max;
     field int length;
 
     // new 新しいStringを生成する
     constructor String new(int maxLength) {
         let chars = Array.new(maxLength);
+        let max = maxLength;
+        let length = 0;
         return this;
     }
 
     method void dispose() {
         do chars.dispose();
-        do Memory.deAlloc(this);
         return;
     }
 
@@ -29,24 +31,33 @@ class String {
     }
 
     method String appendChar(char c) {
-        let chars[length] = c;
-        let length = length + 1;
+        if (length < max) {
+            let chars[length] = c;
+            let length = length + 1;
+        }
         return this;
     }
 
     method void eraseLastChar() {
         // 長さを-1して事実上最後の文字列をcutする
-        let length = length - 1;
+        if (length > 0 ) {
+            let length = length - 1;
+        }
         return;
     }
 
     method int intValue() {
-
-        // TODO
+        // return String.stringToInt(this);
         return 0;
     }
 
-    method void setInt(int i) {
+    method void setInt(int num) {
+
+
+
+
+
+
         // TODO
         return;
     }
@@ -63,21 +74,5 @@ class String {
         return 128;
     }
 
-    function int stringToInt(String str) {
-
-        var int v;
-        var int i;
-        var int tmp;
-
-        while (i < str.length()) {
-
-            let tmp = str.charAt(i) - 48;
-            let v = v*10 + tmp;
-
-            let i = i +1;
-        }
-
-        return v;
-    }
 
 }
