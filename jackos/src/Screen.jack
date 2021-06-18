@@ -66,7 +66,7 @@ class Screen {
         if (color = true) {
             let screen[address] = positions[Math.surplusX16(x)] | screen[address];
         } else {
-            let screen[address] = positions[Math.surplusX16(x)] & screen[address];
+            let screen[address] = (~positions[Math.surplusX16(x)]) & screen[address];
         }
         
         return;

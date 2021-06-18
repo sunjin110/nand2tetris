@@ -133,6 +133,7 @@ push static 2
 add
 pop pointer 1
 push that 0
+not
 push local 0
 push static 1
 add

@@ -157,19 +157,63 @@ class Main {
         // do Screen.blackScreen();
         // do Screen.setColor(false);
 
-
-
-        do Screen.drawPixel(0, 1);
-        do Screen.drawPixel(1, 1);
-        do Screen.drawPixel(2, 1);
-        do Screen.drawPixel(3, 1);
-        do Screen.drawPixel(4, 1);
-        do Screen.drawPixel(5, 1);
+        var int i;
+        var int j;
+        while (i < 30) {
+            let j = 0;
+            while (j < 30) {
+                do Screen.drawPixel(i, j);
+                let j = j + 1;
+            }
+            let i = i + 1;
+        }
 
         do Screen.setColor(false);
-        do Screen.drawPixel(3, 1);
-        do Screen.drawPixel(4, 1);
-        do Screen.drawPixel(5, 1);
+
+
+
+        let i = 5;
+        while (i < 25) {
+            let j = 5;
+            while (j < 25) {
+                do Screen.drawPixel(i, j);
+                let j = j + 1;
+            }
+            let i = i + 1;
+        }
+
+        // do Screen.drawPixel(0, 0);
+
+        // do Screen.drawPixel(5, 5);
+        // do Screen.drawPixel(1, 10);
+        // do Screen.drawPixel(2, 10);
+        // do Screen.drawPixel(3, 10);
+        // do Screen.drawPixel(4, 10);
+        // do Screen.drawPixel(5, 10);
+        // do Screen.drawPixel(6, 10);
+        // do Screen.drawPixel(7, 10);
+        // do Screen.drawPixel(8, 10);
+        // do Screen.drawPixel(9, 10);
+        // do Screen.drawPixel(0, 11);
+        // do Screen.drawPixel(1, 11);
+        // do Screen.drawPixel(2, 11);
+        // do Screen.drawPixel(3, 11);
+        // do Screen.drawPixel(4, 11);
+        // do Screen.drawPixel(5, 11);
+        // do Screen.drawPixel(5, 12);
+        // do Screen.drawPixel(5, 13);
+        // do Screen.drawPixel(5, 14);
+        // do Screen.drawPixel(5, 15);
+
+        // do Screen.drawPixel(6, 11);
+        // do Screen.drawPixel(7, 11);
+        // do Screen.drawPixel(8, 11);
+        // do Screen.drawPixel(9, 11);
+
+        // do Screen.setColor(false);
+        // do Screen.drawPixel(3, 1);
+        // do Screen.drawPixel(4, 1);
+        // do Screen.drawPixel(5, 1);
 
         // do Screen.setColor(false);
         // do Screen.drawPixel(0, 0);
