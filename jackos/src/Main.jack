@@ -132,9 +132,11 @@ class Main {
         do Output.printChar(56); // 8
         do Output.printChar(55); // 7
         do Output.printChar(54); // 6
+        do Output.println();
+        do Output.printChar(53); // 5
 
         do Output.println();
-        do Output.printChar(53);
+        do Output.printString("Hello World");
 
         return;
     }

@@ -121,7 +121,11 @@ class Output {
 
     // printString カーソルが位置する場所にsという文字列を表示させ、その文字数に応じてカーソルを進ませる
     function void printString(String s) {
-        // TODO
+        var int i;
+        while (i < s.length()) {
+            do Output.printChar(s.charAt(i));
+            let i = i + 1;
+        }
         return;
     }
 
