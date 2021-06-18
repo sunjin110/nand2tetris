@@ -1,11 +1,8 @@
 class Array {
-
     function Array new(int size) {
-
         if (size < 0) {
             do Sys.error(1);
         }
-
         return Memory.alloc(size);
     }
 
@@ -13,6 +10,4 @@ class Array {
         do Memory.deAlloc(this);
         return;
     }
-
-
 }
