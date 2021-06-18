@@ -57,7 +57,7 @@ push constant 0
 pop local 0
 push constant 0
 return
-function Output.printChar 3
+function Output.printChar 4
 push argument 0
 push static 0
 add
@@ -66,14 +66,18 @@ push that 0
 pop local 0
 call Output.getNowAddress 0
 pop local 2
+push static 1
+push constant 1
+and
+pop local 3
 label WHILE_START_0
 push local 1
 push constant 11
 lt
 not
 if-goto WHILE_END_0
-push argument 0
-push constant 56
+push local 3
+push constant 1
 eq
 if-goto IF_TRUE_0
 goto IF_FALSE_0

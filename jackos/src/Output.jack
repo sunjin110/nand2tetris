@@ -93,31 +93,21 @@ class Output {
         var Array data;
         var int i;
         var int address;
+        var int mask; // 奇数回目のxの場合は、bitmapを半分ずらす必要があるため
 
         let data = charMaps[c];
         let address = Output.getNowAddress();
-
-
-        // if (c = 56) {
-            // let address = 1;
-        // }
-
-        // let address = 0;
-        // if (c = 56) {
-        //     let address = 1;
-        // }
+        let mask = x & 1; // 偶数の場合は0, 奇数の場合は1
 
         // 11
         while (i < 11) {
 
-            if (c = 56) {
+            if (mask = 1) {
                 // 左のものが消えないように、orですでに1がある場所はそのまま傷つけないようにする
                 let screen[address] = data[i] * 256 | screen[address];
             } else {
                 let screen[address] = data[i];
             }
-
-            
 
             let address = address + 32;
             let i = i + 1;
@@ -128,29 +118,6 @@ class Output {
 
         return;
     }
-
-    // // printChar カーソルが位置する場所にcという文字を表示させ、カーソルの場所を1列先へ進ませる
-    // function void printChar(char c) {
-
-    //     var Array data;
-    //     var int i;
-    //     var int address;
-
-    //     let data = charMaps[c];
-    //     let address = Output.getNowAddress();
-
-    //     // 11
-    //     while (i < 11) {
-    //         let screen[address] = data[i];
-    //         let address = address + 32;
-    //         let i = i + 1;
-    //     }
-
-    //     // move next word cursor
-    //     do Output.moveNextWord();
-
-    //     return;
-    // }
 
     // printString カーソルが位置する場所にsという文字列を表示させ、その文字数に応じてカーソルを進ませる
     function void printString(String s) {

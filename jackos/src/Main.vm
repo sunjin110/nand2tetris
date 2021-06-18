@@ -520,5 +520,16 @@ pop temp 0
 push constant 56
 call Output.printChar 1
 pop temp 0
+push constant 55
+call Output.printChar 1
+pop temp 0
+push constant 54
+call Output.printChar 1
+pop temp 0
+call Output.println 0
+pop temp 0
+push constant 53
+call Output.printChar 1
+pop temp 0
 push constant 0
 return

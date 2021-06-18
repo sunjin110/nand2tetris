@@ -130,11 +130,11 @@ class Main {
 
         do Output.printChar(57); // 9
         do Output.printChar(56); // 8
-        // do Output.printChar(55); // 7
-        // do Output.printChar(54); // 6
+        do Output.printChar(55); // 7
+        do Output.printChar(54); // 6
 
-        // do Output.println();
-        // do Output.printChar(53);
+        do Output.println();
+        do Output.printChar(53);
 
         return;
     }
