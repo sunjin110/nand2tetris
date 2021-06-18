@@ -19,7 +19,7 @@ func Test(t *testing.T) {
 
 			g.It("flow", func() {
 
-				m := simplememory.New()
+				m := simplememory.New(0)
 				m.Alloc(10)
 
 			})

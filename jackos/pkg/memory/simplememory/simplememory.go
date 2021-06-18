@@ -9,8 +9,9 @@ type Manager struct {
 }
 
 // New .
-func New() *Manager {
-	return &Manager{Free: 0}
+// heapBase is まだ割り当てが行われていないヒープ領域の先頭
+func New(heapBase int64) *Manager {
+	return &Manager{Free: heapBase}
 }
 
 // Alloc sizeで指定されたメモリブロックの割当を行う
