@@ -39,6 +39,7 @@ class Output {
     }
 
     // cleanThisPosition
+    // shiftして消す作戦
     function void cleanThisPosition() {
 
         var int address;
