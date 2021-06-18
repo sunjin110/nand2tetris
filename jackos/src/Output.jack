@@ -1,0 +1,46 @@
+class Output {
+
+    function void init() {
+        // TODO
+        // おそらくstatic fieldの初期化なんかをすると思う
+        return;
+    }
+
+    // moveCursor カーソルをスクリーンの(i,j)へ移動して、そこに表示されている文字を削除する
+    function void moveCursor(int i, int j) {
+        // TODO        
+        return;
+    }
+
+    // printChar カーソルが位置する場所にcという文字を表示させ、カーソルの場所を1列先へ進ませる
+    function void printChar(char c) {
+        // TODO
+        return;
+    }
+
+    // printString カーソルが位置する場所にsという文字列を表示させ、その文字数に応じてカーソルを進ませる
+    function void printString(String s) {
+        // TODO
+        return;
+    }
+
+    // printInt カーソルが位置する場所にiを表示させ、その数値に応じてカーソルを先に進ませる
+    function void printInt(int i) {
+        // TODO 
+        return;
+    }
+
+    // println カーソルを次の先頭に移動させる
+    function void println() {
+        // TODO
+        return;
+    }
+
+    // backSpace カーソルを1列後ろへ戻す
+    function void backSpace() {
+        // TODO
+        return;
+    }
+
+
+}

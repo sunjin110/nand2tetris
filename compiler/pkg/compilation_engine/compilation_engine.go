@@ -666,9 +666,9 @@ func (c *CompilationEngine) compileSubroutineCall(token string, nextToken string
 
 	// ; or ) check
 	c.nextToken()
-	if c.getToken() != ";" && c.getToken() != ")" {
-		c.SyntaxError("SubRoutineCallで「;」または「)」がありません")
-	}
+	// if c.getToken() != ";" && c.getToken() != ")" {
+	// c.SyntaxError("SubRoutineCallで「;」または「)」がありません")
+	// }
 
 	return &SubRoutineCall{
 		ClassOrVarName: classOrVarName,
