@@ -37,11 +37,11 @@ call Output.printString 1
 pop temp 0
 call Output.println 0
 pop temp 0
-call Main.mathTest 0
+call Main.Math 0
 pop temp 0
 push constant 0
 return
-function Main.mathTest 1
+function Main.Math 1
 push constant 16
 call String.new 1
 push constant 61
@@ -82,7 +82,7 @@ call Output.println 0
 pop temp 0
 push constant 1
 neg
-call MathTest.abs 1
+call Math.abs 1
 pop local 0
 push constant 15
 call String.new 1
@@ -124,7 +124,7 @@ pop temp 0
 call Output.println 0
 pop temp 0
 push constant 1
-call MathTest.abs 1
+call Math.abs 1
 pop local 0
 push constant 14
 call String.new 1
@@ -165,7 +165,7 @@ call Output.println 0
 pop temp 0
 push constant 10
 push constant 2
-call MathTest.multiply 2
+call Math.multiply 2
 pop local 0
 push constant 9
 call String.new 1
@@ -197,7 +197,7 @@ pop temp 0
 push local 0
 push constant 5
 neg
-call MathTest.multiply 2
+call Math.multiply 2
 pop local 0
 push constant 10
 call String.new 1
@@ -231,7 +231,7 @@ pop temp 0
 push local 0
 push constant 1
 neg
-call MathTest.multiply 2
+call Math.multiply 2
 pop local 0
 push constant 12
 call String.new 1
@@ -268,7 +268,7 @@ call Output.println 0
 pop temp 0
 push constant 10
 push constant 2
-call MathTest.divide 2
+call Math.divide 2
 pop local 0
 push constant 9
 call String.new 1
@@ -299,7 +299,7 @@ call Output.println 0
 pop temp 0
 push constant 10
 push constant 20
-call MathTest.min 2
+call Math.min 2
 pop local 0
 push constant 12
 call String.new 1
@@ -336,7 +336,7 @@ call Output.println 0
 pop temp 0
 push constant 10
 push constant 20
-call MathTest.max 2
+call Math.max 2
 pop local 0
 push constant 12
 call String.new 1
@@ -372,7 +372,7 @@ pop temp 0
 call Output.println 0
 pop temp 0
 push constant 16
-call MathTest.sqrt 1
+call Math.sqrt 1
 pop local 0
 push constant 10
 call String.new 1
@@ -404,7 +404,7 @@ pop temp 0
 call Output.println 0
 pop temp 0
 push constant 17
-call MathTest.sqrt 1
+call Math.sqrt 1
 pop local 0
 push constant 10
 call String.new 1

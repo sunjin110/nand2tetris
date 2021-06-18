@@ -4,12 +4,12 @@ class Main {
         do Output.println();
 
         // MathClassのテスト
-        do Main.mathTest();
+        do Main.Math();
         return;
     }
 
-    // mathTest Mathのテストをする
-    function void mathTest() {
+    // Math Mathのテストをする
+    function void Math() {
 
         var int result;
 
@@ -17,57 +17,57 @@ class Main {
         do Output.println();
 
         // abs
-        let result = MathTest.abs(-1);
+        let result = Math.abs(-1);
         do Output.printString("Math.abs(-1) = ");
         do Output.printInt(result);
         do Output.println();
 
-        let result = MathTest.abs(1);
+        let result = Math.abs(1);
         do Output.printString("Math.abs(1) = ");
         do Output.printInt(result);
         do Output.println();
 
         // multiply
-        let result = MathTest.multiply(10, 2);
+        let result = Math.multiply(10, 2);
         do Output.printString("10 * 2 = ");
         do Output.printInt(result);
         do Output.println();
 
-        let result = MathTest.multiply(result, -5);
+        let result = Math.multiply(result, -5);
         do Output.printString("20 * -5 = ");
         do Output.printInt(result);
         do Output.println();
 
-        let result = MathTest.multiply(result, -1);
+        let result = Math.multiply(result, -1);
         do Output.printString("-100 * -1 = ");
         do Output.printInt(result);
         do Output.println();
 
         // devide
-        let result = MathTest.divide(10, 2);
+        let result = Math.divide(10, 2);
         do Output.printString("10 / 2 = ");
         do Output.printInt(result);
         do Output.println();
 
         // min
-        let result = MathTest.min(10, 20);
+        let result = Math.min(10, 20);
         do Output.printString("10 min 20 = ");
         do Output.printInt(result);
         do Output.println();
 
         // max
-        let result = MathTest.max(10, 20);
+        let result = Math.max(10, 20);
         do Output.printString("10 max 20 = ");
         do Output.printInt(result);
         do Output.println();
 
         // sqrt
-        let result = MathTest.sqrt(16);
+        let result = Math.sqrt(16);
         do Output.printString("16 sqrt = ");
         do Output.printInt(result);
         do Output.println();
 
-        let result = MathTest.sqrt(17);
+        let result = Math.sqrt(17);
         do Output.printString("17 sqrt = ");
         do Output.printInt(result);
         do Output.println();

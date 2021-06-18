@@ -1,4 +1,4 @@
-class MathTest {
+class Math {
 
     // init System初期化時に呼ばれるもの
     function void init() {
@@ -122,9 +122,9 @@ class MathTest {
 
         while (i > -1) {
             
-            let tmp = MathTest.pow((y+MathTest.pow(2, i)), 2);
+            let tmp = Math.pow((y+Math.pow(2, i)), 2);
             if ((tmp > 0) & (tmp < (x+1))) {
-                let y = y + MathTest.pow(2, i);
+                let y = y + Math.pow(2, i);
             }
 
             let i = i - 1;
