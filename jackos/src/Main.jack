@@ -1,6 +1,50 @@
 class Main {
     function void main() {
-        do Output.printString("hello");
+        do Output.printString("===== test =====");
+        do Output.println();
+
+        // MathClassのテスト
+        do mathTest();
+        return;
+    }
+
+    // mathTest Mathのテストをする
+    function void mathTest() {
+
+        var int result;
+
+        do Output.printString("===== Math =====");
+        do Output.println();
+
+        // abs
+        let result = MathTest.abs(-1);
+        do Output.printString("Math.abs(-1) = ");
+        do Output.printInt(result);
+        do Output.println();
+
+        let result = MathTest.abs(1);
+        do Output.printString("Math.abs(1) = ");
+        do Output.printInt(result);
+        do Output.println();
+
+        // multiply
+        let result = MathTest.multiply(10, 2);
+        do Output.printString("10 * 2 = ");
+        do Output.printInt(result);
+        do Output.println();
+
+        let result = MathTest.multiply(result, -5);
+        do Output.printString("20 * -5 = ");
+        do Output.printInt(result);
+        do Output.println();
+
+        let result = MathTest.multiply(result, -1);
+        do Output.printString("-100 * -1 = ");
+        do Output.printInt(result);
+        do Output.println();
+
+
+
         return;
     }
 }

@@ -1,0 +1,82 @@
+class MathTest {
+
+    // init System初期化時に呼ばれるもの
+    function void init() {
+
+    }
+
+    // abs 絶対値を返す
+    function int abs(int num) {
+        if (num < 0) {
+            return -num;
+        }
+        return num;
+    }
+
+    // multiply xとyの積を返す
+    function int multiply(int x, int y) {
+
+        var int sum;
+        var int checkBit;
+        var int shiftedX;
+        var int i; // forで使用
+        var int tmp;
+
+        // どちらかが0の場合は、必ず0
+        if (x = 0) {
+            return 0;
+        }
+        if (y = 0) {
+            return 0;
+        }
+
+        let checkBit = 1;
+        let shiftedX = x;
+        while (i < 16) {
+
+            let tmp = y & checkBit;
+            if (~(tmp = 0)) {
+                let sum = sum + shiftedX;
+            }
+
+            // 1つ左にshift
+            let shiftedX = shiftedX + shiftedX;
+            let checkBit = checkBit + checkBit;
+
+            // loopのためのやつ
+            let i = i + 1;
+        }
+
+        return sum;
+    }
+
+    // devide x/yの整数部分を返す
+    function int devide(int x, int y) {
+        // TODO
+        return 0;
+    }
+
+    // min xとyの最小値を返す
+    function int min(int x, int y) {
+        if (x < y) {
+            return x;
+        }
+        return y;
+    }
+
+    // max xとyの最大値を返す
+    function int max(int x, int y) {
+        if (x < y) {
+            return y;
+        }
+        return x;
+    }
+
+    
+
+    // bit 整数xのj番目のbitが1であればtrue それ以外はfalse
+    function boolean bit (int x, int y) {
+        // TODO
+    }
+    
+}
