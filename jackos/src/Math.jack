@@ -150,4 +150,24 @@ class Math {
         }
         return y;
     }
+
+    // surplusX2 x / 2 の余りの計算
+    function int surplusX2(int x) {
+        return x & 1;
+    }
+
+    // surplusX4 x / 4 の余りの計算
+    function int surplusX4(int x) {
+        return x & 3;
+    }
+
+    // surplusX8 x / 8 の余りの計算
+    function int surplusX8(int x) {
+        return x & 7;
+    }
+
+    // surplusX16 x / 16 の余りの計算
+    function int surplusX16(int x) {
+        return x & 15;
+    }
 }

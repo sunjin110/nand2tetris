@@ -1,27 +1,59 @@
 class Screen {
 
+    static boolean color;
+
+    // スクリーンレジスタの設定
+    static Array screen;
+
+    static Array positions;
+
     // init .
     function void init() {
-        // TODO
+
+        var int i;
+        var int t;
+        let t = 1;
+        let positions = Array.new(16);
+
+        while (i < 16) {
+            let positions[i] = t;
+            let t = t + t;
+            let i = i + 1;
+        }
+
+
+
+        let screen = 16384; // screenの開始地点のAddressを指定する
+
+        // 黒に設定
+        let color = true;
+
         return;
     }
 
     // cleanScreen スクリーン全体を削除する
     function void cleanScreen() {
-        // TODO
+        var int i;
+        while (i < 8160) {
+            let screen[i] = 0;
+            let i = i + 1;
+        }
         return;
     }
 
     // setColor  色の設定を行う(白:false, 黒:true)
     // このコマンドは後に続くdraw系コマンドで使用される
     function void setColor(boolean b) {
-        // TODO
+        let color = b;
         return;
     }
 
     // drawPixel (x, y)にピクセルを描画する
     function void drawPixel(int x, int y) {
-        // TODO
+        var int address;
+        let address = (y * 32) + (x / 16);
+        let screen[address] = positions[Math.surplusX16(x)] | screen[address];
+        // let screen[address] = -1;
         return;
     }
 

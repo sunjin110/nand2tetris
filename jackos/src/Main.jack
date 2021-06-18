@@ -1,16 +1,19 @@
 class Main {
     function void main() {
-        do Output.printString("===== test =====");
-        do Output.println();
+        // do Output.printString("===== test =====");
+        // do Output.println();
 
-        // Math Classのテスト
-        do Main.Math();
+        // // Math Classのテスト
+        // do Main.Math();
         
-        // String Classのテスト
-        do Main.String();
+        // // String Classのテスト
+        // do Main.String();
 
-        // Output Classのテスト
-        do Main.Output();
+        // // Output Classのテスト
+        // do Main.Output();
+
+        // Screeen Classのテスト
+        do Main.Screen();
 
         return;
     }
@@ -146,6 +149,22 @@ class Main {
         do Output.moveCursor(0, 0);
         // do Output.printString("a");
 
+        return;
+    }
+
+    function void Screen() {
+        do Screen.drawPixel(0, 1);
+        do Screen.drawPixel(1, 1);
+        do Screen.drawPixel(2, 1);
+        do Screen.drawPixel(3, 1);
+        do Screen.drawPixel(4, 1);
+        do Screen.drawPixel(5, 1);
+        // do Screen.setColor(false);
+        // do Screen.drawPixel(0, 0);
+        // do Screen.drawPixel();
+
+
+        do Screen.cleanScreen();
         return;
     }
 }

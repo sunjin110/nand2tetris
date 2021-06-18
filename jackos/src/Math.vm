@@ -270,3 +270,23 @@ goto WHILE_START_0
 label WHILE_END_0
 push local 0
 return
+function Math.surplusX2 0
+push argument 0
+push constant 1
+and
+return
+function Math.surplusX4 0
+push argument 0
+push constant 3
+and
+return
+function Math.surplusX8 0
+push argument 0
+push constant 7
+and
+return
+function Math.surplusX16 0
+push argument 0
+push constant 15
+and
+return
