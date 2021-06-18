@@ -22,7 +22,7 @@ func Test(t *testing.T) {
 			fmt.Printf("%b\n", 1&1)
 			fmt.Printf("%b\n", 2&1)
 			fmt.Printf("%b\n", 3&1)
-			fmt.Printf("%d", 102&1)
+			fmt.Printf("%d\n", -1&255)
 
 		})
 	})

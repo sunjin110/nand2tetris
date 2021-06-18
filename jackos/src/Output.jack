@@ -27,10 +27,47 @@ class Output {
 
     // moveCursor カーソルをスクリーンの(i,j)へ移動して、そこに表示されている文字を削除する
     function void moveCursor(int i, int j) {
+
+       
         let x = i;
         let y = j;
+
+        // 移動した場所をcleanする
+        do Output.cleanThisPosition();
+
         return;
     }
+
+    // cleanThisPosition
+    function void cleanThisPosition() {
+
+        var int address;
+        var int i;
+        var int mask;
+
+        // 現在のpositionをcleanする
+        let address = Output.getNowAddress();
+        let mask = x & 1;
+        
+        while (i < 11) {
+
+            if (mask = 1) {
+                let screen[address] = screen[address] * 256;
+                let screen[address] = screen[address] / 256;
+            } else {
+                let screen[address] = screen[address] / 256;
+                let screen[address] = screen[address] * 256;
+            }
+
+            let address = address + 32;
+            let i = i + 1;
+        }
+
+        return;
+    }
+
+
+
 
     // getNowAddress x軸のpixcelを取得する
     function int getNowAddress() {
@@ -68,20 +105,6 @@ class Output {
         var int i;
 
         let address = 0;
-
-        // let screen[address] = -1;
-        // let screen[address] = 63; // 全塗り
-        // let screen[address] = 12;
-
-        // while (i < 10) {
-        //     let screen[address] = i;
-        //     let address = address + 32;
-        //     let i = i +1;
-        // }
-        
-
-
-        // 0 -> 8
         // 
         return;
     }
@@ -112,7 +135,7 @@ class Output {
             let address = address + 32;
             let i = i + 1;
         }
-
+      
         // move next word cursor
         do Output.moveNextWord();
 
@@ -131,12 +154,10 @@ class Output {
 
     // printInt カーソルが位置する場所にiを表示させ、その数値に応じてカーソルを先に進ませる
     function void printInt(int i) {
-
         var String s;
         let s = String.new(5); // int16が最大5桁なので
         do s.setInt(i);
         do Output.printString(s);
-
         return;
     }
 
@@ -148,19 +169,30 @@ class Output {
             let y = y + 1;
         } else {
             // TODO !!! scroll
+            // 今はリセットするのみ
+            let x = 0;
+            let y = 0;
         }
 
         return;
     }
 
+
     // backSpace カーソルを1列後ろへ戻す
     function void backSpace() {
 
-
-        // TODO
+        if (x > 0) {
+            let x = x - 1;
+        } else {
+            // 行を1つ戻して
+            // xを63にする
+            let y = y - 1;
+            let x = 63;
+        }
         return;
     }
 
+    
 
     // initMap 文字のBitMapデータの初期化
     function void initMap() {
@@ -210,7 +242,7 @@ class Output {
         do Output.create(64,30,51,51,59,59,59,27,3,30,0,0);  // @
         do Output.create(63,30,51,51,24,12,12,0,12,12,0,0);  // ?
 
-        do Output.create(65,0,0,0,0,0,0,0,0,0,0,0);          // A ** TO BE FILLED **
+        do Output.create(65,12,30,51,51,63,51,51,51,51,0,0); // A
         do Output.create(66,31,51,51,51,31,51,51,51,31,0,0); // B
         do Output.create(67,28,54,35,3,3,3,35,54,28,0,0);    // C
         do Output.create(68,15,27,51,51,51,51,51,27,15,0,0); // D
