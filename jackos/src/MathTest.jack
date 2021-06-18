@@ -50,11 +50,33 @@ class MathTest {
         return sum;
     }
 
-    // devide x/yの整数部分を返す
-    function int devide(int x, int y) {
-        // TODO
-        return 0;
+
+    // divide x/yの整数部分を返す
+    function int divide(int x, int y) {
+
+        var int q, nx, ny;
+
+        let nx = Math.abs(x);
+        let ny = Math.abs(y);
+  
+        if (ny > nx) {
+          return 0;
+        }
+  
+        let q = Math.divide(nx, 2 * ny);
+        if ((nx - (2 * q * ny)) < ny) {
+          if ((x < 0 & y > 0) | (x > 0 & y < 0)) {
+            let q = -q;
+          }
+          return 2 * q;
+        } else {
+          if ((x < 0 & y > 0) | (x > 0 & y < 0)) {
+            let q = -q;
+          }
+          return (2 * q) + 1;
+        }
     }
+
 
     // min xとyの最小値を返す
     function int min(int x, int y) {

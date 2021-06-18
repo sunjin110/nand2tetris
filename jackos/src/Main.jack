@@ -4,7 +4,7 @@ class Main {
         do Output.println();
 
         // MathClassのテスト
-        do mathTest();
+        do Main.mathTest();
         return;
     }
 
@@ -43,6 +43,23 @@ class Main {
         do Output.printInt(result);
         do Output.println();
 
+        // devide
+        let result = MathTest.divide(10, 2);
+        do Output.printString("10 / 2 = ");
+        do Output.printInt(result);
+        do Output.println();
+
+        // min
+        let result = MathTest.min(10, 20);
+        do Output.printString("10 min 20 = ");
+        do Output.printInt(result);
+        do Output.println();
+
+        // max
+        let result = MathTest.max(10, 20);
+        do Output.printString("10 max 20 = ");
+        do Output.printInt(result);
+        do Output.println();
 
 
         return;

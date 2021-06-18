@@ -77,9 +77,100 @@ goto WHILE_START_0
 label WHILE_END_0
 push local 0
 return
-function MathTest.devide 0
+function MathTest.divide 3
+push argument 0
+call Math.abs 1
+pop local 1
+push argument 1
+call Math.abs 1
+pop local 2
+push local 2
+push local 1
+gt
+if-goto IF_TRUE_0
+goto IF_END_0
+label IF_TRUE_0
 push constant 0
 return
+goto IF_END_0
+label IF_END_0
+push local 1
+push constant 2
+push local 2
+call Math.multiply 2
+call Math.divide 2
+pop local 0
+push local 1
+push constant 2
+push local 0
+call Math.multiply 2
+push local 2
+call Math.multiply 2
+sub
+push local 2
+lt
+if-goto IF_TRUE_1
+goto IF_FALSE_1
+label IF_TRUE_1
+push argument 0
+push constant 0
+lt
+push argument 1
+and
+push constant 0
+gt
+push argument 0
+push constant 0
+gt
+push argument 1
+and
+push constant 0
+lt
+or
+if-goto IF_TRUE_2
+goto IF_END_2
+label IF_TRUE_2
+push local 0
+neg
+pop local 0
+goto IF_END_2
+label IF_END_2
+push constant 2
+push local 0
+call Math.multiply 2
+return
+goto IF_END_1
+label IF_FALSE_1
+push argument 0
+push constant 0
+lt
+push argument 1
+and
+push constant 0
+gt
+push argument 0
+push constant 0
+gt
+push argument 1
+and
+push constant 0
+lt
+or
+if-goto IF_TRUE_3
+goto IF_END_3
+label IF_TRUE_3
+push local 0
+neg
+pop local 0
+goto IF_END_3
+label IF_END_3
+push constant 2
+push local 0
+call Math.multiply 2
+push constant 1
+add
+return
+label IF_END_1
 function MathTest.min 0
 push argument 0
 push argument 1
