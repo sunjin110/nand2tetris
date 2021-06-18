@@ -18,12 +18,12 @@ class Main {
 
         // abs
         let result = Math.abs(-1);
-        do Output.printString("Math.abs(-1) = ");
+        do Output.printString("|-1| = ");
         do Output.printInt(result);
         do Output.println();
 
         let result = Math.abs(1);
-        do Output.printString("Math.abs(1) = ");
+        do Output.printString("|1| = ");
         do Output.printInt(result);
         do Output.println();
 
