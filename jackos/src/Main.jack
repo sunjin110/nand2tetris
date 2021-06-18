@@ -5,8 +5,13 @@ class Main {
 
         // MathClassのテスト
         do Main.Math();
+        
+        // String Classのテスト
+        do Main.String();
+
         return;
     }
+
 
     // Math Mathのテストをする
     function void Math() {
@@ -71,8 +76,40 @@ class Main {
         do Output.printString("17 sqrt = ");
         do Output.printInt(result);
         do Output.println();
+        return;
+    }
 
+    function void String() {
+
+        var String result;
+        var int num;
+
+        do Output.printString("===== String =====");
+        do Output.println();
+
+        // print "HELLO WORLD"
+        let result = String.new(11);
+        do result.appendChar(72);
+        do result.appendChar(69);
+        do result.appendChar(76);
+        do result.appendChar(76);
+        do result.appendChar(79);
+        do result.appendChar(32);
+        do result.appendChar(87);
+        do result.appendChar(79);
+        do result.appendChar(82);
+        do result.appendChar(76);
+        do result.appendChar(68);
+        do Output.printString(result); // HELLO WORLD
+        do Output.println();
+
+        // cut last 
+        do result.eraseLastChar();
+        do Output.printString(result); // HELLO WORL
+        do Output.println();
 
         return;
+
+
     }
 }

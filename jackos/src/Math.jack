@@ -118,7 +118,6 @@ class Math {
         var int i;
         var int tmp;
 
-        // let tmp = (16/2) - 1;
         let i = (16/2) - 1;
 
         while (i > -1) {
@@ -130,8 +129,6 @@ class Math {
 
             let i = i - 1;
         }
-
         return y;
     }
-    
 }
