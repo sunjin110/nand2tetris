@@ -53,10 +53,14 @@ class Output {
         while (i < 11) {
 
             if (mask = 1) {
+                // 右にずらして
                 let screen[address] = screen[address] * 256;
+                // 左にずらす
                 let screen[address] = screen[address] / 256;
             } else {
+                // 左にずらして
                 let screen[address] = screen[address] / 256;
+                // 右にずらす
                 let screen[address] = screen[address] * 256;
             }
 
