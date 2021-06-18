@@ -137,6 +137,9 @@ class Main {
 
         do Output.println();
         do Output.printString("Hello World");
+        do Output.println();
+
+        do Output.printInt(100);
 
         return;
     }

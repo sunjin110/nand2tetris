@@ -131,7 +131,12 @@ class Output {
 
     // printInt カーソルが位置する場所にiを表示させ、その数値に応じてカーソルを先に進ませる
     function void printInt(int i) {
-        // TODO 
+
+        var String s;
+        let s = String.new(5); // int16が最大5桁なので
+        do s.setInt(i);
+        do Output.printString(s);
+
         return;
     }
 
