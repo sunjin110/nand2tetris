@@ -189,6 +189,9 @@ class Output {
             let y = y - 1;
             let x = 63;
         }
+
+        // そのポジションのデータを削除する
+        do Output.cleanThisPosition();
         return;
     }
 
