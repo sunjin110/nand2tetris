@@ -1,14 +1,15 @@
 class Main {
     function void main() {
-        // do Output.printString("===== test =====");
-        // do Output.println();
+        do Output.printString("===== test =====");
+        do Output.println();
 
-        // MathClassのテスト
-        // do Main.Math();
+        // Math Classのテスト
+        do Main.Math();
         
         // String Classのテスト
-        // do Main.String();
+        do Main.String();
 
+        // Output Classのテスト
         do Main.Output();
 
         return;

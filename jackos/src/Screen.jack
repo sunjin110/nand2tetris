@@ -1,0 +1,47 @@
+class Screen {
+
+    // init .
+    function void init() {
+        // TODO
+        return;
+    }
+
+    // cleanScreen スクリーン全体を削除する
+    function void cleanScreen() {
+        // TODO
+        return;
+    }
+
+    // setColor  色の設定を行う(白:false, 黒:true)
+    // このコマンドは後に続くdraw系コマンドで使用される
+    function void setColor(boolean b) {
+        // TODO
+        return;
+    }
+
+    // drawPixel (x, y)にピクセルを描画する
+    function void drawPixel(int x, int y) {
+        // TODO
+        return;
+    }
+
+    // drawLine (x1, y1)から(x2, y2)まで直線を引く
+    function void drawLine(int x1, int y1, int x2, int y2) {
+        // TODO
+        return;
+    }
+
+    // drawRectangle 左上コーナーが(x1, y1) 右下コーナーが(x2, y2)の塗りつぶされた長方形を描画する
+    function void drawRectangle(int x1, int y1, int x2, int y2) {
+        // TODO
+        return;
+    }
+
+    // drawCircle (x, y)を中心に、半径がrの塗りつぶされた円形を描画する (ただし r <= 181)
+    function void drawCircle(int x, int y, int r) {
+        // TODO
+        return;
+    }
+
+    
+}
