@@ -142,7 +142,7 @@ class Main {
         do Output.printInt(1000);
 
         do Output.backSpace();
-        do Output.moveCursor(2, 0);
+        do Output.moveCursor(0, 0);
         // do Output.printString("a");
 
         return;

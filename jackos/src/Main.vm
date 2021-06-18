@@ -566,7 +566,7 @@ call Output.printInt 1
 pop temp 0
 call Output.backSpace 0
 pop temp 0
-push constant 2
+push constant 0
 push constant 0
 call Output.moveCursor 2
 pop temp 0
