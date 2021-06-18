@@ -41,6 +41,16 @@ class Screen {
         return;
     }
 
+    // blackScreen スクリーン全体を黒に染める
+    function void blackScreen() {
+        var int i;
+        while (i < 8160) {
+            let screen[i] = -1;
+            let i = i + 1;
+        }
+        return;
+    }
+
     // setColor  色の設定を行う(白:false, 黒:true)
     // このコマンドは後に続くdraw系コマンドで使用される
     function void setColor(boolean b) {
@@ -52,8 +62,13 @@ class Screen {
     function void drawPixel(int x, int y) {
         var int address;
         let address = (y * 32) + (x / 16);
-        let screen[address] = positions[Math.surplusX16(x)] | screen[address];
-        // let screen[address] = -1;
+
+        if (color = true) {
+            let screen[address] = positions[Math.surplusX16(x)] | screen[address];
+        } else {
+            let screen[address] = positions[Math.surplusX16(x)] & screen[address];
+        }
+        
         return;
     }
 

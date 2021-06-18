@@ -45,7 +45,31 @@ if-goto WHILE_END_0
 push local 0
 push static 1
 add
-push static 0
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_START_0
+label WHILE_END_0
+push constant 0
+return
+function Screen.blackScreen 1
+label WHILE_START_0
+push local 0
+push constant 8160
+lt
+not
+if-goto WHILE_END_0
+push local 0
+push static 1
+add
+push constant 1
+neg
 pop temp 0
 pop pointer 1
 push temp 0
@@ -72,6 +96,13 @@ push constant 16
 call Math.divide 2
 add
 pop local 0
+push static 0
+push constant 0
+not
+eq
+if-goto IF_TRUE_0
+goto IF_FALSE_0
+label IF_TRUE_0
 push local 0
 push static 1
 add
@@ -91,6 +122,28 @@ pop temp 0
 pop pointer 1
 push temp 0
 pop that 0
+goto IF_END_0
+label IF_FALSE_0
+push local 0
+push static 1
+add
+push argument 0
+call Math.surplusX16 1
+push static 2
+add
+pop pointer 1
+push that 0
+push local 0
+push static 1
+add
+pop pointer 1
+push that 0
+and
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+label IF_END_0
 push constant 0
 return
 function Screen.drawLine 0
