@@ -1,15 +1,15 @@
 function Array.new 0
 push argument 0
 push constant 0
-gt
-not
-if-goto IF_TRUE0
-goto IF_FALSE0
-label IF_TRUE0
-push constant 2
+lt
+if-goto IF_TRUE_0
+goto IF_END_0
+label IF_TRUE_0
+push constant 1
 call Sys.error 1
 pop temp 0
-label IF_FALSE0
+goto IF_END_0
+label IF_END_0
 push argument 0
 call Memory.alloc 1
 return
