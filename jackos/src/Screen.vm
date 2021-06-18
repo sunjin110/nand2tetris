@@ -150,7 +150,39 @@ return
 function Screen.drawLine 0
 push constant 0
 return
-function Screen.drawRectangle 0
+function Screen.drawRectangle 2
+push argument 1
+pop local 1
+label WHILE_START_0
+push local 1
+push argument 3
+lt
+not
+if-goto WHILE_END_0
+push argument 0
+pop local 0
+label WHILE_START_1
+push local 0
+push argument 2
+lt
+not
+if-goto WHILE_END_1
+push local 0
+push local 1
+call Screen.drawPixel 2
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_START_1
+label WHILE_END_1
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_START_0
+label WHILE_END_0
 push constant 0
 return
 function Screen.drawCircle 0

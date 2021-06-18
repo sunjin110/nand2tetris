@@ -182,6 +182,10 @@ class Main {
             let i = i + 1;
         }
 
+
+        do Screen.setColor(true);
+        do Screen.drawRectangle(30, 30, 100, 120);
+
         // do Screen.drawPixel(0, 0);
 
         // do Screen.drawPixel(5, 5);

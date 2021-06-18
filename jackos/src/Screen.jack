@@ -80,7 +80,19 @@ class Screen {
 
     // drawRectangle 左上コーナーが(x1, y1) 右下コーナーが(x2, y2)の塗りつぶされた長方形を描画する
     function void drawRectangle(int x1, int y1, int x2, int y2) {
-        // TODO
+
+        var int tmpX;
+        var int tmpY;
+
+        let tmpY = y1;
+        while (tmpY < y2) {
+            let tmpX = x1;
+            while (tmpX < x2) {
+                do Screen.drawPixel(tmpX, tmpY);
+                let tmpX = tmpX + 1;
+            }
+            let tmpY = tmpY + 1;
+        }
         return;
     }
 
