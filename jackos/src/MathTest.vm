@@ -197,4 +197,74 @@ goto IF_END_0
 label IF_END_0
 push argument 0
 return
-function MathTest.bit 0
+function MathTest.pow 2
+push constant 1
+pop local 0
+label WHILE_START_0
+push local 1
+push argument 1
+lt
+not
+if-goto WHILE_END_0
+push local 0
+push argument 0
+call Math.multiply 2
+pop local 0
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_START_0
+label WHILE_END_0
+push local 0
+return
+function MathTest.sqrt 3
+push constant 16
+push constant 2
+call Math.divide 2
+push constant 1
+sub
+pop local 1
+label WHILE_START_0
+push local 1
+push constant 1
+neg
+gt
+not
+if-goto WHILE_END_0
+push local 0
+push constant 2
+push local 1
+call MathTest.pow 2
+add
+push constant 2
+call MathTest.pow 2
+pop local 2
+push local 2
+push constant 0
+gt
+push local 2
+push argument 0
+push constant 1
+add
+lt
+and
+if-goto IF_TRUE_0
+goto IF_END_0
+label IF_TRUE_0
+push local 0
+push constant 2
+push local 1
+call MathTest.pow 2
+add
+pop local 0
+goto IF_END_0
+label IF_END_0
+push local 1
+push constant 1
+sub
+pop local 1
+goto WHILE_START_0
+label WHILE_END_0
+push local 0
+return

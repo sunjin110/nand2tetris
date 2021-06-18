@@ -61,6 +61,17 @@ class Main {
         do Output.printInt(result);
         do Output.println();
 
+        // sqrt
+        let result = MathTest.sqrt(16);
+        do Output.printString("16 sqrt = ");
+        do Output.printInt(result);
+        do Output.println();
+
+        let result = MathTest.sqrt(17);
+        do Output.printString("17 sqrt = ");
+        do Output.printInt(result);
+        do Output.println();
+
 
         return;
     }
