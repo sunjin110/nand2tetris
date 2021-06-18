@@ -1,13 +1,15 @@
 class Main {
     function void main() {
-        do Output.printString("===== test =====");
-        do Output.println();
+        // do Output.printString("===== test =====");
+        // do Output.println();
 
         // MathClassのテスト
-        do Main.Math();
+        // do Main.Math();
         
         // String Classのテスト
-        do Main.String();
+        // do Main.String();
+
+        do Main.Output();
 
         return;
     }
@@ -120,7 +122,20 @@ class Main {
         do Output.printInt(result2.intValue());
 
         return;
+    }
 
+    function void Output() {
 
+        // do Output.test();
+
+        do Output.printChar(57); // 9
+        do Output.printChar(56); // 8
+        // do Output.printChar(55); // 7
+        // do Output.printChar(54); // 6
+
+        // do Output.println();
+        // do Output.printChar(53);
+
+        return;
     }
 }

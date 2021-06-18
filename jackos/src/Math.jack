@@ -17,6 +17,25 @@ class Math {
     // multiply xとyの積を返す
     function int multiply(int x, int y) {
 
+        // var int sum, shifted, j, nx, ny;
+
+        // let nx = Math.abs(x);
+        // let ny = Math.abs(y);
+        // let shifted = nx;
+        // while (j < 16) {
+        //   if (Math.bit(ny, j)) {
+        //     let sum = sum + shifted;
+        //   }
+  
+        //   let shifted = shifted + shifted;
+        //   let j = j + 1;
+        // }
+  
+        // if ((x < 0 & y > 0) | (x > 0 & y < 0)) {
+        //   let sum = -sum;
+        // }
+        // return sum;
+
         var int sum;
         var int checkBit;
         var int shiftedX;
