@@ -3,6 +3,7 @@ class Math {
     // init System初期化時に呼ばれるもの
     function void init() {
         // やることはねえ
+        return;
     }
 
     // abs 絶対値を返す
