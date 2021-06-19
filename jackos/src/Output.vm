@@ -151,6 +151,16 @@ push constant 0
 return
 function Output.printChar 4
 push argument 0
+push constant 126
+gt
+if-goto IF_TRUE_0
+goto IF_END_0
+label IF_TRUE_0
+push constant 0
+return
+goto IF_END_0
+label IF_END_0
+push argument 0
 push static 0
 add
 pop pointer 1
@@ -171,9 +181,9 @@ if-goto WHILE_END_0
 push local 3
 push constant 1
 eq
-if-goto IF_TRUE_0
-goto IF_FALSE_0
-label IF_TRUE_0
+if-goto IF_TRUE_1
+goto IF_FALSE_1
+label IF_TRUE_1
 push local 2
 push static 3
 add
@@ -194,8 +204,8 @@ pop temp 0
 pop pointer 1
 push temp 0
 pop that 0
-goto IF_END_0
-label IF_FALSE_0
+goto IF_END_1
+label IF_FALSE_1
 push local 2
 push static 3
 add
@@ -208,7 +218,7 @@ pop temp 0
 pop pointer 1
 push temp 0
 pop that 0
-label IF_END_0
+label IF_END_1
 push local 2
 push constant 32
 add

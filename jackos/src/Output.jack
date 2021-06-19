@@ -118,10 +118,17 @@ class Output {
     // printChar カーソルが位置する場所にcという文字を表示させ、カーソルの場所を1列先へ進ませる
     function void printChar(char c) {
 
+      
         var Array data;
         var int i;
         var int address;
         var int mask; // 奇数回目のxの場合は、bitmapを半分ずらす必要があるため
+
+        if (c > 126) {
+            // 文字ではない場合は何もしない
+            return;
+        }
+
 
         let data = charMaps[c];
         let address = Output.getNowAddress();

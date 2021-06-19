@@ -219,6 +219,8 @@ class Main {
     // Keyboard
     function void Keyboard() {
 
+        var String result;
+
         // keyPressedの確認
         var char word;
         // while (true) {
@@ -226,12 +228,15 @@ class Main {
         //     do Output.printChar(word);
         // }
 
-        let word = Keyboard.readChar();
-        do Output.printChar(word);
+        // let word = Keyboard.readChar();
+        // do Output.printChar(word);
 
         // do Output.printChar(65);
 
-        // do Keyboard.readLine("message > ");
+        let result = Keyboard.readLine("message > ");
+
+        do Output.printString("result is ");
+        do Output.printString(result);
         // do Keyboard.readLine("message > ");
 
 

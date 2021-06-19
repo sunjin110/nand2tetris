@@ -42,6 +42,32 @@ class Keyboard {
     // readLine messageをスクリーンに表示し、キーボードから文字列を読む(改行が押されるまで)
     // この文字列をスクリーンに表示し、functionはその文字列を返す、このfunctionはユーザーのbackspaceにも対応する
     function String readLine(String message) {
+
+        var String result;
+        var char tmp;
+
+
+        // 先にメッセージを画面に表示する
+        do Output.printString(message);
+
+        // 256文字まで考える、それ以上はしらん
+        let result = String.new(255);
+
+        while (true) {
+
+            let tmp = Keyboard.readChar();
+            // もし、enter keyの場合は処理を終了する
+            if (tmp = String.newLine()) {
+                do Output.println(); // 改行
+                return result;
+            }
+
+            // 文字列を追加
+            do result.appendChar(tmp);
+        }
+
+
+
         // TODO
         return;
     }
