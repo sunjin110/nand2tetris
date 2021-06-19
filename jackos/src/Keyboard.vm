@@ -73,13 +73,37 @@ push local 0
 return
 goto IF_END_0
 label IF_END_0
+push local 1
+call String.backSpace 0
+eq
+if-goto IF_TRUE_1
+goto IF_FALSE_1
+label IF_TRUE_1
+push local 0
+call String.length 1
+push constant 0
+gt
+if-goto IF_TRUE_2
+goto IF_END_2
+label IF_TRUE_2
+push local 0
+call String.eraseLastChar 1
+pop temp 0
+call Output.backSpace 0
+pop temp 0
+goto IF_END_2
+label IF_END_2
+goto IF_END_1
+label IF_FALSE_1
 push local 0
 push local 1
 call String.appendChar 2
 pop temp 0
+label IF_END_1
 goto WHILE_START_0
 label WHILE_END_0
 push constant 0
+call String.new 1
 return
 function Keyboard.readInt 0
 push constant 0

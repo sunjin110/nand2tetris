@@ -62,8 +62,18 @@ class Keyboard {
                 return result;
             }
 
-            // 文字列を追加
-            do result.appendChar(tmp);
+            // もしバックスペースの場合は、1つ戻る
+            if (tmp = String.backSpace()) {
+                // 文字列が1以上の場合のみ削除できる
+                if (result.length() > 0) {
+                    do result.eraseLastChar();
+                    do Output.backSpace();
+                }
+            } else {
+                // 文字列を追加
+                do result.appendChar(tmp);
+            }
+
         }
 
         // ここには到達しない

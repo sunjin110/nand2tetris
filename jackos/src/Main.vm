@@ -685,7 +685,7 @@ pop temp 0
 push constant 0
 return
 function Main.Keyboard 2
-push constant 10
+push constant 9
 call String.new 1
 push constant 109
 call String.appendChar 2
@@ -704,8 +704,6 @@ call String.appendChar 2
 push constant 32
 call String.appendChar 2
 push constant 62
-call String.appendChar 2
-push constant 32
 call String.appendChar 2
 call Keyboard.readLine 1
 pop local 0
