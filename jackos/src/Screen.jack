@@ -61,7 +61,7 @@ class Screen {
     // drawPixel (x, y)にピクセルを描画する
     function void drawPixel(int x, int y) {
         var int address;
-        let address = (y * 32) + (x / 16);
+        let address = Screen.getAddress(x, y);
 
         if (color = true) {
             let screen[address] = positions[Math.surplusX16(x)] | screen[address];
@@ -74,7 +74,42 @@ class Screen {
 
     // drawLine (x1, y1)から(x2, y2)まで直線を引く
     function void drawLine(int x1, int y1, int x2, int y2) {
+
+        // 水平の線を書く
+        if (y1 = y2) {
+            do Screen.drawHorizonLine(x1, x2, y1);
+            return;
+        }
+
+        // 垂直の線を書く
+        if (x1 = x2) {
+            do Screen.drawVerticalLine(x1, y1, y2);
+            return;
+        }
+
         // TODO
+        return;
+    }
+
+    // drawHorizonLine 水平の線を書く
+    function void drawHorizonLine(int x1, int x2, int y) {
+        var int dx;
+        let dx = x1;
+        while (dx < (x2+1)) {
+            do Screen.drawPixel(dx, y);
+            let dx = dx + 1;
+        }
+        return;
+    }
+
+    // drawVertical 垂直の線を書く
+    function void drawVerticalLine(int x, int y1, int y2) {
+        var int dy;
+        let dy = y1;
+        while (dy < (y2 + 2)) {
+            do Screen.drawPixel(x, dy);
+            let dy = dy + 1;
+        }
         return;
     }
 
@@ -100,6 +135,11 @@ class Screen {
     function void drawCircle(int x, int y, int r) {
         // TODO
         return;
+    }
+
+    // getAddress 現在のアドレスを習得する
+    function int getAddress(int x, int y) {
+        return (y * 32) + (x / 16);
     }
 
     

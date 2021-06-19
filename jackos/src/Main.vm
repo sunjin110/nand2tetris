@@ -1,5 +1,5 @@
 function Main.main 0
-call Main.Screen 0
+call Main.ScreenV2 0
 pop temp 0
 push constant 0
 return
@@ -647,6 +647,21 @@ push constant 30
 push constant 100
 push constant 120
 call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Main.ScreenV2 0
+push constant 0
+push constant 0
+push constant 10
+push constant 0
+call Screen.drawLine 4
+pop temp 0
+push constant 3
+push constant 0
+push constant 3
+push constant 10
+call Screen.drawLine 4
 pop temp 0
 push constant 0
 return

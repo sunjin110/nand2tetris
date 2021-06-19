@@ -12,8 +12,11 @@ class Main {
         // // Output Classのテスト
         // do Main.Output();
 
-        // Screeen Classのテスト
-        do Main.Screen();
+        // Screen Classのテスト
+        // do Main.Screen();
+
+        // Screen ClassのテストV2
+        do Main.ScreenV2();
 
         return;
     }
@@ -186,45 +189,19 @@ class Main {
         do Screen.setColor(true);
         do Screen.drawRectangle(30, 30, 100, 120);
 
-        // do Screen.drawPixel(0, 0);
-
-        // do Screen.drawPixel(5, 5);
-        // do Screen.drawPixel(1, 10);
-        // do Screen.drawPixel(2, 10);
-        // do Screen.drawPixel(3, 10);
-        // do Screen.drawPixel(4, 10);
-        // do Screen.drawPixel(5, 10);
-        // do Screen.drawPixel(6, 10);
-        // do Screen.drawPixel(7, 10);
-        // do Screen.drawPixel(8, 10);
-        // do Screen.drawPixel(9, 10);
-        // do Screen.drawPixel(0, 11);
-        // do Screen.drawPixel(1, 11);
-        // do Screen.drawPixel(2, 11);
-        // do Screen.drawPixel(3, 11);
-        // do Screen.drawPixel(4, 11);
-        // do Screen.drawPixel(5, 11);
-        // do Screen.drawPixel(5, 12);
-        // do Screen.drawPixel(5, 13);
-        // do Screen.drawPixel(5, 14);
-        // do Screen.drawPixel(5, 15);
-
-        // do Screen.drawPixel(6, 11);
-        // do Screen.drawPixel(7, 11);
-        // do Screen.drawPixel(8, 11);
-        // do Screen.drawPixel(9, 11);
-
-        // do Screen.setColor(false);
-        // do Screen.drawPixel(3, 1);
-        // do Screen.drawPixel(4, 1);
-        // do Screen.drawPixel(5, 1);
-
-        // do Screen.setColor(false);
-        // do Screen.drawPixel(0, 0);
-        // do Screen.drawPixel();
-
-
-        // do Screen.cleanScreen();
         return;
+    }
+
+    // ScreenV2
+    function void ScreenV2() {
+
+        // 水平
+        do Screen.drawLine(0, 0, 10, 0);
+
+        // 垂直
+        do Screen.drawLine(3, 0, 3, 10);
+
+
+        return;   
     }
 }
