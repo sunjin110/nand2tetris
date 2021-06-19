@@ -12,11 +12,31 @@ class Keyboard {
         return Memory.peek(address);
     }
 
-    // readChar キーボードでキーがオサレ、話されるまで待つ。キーが離された時点で、スクリーンにその文字を表示し、
+    // readChar キーボードでキーが押され、離されるまで待つ。キーが離された時点で、スクリーンにその文字を表示し、
     // このfunctionはその文字を返す
     function char readChar() {
-        // TODO
-        return;
+        var int tmp;
+
+        // キーボードが押されるのを待つ
+        while (true) {
+            let tmp = Keyboard.keyPressed();
+            if (tmp > 0) {
+
+                // キーボードが離されるのを待つ
+                while (true) {
+                    if (Keyboard.keyPressed() = 0) {
+
+                        // 文字を出力する
+                        do Output.printChar(tmp);
+
+                        // 文字を返す
+                        return tmp;
+                    }
+                }
+            }
+        }
+        // ここには到達しない
+        return 0;
     }
 
     // readLine messageをスクリーンに表示し、キーボードから文字列を読む(改行が押されるまで)

@@ -7,7 +7,44 @@ function Keyboard.keyPressed 0
 push static 0
 call Memory.peek 1
 return
-function Keyboard.readChar 0
+function Keyboard.readChar 1
+label WHILE_START_0
+push constant 0
+not
+not
+if-goto WHILE_END_0
+call Keyboard.keyPressed 0
+pop local 0
+push local 0
+push constant 0
+gt
+if-goto IF_TRUE_0
+goto IF_END_0
+label IF_TRUE_0
+label WHILE_START_1
+push constant 0
+not
+not
+if-goto WHILE_END_1
+call Keyboard.keyPressed 0
+push constant 0
+eq
+if-goto IF_TRUE_1
+goto IF_END_1
+label IF_TRUE_1
+push local 0
+call Output.printChar 1
+pop temp 0
+push local 0
+return
+goto IF_END_1
+label IF_END_1
+goto WHILE_START_1
+label WHILE_END_1
+goto IF_END_0
+label IF_END_0
+goto WHILE_START_0
+label WHILE_END_0
 push constant 0
 return
 function Keyboard.readLine 0
