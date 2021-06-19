@@ -201,6 +201,8 @@ class Main {
         // 垂直
         do Screen.drawLine(3, 0, 3, 10);
 
+        // 斜め
+        do Screen.drawLine(0, 1, 10, 20);
 
         return;   
     }

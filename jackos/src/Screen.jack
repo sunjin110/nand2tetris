@@ -75,6 +75,9 @@ class Screen {
     // drawLine (x1, y1)から(x2, y2)まで直線を引く
     function void drawLine(int x1, int y1, int x2, int y2) {
 
+        var int dx;
+        var int dy;
+
         // 水平の線を書く
         if (y1 = y2) {
             do Screen.drawHorizonLine(x1, x2, y1);
@@ -87,7 +90,10 @@ class Screen {
             return;
         }
 
-        // TODO
+        // 斜めを書く
+        let dx = x2 - x1;
+        let dy = y2 - y1;
+        do Screen.drawDiagonalLine(x1, y1, x2, y2, dx, dy);
         return;
     }
 
@@ -110,6 +116,39 @@ class Screen {
             do Screen.drawPixel(x, dy);
             let dy = dy + 1;
         }
+        return;
+    }
+
+    // drawDiagonalLine 斜めの線を書く
+    function void drawDiagonalLine(int x1, int y1, int x2, int y2, int dx, int dy) {
+
+        var int a, b;
+        var int adyMinusbdx;
+        var int yInc;
+
+        let a = 0;
+        let b = 0;
+        let adyMinusbdx = 0;
+
+        if (dy < 0) {
+            let yInc = -1;
+        } else {
+            let yInc = 1;
+        }
+
+        while( ~(a > dx) & ( ((yInc = 1) & ~(b > dy)) | ((yInc = -1) & ~(b < dy) ) ) ) {
+
+            do Screen.drawPixel(x1+a, y1+b);
+
+            if (adyMinusbdx < 0) {
+                let a = a + 1;
+                let adyMinusbdx = adyMinusbdx + (dy*yInc);
+            } else {
+                let b = b + 1;
+                let adyMinusbdx = adyMinusbdx - dx;
+            }
+        }
+
         return;
     }
 
