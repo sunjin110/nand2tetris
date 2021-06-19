@@ -1,0 +1,50 @@
+class Memory {
+
+    static Array memory;
+
+    static Array freeList; // heap
+    static int freeListLength;
+    static int freeListNext; // next address
+
+    // 一つのデータ構造の仕組みとして
+    // 0番目に自分の領域の長さ
+    // 1番目に次の領域のbaseアドレスをしていする
+
+    // init 
+    function void init() {
+        let memory = 0;
+        let freeList = 2048; // heap領域
+        let freeListLength = 0; // position
+        let freeListNext = 1; // position
+        
+
+
+
+        return;
+    }
+
+    // peek メインメモリのアドレスの場所にある値を返す
+    function int peek(int address) {
+        return memory[address];
+    }
+
+    // poke メインメモリのアドレスの場所にvalueを設定する
+    function void poke(int address, int value) {
+        let memory[address] = value;
+        return;
+    }
+
+    // alloc ヒープから指定されたサイズのメモリブロックを探し、それを確保し、そのベースアドレスを返す
+    function Array alloc(int size) {
+        // TODO
+        return;
+    }
+
+    // deAlloc 与えられたオブジェクトが占めるメモリ領域を破棄する
+    function void deAlloc(Array o) {
+        // TODO
+        return;
+    }
+
+
+}
