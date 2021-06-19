@@ -220,14 +220,14 @@ class Main {
     function void Keyboard() {
 
         // keyPressedの確認
-        // var char word;
+        var char word;
         // while (true) {
         //     let word = Keyboard.keyPressed();
         //     do Output.printChar(word);
         // }
 
-        do Keyboard.readChar();
-        // do Output.printChar(word);
+        let word = Keyboard.readChar();
+        do Output.printChar(word);
 
         // do Output.printChar(65);
 

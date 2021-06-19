@@ -684,8 +684,11 @@ call Screen.drawCircle 3
 pop temp 0
 push constant 0
 return
-function Main.Keyboard 0
+function Main.Keyboard 1
 call Keyboard.readChar 0
+pop local 0
+push local 0
+call Output.printChar 1
 pop temp 0
 push constant 0
 return
