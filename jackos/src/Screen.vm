@@ -359,7 +359,45 @@ goto WHILE_START_0
 label WHILE_END_0
 push constant 0
 return
-function Screen.drawCircle 0
+function Screen.drawCircle 3
+push argument 2
+neg
+pop local 1
+push argument 2
+push argument 2
+call Math.multiply 2
+pop local 2
+label WHILE_START_0
+push local 1
+push argument 2
+gt
+not
+not
+if-goto WHILE_END_0
+push local 2
+push local 1
+push local 1
+call Math.multiply 2
+sub
+call Math.sqrt 1
+pop local 0
+push argument 0
+push local 0
+sub
+push argument 0
+push local 0
+add
+push argument 1
+push local 1
+add
+call Screen.drawHorizonLine 3
+pop temp 0
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_START_0
+label WHILE_END_0
 push constant 0
 return
 function Screen.getAddress 0

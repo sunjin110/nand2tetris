@@ -204,6 +204,12 @@ class Main {
         // 斜め
         do Screen.drawLine(0, 1, 10, 20);
 
+        // chirchle
+        do Screen.drawCircle(50, 50, 20);
+
+        do Screen.setColor(false);
+        do Screen.drawCircle(50, 50, 18);
+
         return;   
     }
 }
