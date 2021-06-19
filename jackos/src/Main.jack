@@ -220,6 +220,7 @@ class Main {
     function void Keyboard() {
 
         var String result;
+        var int num;
 
         // keyPressedの確認
         var char word;
@@ -233,11 +234,15 @@ class Main {
 
         // do Output.printChar(65);
 
-        let result = Keyboard.readLine("message >");
-        do Output.printString("result is ");
-        do Output.printString(result);
+        // let result = Keyboard.readLine("message >");
+        // do Output.printString("result is ");
+        // do Output.printString(result);
         // do Keyboard.readLine("message > ");
 
+        let num = Keyboard.readInt("number >");
+        do Output.printString("number is ");
+        do Output.printInt(num);
+        do Output.println();
 
 
         return;

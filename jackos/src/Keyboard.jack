@@ -83,8 +83,54 @@ class Keyboard {
     // readInt messageをスクリーンに表示し、キーボードから数字の列(改行が押されるまで)を読む
     // この数字列をスクリーンに表示し、その整数値を返す、このfunctionはユーザーのbacksapceにも対応する
     function int readInt(String message) {
-        // TODO
-        return;
+
+        var String result;
+        var char tmp;
+
+        // 先にメッセージを画面に表示する
+        do Output.printString(message);
+
+        // 5桁までint16
+        let result = String.new(5);
+
+        while (true) {
+
+            let tmp = Keyboard.readChar();
+
+            // もし、enter keyの場合は処理を終了する
+            if (tmp = String.newLine()) {
+                do Output.println(); // 改行
+                return result.intValue();
+            }
+
+            // 数字が来るかどうかを判定
+            if (String.isDigit(tmp)) {
+                do result.appendChar(tmp);
+            } else {
+
+                // 1文字目のみ(-)を許可する
+                if ((result.length() = 0) & (tmp = 45)) {
+                    do result.appendChar(tmp);
+                } else {
+                    // backsapceの場合は、1つ戻る
+                    if (tmp = String.backSpace()) {
+                        // 文字列が1以上の場合のみ削除できる
+                        if (result.length() > 0) {
+                            do result.eraseLastChar();
+                            do Output.backSpace();
+                        }
+                    } else {
+                        // 数字ではないので消す
+                        do Output.backSpace();
+                    }
+                }
+
+                
+            }
+        }
+
+        // ここには到達しない
+        return 0;
     }
 
 }
