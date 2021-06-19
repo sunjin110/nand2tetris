@@ -16,7 +16,10 @@ class Main {
         // do Main.Screen();
 
         // Screen ClassのテストV2
-        do Main.ScreenV2();
+        // do Main.ScreenV2();
+
+        // Keyboard Classのテスト
+        do Main.Keyboard();
 
         return;
     }
@@ -211,5 +214,28 @@ class Main {
         do Screen.drawCircle(50, 50, 18);
 
         return;   
+    }
+
+    // Keyboard
+    function void Keyboard() {
+
+        // keyPressedの確認
+        var char word;
+        while (true) {
+            let word = Keyboard.keyPressed();
+            do Output.printChar(word);
+        }
+
+        // do Keyboard.readChar();
+        // do Output.printChar(word);
+
+        // do Output.printChar(65);
+
+        // do Keyboard.readLine("message > ");
+        // do Keyboard.readLine("message > ");
+
+
+
+        return;
     }
 }

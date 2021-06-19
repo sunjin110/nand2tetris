@@ -1,14 +1,15 @@
 class Keyboard {
 
+    static int address;
+
     function void init() {
-        // TODO
+        let address = 24576;
         return;
     }
 
     // keyPressed キーボードで現在押されているキーの文字を返す、何も押されていなければ0を返す
     function char keyPressed() {
-        // TODO
-        return;
+        return Memory.peek(address);
     }
 
     // readChar キーボードでキーがオサレ、話されるまで待つ。キーが離された時点で、スクリーンにその文字を表示し、
