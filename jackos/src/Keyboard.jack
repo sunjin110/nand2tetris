@@ -66,10 +66,8 @@ class Keyboard {
             do result.appendChar(tmp);
         }
 
-
-
-        // TODO
-        return;
+        // ここには到達しない
+        return "";
     }
 
     // readInt messageをスクリーンに表示し、キーボードから数字の列(改行が押されるまで)を読む

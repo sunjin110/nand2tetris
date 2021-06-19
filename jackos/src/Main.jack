@@ -234,7 +234,6 @@ class Main {
         // do Output.printChar(65);
 
         let result = Keyboard.readLine("message > ");
-
         do Output.printString("result is ");
         do Output.printString(result);
         // do Keyboard.readLine("message > ");
