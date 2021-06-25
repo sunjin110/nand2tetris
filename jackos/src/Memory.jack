@@ -64,7 +64,7 @@ class Memory {
             let heap = nextBlock;
         } else {
             // blockを切り出す作業
-            let prevBlock[next] = nextBlock;
+            let prevBlock[1] = nextBlock;
         }
 
         return block + 2; // 実際のデータとして使えるアドレスから返す必要がある
@@ -76,8 +76,8 @@ class Memory {
         let block = object - 2; // ここが、freeListの先頭
 
         // heapのlinkedListの先頭の方にくっつける
-        let block[next] = heap;
-        let heap = block;
+        let block[1] = heap;
+        // let heap = block;
         return;
     }
 }

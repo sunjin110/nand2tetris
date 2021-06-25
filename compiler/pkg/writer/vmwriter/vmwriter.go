@@ -440,6 +440,11 @@ func (writer *VMWriter) writeValNameConstTerm(valNameConstTerm *compilation_engi
 	// 変数のsymbol情報を習得する
 	symbol := writer.getSymbol(valNameConstTerm.ValName)
 
+	if symbol == nil {
+		chk.SE(fmt.Errorf("宣言されていない変数があります: %s", valNameConstTerm.ValName))
+		return
+	}
+
 	segment := getSegmentFromSymbolAttribute(symbol.Attribute)
 	writer.writePush(segment, symbol.Num)
 }
