@@ -1,5 +1,9 @@
 function Main.main 0
-call Main.Keyboard 0
+call Main.Math 0
+pop temp 0
+call Main.String 0
+pop temp 0
+call Main.Output 0
 pop temp 0
 push constant 0
 return

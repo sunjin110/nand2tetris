@@ -4,13 +4,13 @@ class Main {
         // do Output.println();
 
         // // Math Classのテスト
-        // do Main.Math();
+        do Main.Math();
         
         // // String Classのテスト
-        // do Main.String();
+        do Main.String();
 
         // // Output Classのテスト
-        // do Main.Output();
+        do Main.Output();
 
         // Screen Classのテスト
         // do Main.Screen();
@@ -19,7 +19,7 @@ class Main {
         // do Main.ScreenV2();
 
         // Keyboard Classのテスト
-        do Main.Keyboard();
+        // do Main.Keyboard();
 
         return;
     }
