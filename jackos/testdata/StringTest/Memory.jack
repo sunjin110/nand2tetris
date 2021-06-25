@@ -1,0 +1,83 @@
+class Memory {
+
+    static Array ram;
+    static Array heap;
+
+    static int heapBase;
+
+    function void init() {
+        let ram = 0;
+
+        let heapBase = 2048;
+        let heap = heapBase; // heapの基準pointer位置を2048に設定
+        let heap[0] = 14335; // 現在フリーなブロック(自分自身のサイズを指定)
+        let heap[1] = null; // 次のfreeListの場所を指定(ないためnull)
+        return;
+    }
+
+    // peek メインメモリのアドレスの場所にある値を返す
+    function int peek(int address) {
+        return ram[address];
+    }
+
+    // poke メインメモリのアドレスの場所にvalueを設定する
+    function void poke(int address, int value) {
+        let ram[address] = value;
+        return;
+    }
+
+    // alloc ヒープからメモリブロックを見つけて割り当てます
+    // 指定されたサイズで、ベースアドレスへの参照を返します。
+    function int alloc(int size) {
+
+        var Array block, prevBlock, nextBlock;
+
+        // heapをblockとして取得
+        let block = heap;
+
+        // 切り出すblockの前
+        let prevBlock = 0;
+
+        // 現在のblockのサイズが、求めているサイズに合うまで検証
+        while (block[0] < size) {
+            let prevBlock = block;
+            let block = block[1]; // 次のブロックにいく
+
+            if (block = null) { // 次のブロックがなかったら
+                return -1; // 最後まで探索して見つからなかったということ
+            }
+        }
+
+        // 適したfreeListから、必要なmemory(block)を取り出す
+        // nextBlockは切り出したblockのあまり(blockの前のprevBlockと繋ぎ込みをする)
+        let nextBlock = block + 2 + size; // 切り出したblockの場所から、切り出したblockのアドレス分プラスして、次のブロックのbaseを見つける
+        let nextBlock[0] = block[0] - size - 2; // nextのsizeを計算
+        let nextBlock[1] = block[1]; // nextの次の参照を設定
+
+        // 今回割り当てるやつ
+        let block[0] = size; 
+        let block[1] = null;
+
+        // 繋ぎ込み作業
+        if (prevBlock = 0) {
+            // これは初回、完全に何も使っていない状態からlinkedなlistにする
+            let heap = nextBlock;
+        } else {
+            // blockを切り出す作業
+            let prevBlock[1] = nextBlock;
+        }
+
+        return block + 2; // 実際のデータとして使えるアドレスから返す必要がある
+    }
+
+    // deAlloc 指定されたオブジェクトの割り当てを解除し、そのスペースを開放します
+    function void deAlloc(int object) {
+        var Array block;
+        let block = object - 2; // ここが、freeListの先頭
+
+        // heapのlinkedListの先頭の方にくっつける
+        let block[1] = heap;
+        // let heap = block;
+        return;
+    }
+}

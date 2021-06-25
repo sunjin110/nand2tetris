@@ -1,0 +1,65 @@
+class Sys {
+
+    // init その他のOSクラスのinitを呼び出す
+    // そして最後に、Main.main()を呼ぶ
+    function void init() {
+
+        // keyboard
+        do Keyboard.init();
+
+        // math
+        do Math.init();
+
+        // memory
+        do Memory.init();
+
+        // output
+        do Output.init();
+
+        // screen
+        do Screen.init();
+
+        // main!!
+        do Main.main();
+
+        // プログラムの終了
+        do Sys.helt();
+
+        return;
+    }
+
+    // help プログラムの実行を終了させる
+    function void helt() {
+        while (true) {
+            // Do nothing
+        }
+        return;
+    }
+
+    // error エラーコードをスクリーンに表示し、プログラムを終了させる
+    function void error(int errorCode) {
+        do Output.printString("error:");
+        do Output.printInt(errorCode);
+        return;
+    }
+
+    // wait およそduration msの間、待機する
+    function void wait(int duration) {
+
+        var int i;
+        while (duration > 1000) {
+            while (i < (1000 * 20)) {
+                let i = i + 1;
+            }
+            let duration = duration - 1000;
+        }
+
+        let i = 0;
+        while (i < (duration * 20)) {
+            let i = i + 1;
+        }
+        return;
+    }
+
+
+}

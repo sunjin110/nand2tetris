@@ -1,0 +1,173 @@
+class Math {
+
+    // init System初期化時に呼ばれるもの
+    function void init() {
+        // やることはねえ
+        return;
+    }
+
+    // abs 絶対値を返す
+    function int abs(int num) {
+        if (num < 0) {
+            return -num;
+        }
+        return num;
+    }
+
+    // multiply xとyの積を返す
+    function int multiply(int x, int y) {
+
+        // var int sum, shifted, j, nx, ny;
+
+        // let nx = Math.abs(x);
+        // let ny = Math.abs(y);
+        // let shifted = nx;
+        // while (j < 16) {
+        //   if (Math.bit(ny, j)) {
+        //     let sum = sum + shifted;
+        //   }
+  
+        //   let shifted = shifted + shifted;
+        //   let j = j + 1;
+        // }
+  
+        // if ((x < 0 & y > 0) | (x > 0 & y < 0)) {
+        //   let sum = -sum;
+        // }
+        // return sum;
+
+        var int sum;
+        var int checkBit;
+        var int shiftedX;
+        var int i; // forで使用
+        var int tmp;
+
+        // どちらかが0の場合は、必ず0
+        if (x = 0) {
+            return 0;
+        }
+        if (y = 0) {
+            return 0;
+        }
+
+        let checkBit = 1;
+        let shiftedX = x;
+        while (i < 16) {
+
+            let tmp = y & checkBit;
+            if (~(tmp = 0)) {
+                let sum = sum + shiftedX;
+            }
+
+            // 1つ左にshift
+            let shiftedX = shiftedX + shiftedX;
+            let checkBit = checkBit + checkBit;
+
+            // loopのためのやつ
+            let i = i + 1;
+        }
+
+        return sum;
+    }
+
+
+    // divide x/yの整数部分を返す
+    function int divide(int x, int y) {
+
+        var int q, nx, ny;
+
+        let nx = Math.abs(x);
+        let ny = Math.abs(y);
+  
+        if (ny > nx) {
+          return 0;
+        }
+  
+        let q = Math.divide(nx, 2 * ny);
+        if ((nx - (2 * q * ny)) < ny) {
+          if ((x < 0 & y > 0) | (x > 0 & y < 0)) {
+            let q = -q;
+          }
+          return 2 * q;
+        } else {
+          if ((x < 0 & y > 0) | (x > 0 & y < 0)) {
+            let q = -q;
+          }
+          return (2 * q) + 1;
+        }
+    }
+
+
+    // min xとyの最小値を返す
+    function int min(int x, int y) {
+        if (x < y) {
+            return x;
+        }
+        return y;
+    }
+
+    // max xとyの最大値を返す
+    function int max(int x, int y) {
+        if (x < y) {
+            return y;
+        }
+        return x;
+    }
+
+    // pow べき乗
+    function int pow(int x, int y) {
+        
+        var int result;
+        var int i;
+
+        let result = 1;
+
+        while (i < y) {
+            let result = result * x;
+            let i = i + 1;
+        }
+
+        return result;
+    }
+
+    // sqrt y = √xの整数部分を計算する
+    function int sqrt(int x) {
+
+        var int y;
+        var int i;
+        var int tmp;
+
+        let i = (16/2) - 1;
+
+        while (i > -1) {
+            
+            let tmp = Math.pow((y+Math.pow(2, i)), 2);
+            if ((tmp > 0) & (tmp < (x+1))) {
+                let y = y + Math.pow(2, i);
+            }
+
+            let i = i - 1;
+        }
+        return y;
+    }
+
+    // surplusX2 x / 2 の余りの計算
+    function int surplusX2(int x) {
+        return x & 1;
+    }
+
+    // surplusX4 x / 4 の余りの計算
+    function int surplusX4(int x) {
+        return x & 3;
+    }
+
+    // surplusX8 x / 8 の余りの計算
+    function int surplusX8(int x) {
+        return x & 7;
+    }
+
+    // surplusX16 x / 16 の余りの計算
+    function int surplusX16(int x) {
+        return x & 15;
+    }
+}

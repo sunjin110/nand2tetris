@@ -1,0 +1,196 @@
+class Screen {
+
+    static boolean color;
+
+    // スクリーンレジスタの設定
+    static Array screen;
+
+    static Array positions;
+
+    // init .
+    function void init() {
+
+        var int i;
+        var int t;
+        let t = 1;
+        let positions = Array.new(16);
+
+        while (i < 16) {
+            let positions[i] = t;
+            let t = t + t;
+            let i = i + 1;
+        }
+
+        let screen = 16384; // screenの開始地点のAddressを指定する
+
+        // 黒に設定
+        let color = true;
+
+        return;
+    }
+
+    // cleanScreen スクリーン全体を削除する
+    function void cleanScreen() {
+        var int i;
+        while (i < 8160) {
+            let screen[i] = 0;
+            let i = i + 1;
+        }
+        return;
+    }
+
+    // blackScreen スクリーン全体を黒に染める
+    function void blackScreen() {
+        var int i;
+        while (i < 8160) {
+            let screen[i] = -1;
+            let i = i + 1;
+        }
+        return;
+    }
+
+    // setColor  色の設定を行う(白:false, 黒:true)
+    // このコマンドは後に続くdraw系コマンドで使用される
+    function void setColor(boolean b) {
+        let color = b;
+        return;
+    }
+
+    // drawPixel (x, y)にピクセルを描画する
+    function void drawPixel(int x, int y) {
+        var int address;
+        let address = Screen.getAddress(x, y);
+
+        if (color = true) {
+            let screen[address] = positions[Math.surplusX16(x)] | screen[address];
+        } else {
+            let screen[address] = (~positions[Math.surplusX16(x)]) & screen[address];
+        }
+        
+        return;
+    }
+
+    // drawLine (x1, y1)から(x2, y2)まで直線を引く
+    function void drawLine(int x1, int y1, int x2, int y2) {
+
+        var int dx;
+        var int dy;
+
+        // 水平の線を書く
+        if (y1 = y2) {
+            do Screen.drawHorizonLine(x1, x2, y1);
+            return;
+        }
+
+        // 垂直の線を書く
+        if (x1 = x2) {
+            do Screen.drawVerticalLine(x1, y1, y2);
+            return;
+        }
+
+        // 斜めを書く
+        let dx = x2 - x1;
+        let dy = y2 - y1;
+        do Screen.drawDiagonalLine(x1, y1, x2, y2, dx, dy);
+        return;
+    }
+
+    // drawHorizonLine 水平の線を書く
+    function void drawHorizonLine(int x1, int x2, int y) {
+        var int dx;
+        let dx = x1;
+        while (dx < (x2+1)) {
+            do Screen.drawPixel(dx, y);
+            let dx = dx + 1;
+        }
+        return;
+    }
+
+    // drawVertical 垂直の線を書く
+    function void drawVerticalLine(int x, int y1, int y2) {
+        var int dy;
+        let dy = y1;
+        while (dy < (y2 + 2)) {
+            do Screen.drawPixel(x, dy);
+            let dy = dy + 1;
+        }
+        return;
+    }
+
+    // drawDiagonalLine 斜めの線を書く
+    function void drawDiagonalLine(int x1, int y1, int x2, int y2, int dx, int dy) {
+
+        var int a, b;
+        var int adyMinusbdx;
+        var int yInc;
+
+        let a = 0;
+        let b = 0;
+        let adyMinusbdx = 0;
+
+        if (dy < 0) {
+            let yInc = -1;
+        } else {
+            let yInc = 1;
+        }
+
+        while( ~(a > dx) & ( ((yInc = 1) & ~(b > dy)) | ((yInc = -1) & ~(b < dy) ) ) ) {
+
+            do Screen.drawPixel(x1+a, y1+b);
+
+            if (adyMinusbdx < 0) {
+                let a = a + 1;
+                let adyMinusbdx = adyMinusbdx + (dy*yInc);
+            } else {
+                let b = b + 1;
+                let adyMinusbdx = adyMinusbdx - dx;
+            }
+        }
+
+        return;
+    }
+
+    // drawRectangle 左上コーナーが(x1, y1) 右下コーナーが(x2, y2)の塗りつぶされた長方形を描画する
+    function void drawRectangle(int x1, int y1, int x2, int y2) {
+
+        var int tmpX;
+        var int tmpY;
+
+        let tmpY = y1;
+        while (tmpY < y2) {
+            let tmpX = x1;
+            while (tmpX < x2) {
+                do Screen.drawPixel(tmpX, tmpY);
+                let tmpX = tmpX + 1;
+            }
+            let tmpY = tmpY + 1;
+        }
+        return;
+    }
+
+    // drawCircle (x, y)を中心に、半径がrの塗りつぶされた円形を描画する (ただし r <= 181)
+    function void drawCircle(int cx, int cy, int r) {
+
+        var int dx, dy;
+        var int rSquared;
+
+        let dy = -r;
+        let rSquared = r*r;
+
+        // dy <= r
+        while ( ~(dy > r) ) {
+            let dx = Math.sqrt(rSquared-(dy*dy));
+            do Screen.drawHorizonLine(cx-dx, cx+dx, cy+dy);
+            let dy = dy + 1;
+        }
+
+        return;
+    }
+
+    // getAddress 現在のアドレスを習得する
+    function int getAddress(int x, int y) {
+        return (y * 32) + (x / 16);
+    }
+
+    
+}

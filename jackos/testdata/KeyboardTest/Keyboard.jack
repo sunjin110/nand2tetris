@@ -1,0 +1,136 @@
+class Keyboard {
+
+    static int address;
+
+    function void init() {
+        let address = 24576;
+        return;
+    }
+
+    // keyPressed キーボードで現在押されているキーの文字を返す、何も押されていなければ0を返す
+    function char keyPressed() {
+        return Memory.peek(address);
+    }
+
+    // readChar キーボードでキーが押され、離されるまで待つ。キーが離された時点で、スクリーンにその文字を表示し、
+    // このfunctionはその文字を返す
+    function char readChar() {
+        var int tmp;
+
+        // キーボードが押されるのを待つ
+        while (true) {
+            let tmp = Keyboard.keyPressed();
+            if (tmp > 0) {
+
+                // キーボードが離されるのを待つ
+                while (true) {
+                    if (Keyboard.keyPressed() = 0) {
+
+                        // 文字を出力する
+                        do Output.printChar(tmp);
+
+                        // 文字を返す
+                        return tmp;
+                    }
+                }
+            }
+        }
+        // ここには到達しない
+        return 0;
+    }
+
+    // readLine messageをスクリーンに表示し、キーボードから文字列を読む(改行が押されるまで)
+    // この文字列をスクリーンに表示し、functionはその文字列を返す、このfunctionはユーザーのbackspaceにも対応する
+    function String readLine(String message) {
+
+        var String result;
+        var char tmp;
+
+
+        // 先にメッセージを画面に表示する
+        do Output.printString(message);
+
+        // 256文字まで考える、それ以上はしらん
+        let result = String.new(255);
+
+        while (true) {
+
+            let tmp = Keyboard.readChar();
+            // もし、enter keyの場合は処理を終了する
+            if (tmp = String.newLine()) {
+                do Output.println(); // 改行
+                return result;
+            }
+
+            // もしバックスペースの場合は、1つ戻る
+            if (tmp = String.backSpace()) {
+                // 文字列が1以上の場合のみ削除できる
+                if (result.length() > 0) {
+                    do result.eraseLastChar();
+                    do Output.backSpace();
+                }
+            } else {
+                // 文字列を追加
+                do result.appendChar(tmp);
+            }
+
+        }
+
+        // ここには到達しない
+        return "";
+    }
+
+    // readInt messageをスクリーンに表示し、キーボードから数字の列(改行が押されるまで)を読む
+    // この数字列をスクリーンに表示し、その整数値を返す、このfunctionはユーザーのbacksapceにも対応する
+    function int readInt(String message) {
+
+        var String result;
+        var char tmp;
+
+        // 先にメッセージを画面に表示する
+        do Output.printString(message);
+
+        // 5桁までint16
+        let result = String.new(5);
+
+        while (true) {
+
+            let tmp = Keyboard.readChar();
+
+            // もし、enter keyの場合は処理を終了する
+            if (tmp = String.newLine()) {
+                do Output.println(); // 改行
+                return result.intValue();
+            }
+
+            // 数字が来るかどうかを判定
+            if (String.isDigit(tmp)) {
+                do result.appendChar(tmp);
+            } else {
+
+                // 1文字目のみ(-)を許可する
+                if ((result.length() = 0) & (tmp = 45)) {
+                    do result.appendChar(tmp);
+                } else {
+                    // backsapceの場合は、1つ戻る
+                    if (tmp = String.backSpace()) {
+                        // 文字列が1以上の場合のみ削除できる
+                        if (result.length() > 0) {
+                            do result.eraseLastChar();
+                            do Output.backSpace();
+                        }
+                    } else {
+                        // 数字ではないので消す
+                        do Output.backSpace();
+                    }
+                }
+
+                
+            }
+        }
+
+        // ここには到達しない
+        return 0;
+    }
+
+}
