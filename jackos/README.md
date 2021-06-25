@@ -1,3 +1,12 @@
 # JackOS
 Jack言語で書かれたOS  
-先にGoで実装してJackで実装し直せるものはする
+
+ - build-compiler.sh
+ compierのbuild
+
+ - build.sh
+ JackOSをbuildしてbinディレクトリに格納する
+
+
+
+
